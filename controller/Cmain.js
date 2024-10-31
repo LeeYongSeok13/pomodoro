@@ -23,3 +23,19 @@ const uploadDetail = multer({
 exports.get_Index = (req, res) => {
   res.render("index");
 };
+
+exports.get_Feed = (req, res) => {
+  res.render("feed");
+};
+
+exports.get_Calender = (req, res) => {
+  res.render("calender");
+};
+
+exports.get_Timer = (req, res) => {
+  res.render("timer");
+};
+
+exports.get_MyPage = (req, res) => {
+  res.render("myPage");
+};
