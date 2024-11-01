@@ -21,12 +21,13 @@ const user = (Sequelize, DataTypes) => {
       },
       nickname: {
         // 닉네임
-        type: DataTypes.VARCHAR(255),
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true, // 닉네임 중복 불가 설정
       },
       emailAddr: {
-        type: DataTypes.VARCHAR(255),
+        // 이메일 주소
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true, // 이메일 중복 불가 설정
         validate: {
@@ -34,12 +35,19 @@ const user = (Sequelize, DataTypes) => {
         },
       },
       password: {
-        type: DataTypes.VARCHAR(255),
+        // 비밀번호
+        type: DataTypes.STRING(255),
         allowNull: false,
       },
       phoneNumber: {
-        type: DataType.VARCHAR(255),
+        // 휴대전화 번호
+        type: DataTypes.STRING(255),
         allowNull: false,
+        unique: true,
+      },
+      profile_image: {
+        // 프로필 이미지
+        type: DataTypes.STRING(255),
       },
       created_at: {
         type: DataTypes.DATE,

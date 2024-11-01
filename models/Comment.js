@@ -32,7 +32,7 @@ const feed = (Sequelize, DataTypes) => {
       },
     },
     {
-      timestamps: true, // created_at과 update_at 자동생성
+      timestamps: true, // created_at 자동생성
       createdAt: "created_at",
     }
   );

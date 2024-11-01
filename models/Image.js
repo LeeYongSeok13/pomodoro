@@ -17,7 +17,7 @@ const image = (Sequelize, DataTypes) => {
       allowNull: false,
     },
     url: {
-      type: DataTypes.VARCHAR(255),
+      type: DataTypes.STRING(255),
     },
     uploded_at: {
       type: DataTypes.DATE,
