@@ -15,11 +15,11 @@ const timer = (Sequelize, DataTypes) => {
         autoIncrement: true,
       },
       user_id: {
-        type: DataTypes.VARCHAR(255),
+        type: DataTypes.STRING(255),
         allowNull: false,
       },
       task_id: {
-        type: DataTypes.VARCHAR(255),
+        type: DataTypes.STRING(255),
         allowNull: false,
       },
       start_time: {

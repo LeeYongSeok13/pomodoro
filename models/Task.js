@@ -19,7 +19,7 @@ const task = (Sequelize, DataTypes) => {
         allowNull: false,
       },
       title: {
-        type: DataTypes.VARCHAR(255),
+        type: DataTypes.STRING(255),
         allowNull: false,
       },
       description: {
