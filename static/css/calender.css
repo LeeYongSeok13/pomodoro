@@ -1,0 +1,79 @@
+.calender > div:nth-child(1) {
+  display: flex;
+  justify-content: center;
+}
+
+.dayList {
+  display: flex;
+}
+.leftbutton {
+  background-image: url("/static/svg/arrow-left.svg");
+  background-size: 50%;
+}
+.rightbutton {
+  background-image: url("/static/svg/arrow-right.svg");
+  background-size: 50%;
+}
+#month {
+  display: block;
+  padding: 0 10px;
+  font-size: 24px;
+  line-height: 44px;
+}
+
+.calender > div:nth-child(2) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+.calender > div:nth-child(2) > div {
+  flex-grow: 1;
+  height: 100%;
+}
+.dayList {
+  justify-content: space-between;
+}
+.dayList > .today {
+  background-color: #da2337;
+  transform: scale(1.1);
+  box-shadow: 0px 4px 4px #00000052;
+}
+
+.dayList > li {
+  transition-duration: 200ms;
+  color: white;
+  background-color: #4b3134;
+  border-radius: 15px;
+  width: 22%;
+  height: 100px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.dayList > li > span {
+  display: block;
+  text-align: center;
+}
+.day {
+  font-size: 24px;
+}
+.date {
+  font-size: 32px;
+}
+.list-Wrap {
+  padding: 10px;
+  color: #4b3134;
+}
+.todayTomato {
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 30px;
+  padding: 20px 30px;
+  border-radius: 10px;
+  background-color: #ffffff;
+
+  background-image: url("/static/img/tomato.png");
+  background-repeat: no-repeat;
+  background-size: 33px;
+  background-position: 95% center;
+}
