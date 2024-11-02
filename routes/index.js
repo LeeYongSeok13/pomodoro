@@ -13,4 +13,6 @@ router.get("/calender", controller.get_Calender);
 router.get("/timer", controller.get_Timer);
 
 router.get("/myPage", controller.get_MyPage);
+
+router.post("/login", controller.post_login);
 module.exports = router;

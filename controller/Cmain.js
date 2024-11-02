@@ -22,10 +22,25 @@ const uploadDetail = multer({
   }),
 });
 
-// 비밀번호를 저장하기 전에 해시 처리
-
 exports.get_Index = (req, res) => {
-  res.render("index");
+  // 세션 권한 없으면 login으로 가야함!!!
+  if (req.session.isAuthenticated) {
+    res.render("index");
+  } else {
+    // 데이터 구현시 index 대신 login 넣기!!!
+    res.render("index");
+  }
+};
+
+exports.post_login = (req, res) => {
+  const { email, password } = req.body;
+  // 로그인 성공 실패 판단 조건 넣기
+  if (true) {
+    req.session.isAuthenticated = true;
+    return res.redirect("/");
+  } else {
+    return res.render("login", { error: "로그인 실패. 다시 시도하세요." });
+  }
 };
 
 // Register post 요청 받아오기
