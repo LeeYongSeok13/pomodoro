@@ -1,3 +1,5 @@
+const { config } = require("dotenv");
+
 require("dotenv").config();
 
 const development = {
