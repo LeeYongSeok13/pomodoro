@@ -4,260 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>피드 페이지</title>
+    <link rel="stylesheet" href="/static/css/reset.css" />
+    <link rel="stylesheet" href="/static/css/navbar.css" />
+    <link rel="stylesheet" href="/static/css/feed.css" />
     <!-- 글씨체 -->
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
       rel="stylesheet"
     />
-    <style>
-      @media screen and (max-width: 320px) {
-        body {
-          font-family: "Noto Sans KR", sans-serif;
-          background-color: #f8f2f1;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          min-height: 100vh;
-          padding-bottom: 55px;
-        }
-
-        .feed-container {
-          width: 80%;
-          max-width: 600px;
-          margin-top: 50px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-
-        .logo {
-          margin-bottom: 20px;
-          text-align: center;
-        }
-
-        .feed-item {
-          background-color: #fff;
-          border: 1px solid #dbdbdb;
-          border-radius: 8px;
-          margin-bottom: 20px;
-          width: 100%;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-
-        .feed-item img {
-          width: 100%;
-          height: auto;
-          cursor: pointer;
-        }
-
-        .feed-item .content {
-          padding: 15px;
-        }
-
-        .feed-item .content p {
-          margin: 5px 0;
-          font-size: 10px;
-        }
-
-        .get-tomato-sum {
-          background-color: #f1f1f1;
-          border: 1px solid #dbdbdb;
-          border-radius: 8px;
-          font-size: 6px;
-          padding: 5px;
-          text-align: center;
-          margin-top: 10px;
-        }
-
-        .icon-container {
-          display: flex;
-          justify-content: left;
-          margin-top: 10px;
-        }
-
-        .icon-container img {
-          width: 13px;
-          height: auto;
-          margin-right: 10px;
-          cursor: pointer;
-        }
-
-        .comment-box {
-          display: none;
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          background-color: #fff;
-          border-top: 1px solid #dbdbdb;
-          padding: 10px;
-          box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-          transition: transform 0.3s ease;
-          transform: translateY(100%);
-        }
-
-        .comment-box.active {
-          display: block;
-          transform: translateY(0);
-        }
-
-        .comment-box input {
-          width: 90%;
-          padding: 10px;
-          border: 1px solid #dbdbdb;
-          border-radius: 5px;
-          font-size: 14px;
-        }
-
-        .comment-box button {
-          padding: 10px;
-          background-color: black;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-        }
-
-        .comment-box button:hover {
-          background-color: gray;
-        }
-        .navigation {
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          right: 0;
-
-          height: 20px;
-          padding: 1rem;
-          background-color: #fff;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        .icon-container2 {
-          display: flex;
-          justify-content: space-around;
-          width: 100%;
-        }
-        .plus-icon img {
-          position: fixed;
-          bottom: 70px;
-          right: 10px;
-          width: 35px;
-        }
-
-        .icon-container2 img {
-          width: 24px;
-          height: 24px;
-          margin: 0 10px;
-        }
-        .house {
-          filter: invert(40%) sepia(100%) saturate(500%) hue-rotate(0deg);
-        }
-
-        /* 피드 생성 아이콘 눌렀을 때 나오는 모달ㄹ창 */
-        .modal {
-          display: none;
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.7);
-          justify-content: center;
-          align-items: center;
-          z-index: 10;
-        }
-
-        .modal-content {
-          background-color: #e2e2e2;
-          padding: 20px;
-          border-radius: 30px;
-          width: 75%;
-          height: auto;
-          text-align: center;
-        }
-        .modal-content img {
-          width: 100%;
-          height: auto;
-          margin-bottom: 15px;
-        }
-
-        .close {
-          color: #efefef;
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          font-size: 30px;
-          cursor: pointer;
-        }
-
-        .close:hover {
-          color: #000;
-        }
-        .upload-container {
-          margin-top: 10px;
-          background-color: #efefef;
-          border-radius: 10px;
-          padding: 20px;
-          position: relative;
-          cursor: pointer;
-          text-align: center;
-          width: 80%;
-        }
-
-        .upload-container:hover {
-          border-color: #888;
-        }
-
-        .upload-container p {
-          margin: 0;
-          color: #888;
-        }
-
-        .file-name {
-          margin-top: 10px;
-          font-weight: bold;
-          color: #333;
-        }
-        #postContent {
-          width: 80%;
-          margin-top: 10px;
-          background-color: #efefef;
-          border-radius: 10px;
-          padding: 20px;
-          text-align: left;
-          border-color: #efefef;
-        }
-        .get-tomato-sum {
-          background-color: #f1f1f1;
-          border: 1px solid #dbdbdb;
-          border-radius: 8px;
-          font-size: 6px;
-          padding: 5px;
-          text-align: center;
-          margin-top: 10px;
-          height: 20px;
-          font-size: 10px;
-        }
-        .create-button {
-          background-color: #c9383e;
-          color: #fff;
-          border: #c9383e;
-          border-radius: 10px;
-          width: 250px;
-          height: 30px;
-          margin-top: 20px;
-        }
-      }
-    </style>
   </head>
   <body>
+    <%- include("./shared/navbar") %>
     <h1 class="logo">PomoTime</h1>
     <div class="feed-container">
       <div class="feed-item">
@@ -272,9 +29,9 @@
           </p>
           <div class="get-tomato-sum">획득한 토마토</div>
           <div class="icon-container">
-            <img src="../static/suit-heart.svg" alt="하트 아이콘" />
+            <img src="../static/svg/suit-heart.svg" alt="하트 아이콘" />
             <img
-              src="../static/chat.svg"
+              src="../static/svg/chat.svg"
               alt="채팅 아이콘"
               onclick="toggleCommentBox()"
             />
@@ -294,9 +51,9 @@
           </p>
           <div class="get-tomato-sum">획득한 토마토</div>
           <div class="icon-container">
-            <img src="../static/suit-heart.svg" alt="하트 아이콘" />
+            <img src="../static/svg/suit-heart.svg" alt="하트 아이콘" />
             <img
-              src="../static/chat.svg"
+              src="../static/svg/chat.svg"
               alt="채팅 아이콘"
               onclick="toggleCommentBox()"
             />
@@ -313,7 +70,7 @@
     <!-- 피드생성 -->
     <div class="plus-icon">
       <img
-        src="../static/plus-circle-fill.svg"
+        src="../static/svg/plus-circle-fill.svg"
         alt="피드 올리는 아이콘"
         onclick="openModal()"
       />
@@ -344,15 +101,6 @@
         <div class="get-tomato-sum">획득한 토마토</div>
         <br />
         <button class="create-button" onclick="createPost()">생성</button>
-      </div>
-    </div>
-    <!-- 네비게이션...밑에 고정시켜둠!! -->
-    <div class="navigation">
-      <div class="icon-container2">
-        <img src="../static/house.svg" alt="홈 아이콘" class="house" />
-        <img src="../static/stopwatch.svg" alt="스톱워치" />
-        <img src="../static/calendar-check.svg" alt="캘린더" />
-        <img src="../static/person.svg" alt="마이페이지" />
       </div>
     </div>
 
