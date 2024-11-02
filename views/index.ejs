@@ -3,18 +3,111 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>메인페이지</title>
     <link rel="stylesheet" href="/static/css/reset.css" />
     <link rel="stylesheet" href="/static/css/navbar.css" />
+    <link rel="stylesheet" href="/static/css/index.css" />
     <script src="/static/js/navbar.js"></script>
-
+    <script src="/static/js/index.js"></script>
+    <title>메인 페이지</title>
+    <!-- 글씨체 -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
     <!-- axios CDN -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   <body>
-    <h1>메인 페이지 예정입니다.</h1>
     <%- include("./shared/navbar") %>
+    <h1 class="logo">PomoTime</h1>
+    <div class="feed-container">
+      <div class="feed-item">
+        <div class="content">
+          <p><strong>User123</strong></p>
+          <img src="https://via.placeholder.com/600x400" alt="post" />
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique
+            reiciendis odit, itaque aut labore consectetur nesciunt vel quidem
+            nulla nam nobis mollitia amet molestias dolore, quisquam blanditiis
+            natus. Rerum, asperiores.
+          </p>
+          <div class="get-tomato-sum">획득한 토마토</div>
+          <div class="icon-container">
+            <img src="../static/svg/suit-heart.svg" alt="하트 아이콘" />
+            <img
+              src="../static/svg/chat.svg"
+              alt="채팅 아이콘"
+              onclick="toggleCommentBox()"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="feed-item">
+        <div class="content">
+          <p><strong>User456</strong></p>
+          <img src="https://via.placeholder.com/600x400" alt="post" />
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique
+            reiciendis odit, itaque aut labore consectetur nesciunt vel quidem
+            nulla nam nobis mollitia amet molestias dolore, quisquam blanditiis
+            natus. Rerum, asperiores.
+          </p>
+          <div class="get-tomato-sum">획득한 토마토</div>
+          <div class="icon-container">
+            <img src="../static/svg/suit-heart.svg" alt="하트 아이콘" />
+            <img
+              src="../static/svg/chat.svg"
+              alt="채팅 아이콘"
+              onclick="toggleCommentBox()"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 댓글 입력창 -->
+    <div class="comment-box" id="commentBox">
+      <input type="text" id="commentInput" placeholder="댓글을 입력하세요." />
+      <button onclick="submitComment()">전송</button>
+    </div>
+
+    <!-- 피드올리는 아이콘 -->
+    <div class="plus-icon">
+      <img
+        src="../static/svg/plus-circle-fill.svg"
+        alt="피드 올리는 아이콘"
+        onclick="goToFeed()"
+      />
+    </div>
+
+    <script>
+      function toggleCommentBox() {
+        const commentBox = document.getElementById("commentBox");
+        commentBox.classList.toggle("active");
+        if (commentBox.classList.contains("active")) {
+          document.getElementById("commentInput").focus();
+        }
+      }
+
+      // 댓글 전송 함수
+      function submitComment() {
+        const commentInput = document.getElementById("commentInput");
+        const comment = commentInput.value;
+
+        if (comment) {
+          // 여기에서 댓글을 서버에 저장할 수 있어요오오오오.
+          commentInput.value = "";
+          toggleCommentBox();
+        }
+      }
+      // 피드 올리는 아이콘 클릭시 feed.ejs 파일로 ㄱ
+      function goToFeed() {
+        window.location.href = "./feed";
+      }
+    </script>
   </body>
 </html>
 
