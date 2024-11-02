@@ -178,8 +178,8 @@
           background-color: #e2e2e2;
           padding: 20px;
           border-radius: 30px;
-          width: 400px;
-          height: 400px;
+          width: 75%;
+          height: auto;
           text-align: center;
         }
         .modal-content img {
@@ -233,6 +233,17 @@
           padding: 20px;
           text-align: left;
           border-color: #efefef;
+        }
+        .get-tomato-sum {
+          background-color: #f1f1f1;
+          border: 1px solid #dbdbdb;
+          border-radius: 8px;
+          font-size: 6px;
+          padding: 5px;
+          text-align: center;
+          margin-top: 10px;
+          height: 20px;
+          font-size: 10px;
         }
         .create-button {
           background-color: #c9383e;
@@ -299,6 +310,7 @@
       <input type="text" id="commentInput" placeholder="댓글을 입력하세요..." />
       <button onclick="submitComment()">전송</button>
     </div>
+    <!-- 피드생성 -->
     <div class="plus-icon">
       <img
         src="../static/plus-circle-fill.svg"
@@ -319,6 +331,7 @@
           <p style="font-size: small">
             파일을 선택하거나 여기로 끌어다 놓으세요
           </p>
+          <br />
           <input type="file" id="imageUpload" onchange="updateFileName()" />
           <span class="file-name" id="fileNameDisplay"></span>
         </div>
@@ -328,6 +341,7 @@
           placeholder="게시물 내용을 입력하세요."
           rows="4"
         ></textarea>
+        <div class="get-tomato-sum">획득한 토마토</div>
         <br />
         <button class="create-button" onclick="createPost()">생성</button>
       </div>
@@ -335,10 +349,10 @@
     <!-- 네비게이션...밑에 고정시켜둠!! -->
     <div class="navigation">
       <div class="icon-container2">
-        <img src="../static/house.svg" alt="집 아이콘" class="house" />
-        <img src="../static/stopwatch.svg" alt="집 아이콘" />
-        <img src="../static/calendar-check.svg" alt="집 아이콘" />
-        <img src="../static/person.svg" alt="집 아이콘" />
+        <img src="../static/house.svg" alt="홈 아이콘" class="house" />
+        <img src="../static/stopwatch.svg" alt="스톱워치" />
+        <img src="../static/calendar-check.svg" alt="캘린더" />
+        <img src="../static/person.svg" alt="마이페이지" />
       </div>
     </div>
 
@@ -367,44 +381,11 @@
 
       function closeModal() {
         document.getElementById("modal").style.display = "none";
+        window.location.href = "/";
       }
-
-      // 게시물 생성 함수. 함수 만들었으므로 추가하기,,,,
-      function createPost() {
-        const imageUpload = document.getElementById("imageUpload").files[0];
-        const postContent = document.getElementById("postContent").value;
-
-        if (imageUpload && postContent) {
-          alert("게시물이 생성되었습니다!");
-          closeModal();
-        } else {
-          alert("모든 필드를 입력해주세요!");
-        }
-      }
-      // 파일 이름 업데이트
-      function updateFileName() {
-        const fileInput = document.getElementById("imageUpload");
-        const fileNameDisplay = document.getElementById("fileNameDisplay");
-        fileNameDisplay.textContent = fileInput.files[0]
-          ? fileInput.files[0].name
-          : "";
-      }
-
-      // 업로드 상태 초기화
-      function resetUpload() {
-        document.getElementById("imageUpload").value = ""; // 파일 입력 초기화
-        document.getElementById("fileNameDisplay").textContent = ""; // 파일 이름 초기화
-      }
-
-      // 드래그 앤 드롭 처리
-      function handleDrop(event) {
-        event.preventDefault(); // 기본 동작 방지
-        const files = event.dataTransfer.files;
-        if (files.length > 0) {
-          document.getElementById("imageUpload").files = files; // 파일 입력에 드롭한 파일 추가
-          updateFileName(); // 파일 이름 업데이트
-        }
-      }
+      window.onload = function () {
+        openModal();
+      };
     </script>
   </body>
 </html>

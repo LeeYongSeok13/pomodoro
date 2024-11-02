@@ -3,18 +3,275 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<<<<<<< HEAD
     <title>Document</title>
     <link rel="stylesheet" href="/static/css/reset.css" />
     <link rel="stylesheet" href="/static/css/navbar.css" />
     <script src="/static/js/navbar.js"></script>
 
+=======
+    <title>메인 페이지</title>
+    <!-- 글씨체 -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+>>>>>>> e9f18fc (인덱스,피드 수정)
     <!-- axios CDN -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+      @media screen and (max-width: 320px) {
+        body {
+          font-family: "Noto Sans KR", sans-serif;
+          background-color: #f8f2f1;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          min-height: 100vh;
+          padding-bottom: 55px;
+        }
+
+        .feed-container {
+          width: 80%;
+          max-width: 600px;
+          margin-top: 50px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .logo {
+          margin-bottom: 20px;
+          text-align: center;
+        }
+
+        .feed-item {
+          background-color: #fff;
+          border: 1px solid #dbdbdb;
+          border-radius: 8px;
+          margin-bottom: 20px;
+          width: 100%;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .feed-item img {
+          width: 100%;
+          height: auto;
+          cursor: pointer;
+        }
+
+        .feed-item .content {
+          padding: 15px;
+        }
+
+        .feed-item .content p {
+          margin: 5px 0;
+          font-size: 10px;
+        }
+
+        .get-tomato-sum {
+          background-color: #f1f1f1;
+          border: 1px solid #dbdbdb;
+          border-radius: 8px;
+          font-size: 6px;
+          padding: 5px;
+          text-align: center;
+          margin-top: 10px;
+        }
+
+        .icon-container {
+          display: flex;
+          justify-content: left;
+          margin-top: 10px;
+        }
+
+        .icon-container img {
+          width: 13px;
+          height: auto;
+          margin-right: 10px;
+          cursor: pointer;
+        }
+
+        .comment-box {
+          display: none;
+          position: fixed;
+          bottom: 50px;
+          left: 0;
+          width: 100%;
+          background-color: #fff;
+          border-top: 1px solid #dbdbdb;
+          padding: 10px;
+          box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+          transition: transform 0.3s ease;
+          transform: translateY(100%);
+        }
+
+        .comment-box.active {
+          display: block;
+          transform: translateY(0);
+        }
+
+        .comment-box input {
+          width: 90%;
+          padding: 10px;
+          border: 1px solid #dbdbdb;
+          border-radius: 5px;
+          font-size: 14px;
+        }
+
+        .comment-box button {
+          padding: 10px;
+          background-color: black;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+
+        .comment-box button:hover {
+          background-color: gray;
+        }
+        .navigation {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+
+          height: 20px;
+          padding: 1rem;
+          background-color: #fff;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .plus-icon img {
+          position: fixed;
+          bottom: 70px;
+          right: 10px;
+          width: 35px;
+        }
+
+        .icon-container2 {
+          display: flex;
+          justify-content: space-around;
+          width: 100%;
+        }
+
+        .icon-container2 img {
+          width: 24px;
+          height: 24px;
+          margin: 0 10px;
+        }
+      }
+    </style>
   </head>
   <body>
+<<<<<<< HEAD
     <h1>메인 페이지 예정입니다.</h1>
     <%- include("./shared/navbar") %>
+=======
+    <h1 class="logo">PomoTime</h1>
+    <div class="feed-container">
+      <div class="feed-item">
+        <div class="content">
+          <p><strong>User123</strong></p>
+          <img src="https://via.placeholder.com/600x400" alt="post" />
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique
+            reiciendis odit, itaque aut labore consectetur nesciunt vel quidem
+            nulla nam nobis mollitia amet molestias dolore, quisquam blanditiis
+            natus. Rerum, asperiores.
+          </p>
+          <div class="get-tomato-sum">획득한 토마토</div>
+          <div class="icon-container">
+            <img src="../static/suit-heart.svg" alt="하트 아이콘" />
+            <img
+              src="../static/chat.svg"
+              alt="채팅 아이콘"
+              onclick="toggleCommentBox()"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="feed-item">
+        <div class="content">
+          <p><strong>User456</strong></p>
+          <img src="https://via.placeholder.com/600x400" alt="post" />
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique
+            reiciendis odit, itaque aut labore consectetur nesciunt vel quidem
+            nulla nam nobis mollitia amet molestias dolore, quisquam blanditiis
+            natus. Rerum, asperiores.
+          </p>
+          <div class="get-tomato-sum">획득한 토마토</div>
+          <div class="icon-container">
+            <img src="../static/suit-heart.svg" alt="하트 아이콘" />
+            <img
+              src="../static/chat.svg"
+              alt="채팅 아이콘"
+              onclick="toggleCommentBox()"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 댓글 입력창 -->
+    <div class="comment-box" id="commentBox">
+      <input type="text" id="commentInput" placeholder="댓글을 입력하세요..." />
+      <button onclick="submitComment()">전송</button>
+    </div>
+
+    <!-- 피드올리는 아이콘 -->
+    <div class="plus-icon">
+      <img
+        src="../static/plus-circle-fill.svg"
+        alt="피드 올리는 아이콘"
+        onclick="goToFeed()"
+      />
+    </div>
+
+    <!-- 네비게이션...밑에 고정시켜둠!! -->
+    <div class="navigation">
+      <div class="icon-container2">
+        <img src="../static/house.svg" alt="홈 아이콘" class="house" />
+        <img src="../static/stopwatch.svg" alt="스톱워치" />
+        <img src="../static/calendar-check.svg" alt="캘린더" />
+        <img src="../static/person.svg" alt="마이페이지" />
+      </div>
+    </div>
+
+    <script>
+      function toggleCommentBox() {
+        const commentBox = document.getElementById("commentBox");
+        commentBox.classList.toggle("active");
+        if (commentBox.classList.contains("active")) {
+          document.getElementById("commentInput").focus();
+        }
+      }
+
+      // 댓글 전송 함수
+      function submitComment() {
+        const commentInput = document.getElementById("commentInput");
+        const comment = commentInput.value;
+        if (comment) {
+          // 여기에서 댓글을 서버에 저장할 수 있어요오오오오.
+          commentInput.value = "";
+          toggleCommentBox();
+        }
+      }
+      function goToFeed() {
+        window.location.href = "./feed";
+      }
+    </script>
+>>>>>>> e9f18fc (인덱스,피드 수정)
   </body>
 </html>
 
