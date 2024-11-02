@@ -27,3 +27,9 @@ sequelize
   .catch((err) => {
     console.error(err);
   });
+
+// Login
+
+app.post("/login", (req, res) => {
+  const { userId, userPw } = req.body;
+});
