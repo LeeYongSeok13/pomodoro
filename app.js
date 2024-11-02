@@ -1,15 +1,27 @@
 const express = require("express");
+const session = require("express-session");
 const { sequelize } = require("./models");
 const dotenv = require("dotenv");
 dotenv.config();
 const app = express();
 
+const sessionConfig = {
+  secret: "mySecretSession",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    maxAge: 1000 * 60 * 30,
+  },
+};
+app.use(session(sessionConfig));
 app.set("view engine", "ejs");
 app.set("views", "./views");
 app.use("/static", express.static(__dirname + "/static"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
+const path = require("path");
+app.use(express.static(path.join(__dirname, "public")));
 const indexRouter = require("./routes/index");
 app.use("/", indexRouter);
 
