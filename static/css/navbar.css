@@ -7,6 +7,13 @@ html {
   font-weight: 500;
   background-color: #fff8f0;
 }
+/* 최상단 로고 설정 */
+.logo {
+  display: block;
+  margin: 0 auto;
+  padding: 15px;
+  width: 158px;
+}
 nav {
   position: fixed;
   bottom: 0;
