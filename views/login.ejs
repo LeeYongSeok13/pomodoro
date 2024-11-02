@@ -5,100 +5,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-
-
-    <style>
-        body {
-            background-color: #fff8f0;
-        }
-
-        .button1 {
-            width: 70px;
-            height: 50px;
-            background-color: #9c9c9c;
-        }
-
-        .loginForm {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .loginBox {
-            background-color: #f0f0f0;
-            border-width: 0;
-            width: 250px;
-            height: 30px;
-            margin-top: 4%;
-            border-radius: 30px;
-        }
-
-        .loginBox::placeholder {
-            font-weight: bold;
-            opacity: 0.5;
-            color: #b2b2b2;
-            padding-left: 15px;
-        }
-
-        .loginBt {
-            background-color: #da2337;
-            border-width: 0;
-            width: 250px;
-            height: 30px;
-            margin-top: 4%;
-            border-radius: 30px;
-        }
-
-        button.loginBt {
-            font-weight: bold;
-            color: #ffffff;
-            text-align: center;
-        }
-
-        .lostEp {
-            color: black;
-            text-decoration: none;
-            font-weight: 900;
-            margin-left: 10px;
-            font-size: 15px;
-        }
-    </style>
+    <title>로그인</title>
+    <link rel="stylesheet" href="/static/css/reset.css" />
+    <link rel="stylesheet" href="/static/css/login.css">
 </head>
 
 <body>
-
-
-    <h1 style="text-align: center; margin-top: 20%;">로그인</h1>
-    <form action="/login" method="POST" style=" margin-top: 30%;" class="loginForm">
-        <input class="loginBox" type="text" id="userId" name="userId" required placeholder="이메일을 입력해 주세요">
+    <h1>로그인</h1>
+    <form action="/login" method="POST" class="loginForm">
+        <input class="loginBox" type="text" id="userEmail" name="userEmail" required placeholder="이메일을 입력해 주세요">
         <input class="loginBox" type="password" id="userPw" name="userPw" required placeholder="비밀번호를 입력해 주세요">
-
 
         <button class="loginBt" type="submit">로그인</button>
 
-
-
-
-        <div style="display: flex; align-items: center; height: 40px; margin-top: 3%;">
-            <h5 style="font-size: small;">email을 잊어버리셨나요?</h5>
-            <a class="lostEp" href="/lostE">email 찾기</a>
-        </div>
-
-        <div style="display: flex; align-items: center; height: 40px; margin-top: -15px;">
-            <h5 style="font-size: small;">비밀번호를 잊어버리셨나요?</h5>
-            <a class="lostEp" href="/lostPw">비밀번호 찾기</a>
+        <div class="lostE">
+            <p style="font-size: 11px;">email 또는 비밀번호를 잊어버리셨나요?</p>
+            <a class="lostEp" href="/lostE">email & 비밀번호 찾기</a>
         </div>
 
 
-
-        <div style="display: flex; align-items: center; height: 40px; margin-top: 70%;">
-            <h5 style="font-size: small;">계정이 없으신가요?</h5>
-            <a class="lostEp" href="/joinLg">회원가입</a>
-        </div>
 
         <!-- <div class="button1"></div> -->
     </form>
+    <div class="newUser">
+        <p style="font-size:11px">계정이 없으신가요?</p>
+        <a class="lostEp" href="/login/register">회원가입</a>
+    </div>
 
 </body>
 
