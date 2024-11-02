@@ -54,11 +54,12 @@ body {
 .get-tomato-sum {
   background-color: #f1f1f1;
   border: 1px solid #dbdbdb;
-  border-radius: 8px;
-  font-size: 6px;
+  border-radius: 4px;
+  font-size: 13px;
   padding: 5px;
-  text-align: center;
+  text-align: left;
   margin-top: 10px;
+  height: 30px;
 }
 
 .icon-container {
@@ -77,7 +78,7 @@ body {
 .comment-box {
   display: none;
   position: fixed;
-  bottom: 0;
+  bottom: 48px;
   left: 0;
   width: 100%;
   background-color: #fff;
@@ -91,6 +92,10 @@ body {
 .comment-box.active {
   display: block;
   transform: translateY(0);
+}
+.input-container {
+  position: relative;
+  width: 100%;
 }
 
 .comment-box input {
@@ -150,17 +155,26 @@ body {
 }
 
 .modal-content {
-  background-color: #e2e2e2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  background-color: #fbfbfb;
   padding: 20px;
   border-radius: 30px;
   width: 75%;
   height: auto;
-  text-align: center;
 }
+/* 부모요소때문에 방해되던 정렬을 왼쪽으로 바꿈 (유저id) */
+.left-align {
+  align-self: flex-start;
+  text-align: left;
+}
+
 .modal-content img {
   width: 100%;
   height: auto;
-  margin-bottom: 15px;
 }
 
 .close {
@@ -177,7 +191,7 @@ body {
 }
 .upload-container {
   margin-top: 10px;
-  background-color: #efefef;
+  background-color: #f0f0f0;
   border-radius: 10px;
   padding: 20px;
   position: relative;
@@ -195,6 +209,12 @@ body {
   color: #888;
 }
 
+#imageUpload {
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
 .file-name {
   margin-top: 10px;
   font-weight: bold;
@@ -203,23 +223,31 @@ body {
 #postContent {
   width: 80%;
   margin-top: 10px;
-  background-color: #efefef;
+  background-color: #f0f0f0;
   border-radius: 10px;
   padding: 20px;
   text-align: left;
-  border-color: #efefef;
+  border-color: #f0f0f0;
 }
 .get-tomato-sum {
-  background-color: #f1f1f1;
-  border: 1px solid #dbdbdb;
-  border-radius: 8px;
-  font-size: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f0f0f0;
+  border: 1px solid #f0f0f0;
+  border-radius: 7px;
+  font-size: 13px;
   padding: 5px;
-  text-align: center;
   margin-top: 10px;
-  height: 20px;
-  font-size: 10px;
+  height: 30px;
+  width: 80%;
 }
+
+.get-tomato-sum .tomato {
+  width: 20px;
+  margin-left: auto;
+}
+
 .create-button {
   background-color: #c9383e;
   color: #fff;
@@ -228,6 +256,4 @@ body {
   width: 230px;
   height: 30px;
   margin-top: 20px;
-}
-@media screen and (max-width: 320px) {
 }

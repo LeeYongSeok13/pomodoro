@@ -1,0 +1,157 @@
+/* 폰트 설정 */
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap");
+html {
+  height: 100%;
+}
+
+body {
+  font-family: "Noto Sans KR", serif;
+  font-weight: 500;
+  background-color: #fff8f0;
+  background-color: #fff8f0;
+  height: 100%;
+}
+h1 {
+  text-align: center;
+  margin-top: 20%;
+}
+
+.button1 {
+  width: 70px;
+  height: 50px;
+  background-color: #9c9c9c;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30%;
+}
+
+.findForm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 7%;
+}
+
+.findD {
+  margin-top: 15%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+#userName {
+  background-image: url("/static/svg/person-vcard.svg");
+  background-position: center left 15px;
+  background-repeat: no-repeat;
+}
+
+#userEmail {
+  background-image: url("/static/svg/envelope-fill.svg");
+  background-position: center left 15px;
+  background-repeat: no-repeat;
+}
+
+#userPw {
+  background-image: url("/static/svg/lock-fill.svg");
+  background-position: center left 15px;
+  background-repeat: no-repeat;
+}
+
+#userId {
+  background-image: url("/static/svg/person-fill.svg");
+  background-position: center left 15px;
+  background-repeat: no-repeat;
+}
+
+#userNum {
+  background-image: url("/static/svg/telephone-fill.svg");
+  background-position: center left 15px;
+  background-repeat: no-repeat;
+}
+
+.loginBox {
+  background-color: #f0f0f0;
+  border-width: 0;
+  width: 283px;
+  height: 40px;
+  margin-top: 5%;
+  border-radius: 30px;
+}
+
+.loginBox::placeholder {
+  font-weight: 400;
+  opacity: 0.5;
+  color: #b2b2b2;
+  padding-left: 40px;
+}
+
+.loginBt {
+  background-color: #da2337;
+  border-width: 0;
+  width: 283px;
+  height: 40px;
+  margin-top: 6%;
+  border-radius: 30px;
+}
+
+.findBt {
+  background-color: #da2337;
+  border-width: 0;
+  width: 131px;
+  height: 40px;
+  margin-top: 6%;
+  border-radius: 30px;
+}
+
+button.loginBt {
+  font-weight: 500;
+  color: #ffffff;
+  text-align: center;
+}
+
+button.findBt {
+  font-weight: 500;
+  color: #ffffff;
+  text-align: center;
+}
+
+.lostE {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin-top: 3%;
+  white-space: nowrap;
+}
+
+.lostEp {
+  color: black;
+  text-decoration: none;
+  font-weight: 900;
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+.newUser {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.isUser {
+  margin-top: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+}
