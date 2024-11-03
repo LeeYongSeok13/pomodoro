@@ -17,7 +17,6 @@
     />
     <!-- axios CDN -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   <body>
     <header>
@@ -29,35 +28,10 @@
     <div class="feed-container">
       <div class="feed-item">
         <div class="content">
-          <p><strong>User123</strong></p>
-          <img src="https://via.placeholder.com/600x400" alt="post" />
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique
-            reiciendis odit, itaque aut labore consectetur nesciunt vel quidem
-            nulla nam nobis mollitia amet molestias dolore, quisquam blanditiis
-            natus. Rerum, asperiores.
+          <p class="user-info">
+            <span class="profile-img"></span>
+            <strong>User123</strong>
           </p>
-          <div class="get-tomato-sum">
-            획득한 토마토<img
-              class="tomato"
-              src="/static/img/tomato.png"
-              alt="획득 토마토"
-            />
-          </div>
-          <div class="icon-container">
-            <img src="../static/svg/suit-heart.svg" alt="하트 아이콘" />
-            <img
-              src="../static/svg/chat.svg"
-              alt="채팅 아이콘"
-              onclick="toggleCommentBox()"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="feed-item">
-        <div class="content">
-          <p><strong>User456</strong></p>
           <img src="https://via.placeholder.com/600x400" alt="post" />
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique
@@ -86,8 +60,10 @@
 
     <!-- 댓글 입력창 -->
     <div class="comment-box" id="commentBox">
+      <div id="commentsContainer" class="comments-container"></div>
       <div class="input-container">
-        <input type="text" id="commentInput" placeholder="댓글을 입력하세요." />
+        <input type="text" id="commentInput" placeholder="댓글을 입력하세요.""
+        />
         <button onclick="submitComment()" class="send-button">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -117,24 +93,88 @@
     <script>
       function toggleCommentBox() {
         const commentBox = document.getElementById("commentBox");
+        const plusIcon = document.querySelector(".plus-icon");
+
         commentBox.classList.toggle("active");
+
         if (commentBox.classList.contains("active")) {
           document.getElementById("commentInput").focus();
+          plusIcon.style.display = "none";
+        } else {
+          plusIcon.style.display = "block";
         }
       }
 
+      // 댓글을 화면에 추가하는 함수
+      function addCommentToDOM(userID, commentText) {
+        const commentsContainer = document.getElementById("commentsContainer");
+        const commentElement = document.createElement("div");
+        commentElement.classList.add("comment");
+
+        // 유저 ID와 댓글 내용을 함께 표시
+        commentElement.innerHTML = `
+          <div class="profile-img"></div>
+          <div class="comment-content">
+            <strong>${userID}</strong>
+            <p>${commentText}</p>
+            <div class="comment-actions">
+              <button onclick="editComment(this)">수정</button>
+              <button onclick="deleteComment(this)">삭제</button>
+            </div>
+          </div>
+        `;
+
+        commentsContainer.appendChild(commentElement);
+        commentsContainer.scrollTop = commentsContainer.scrollHeight;
+      }
+
+      let currentEditComment = null;
       // 댓글 전송 함수
       function submitComment() {
         const commentInput = document.getElementById("commentInput");
-        const comment = commentInput.value;
+        const commentText = commentInput.value;
+        const userID = "User123"; // 여기 데이터베이스 가져와서 유저 아이디 가져와야해요!!!
 
-        if (comment) {
-          // 여기에서 댓글을 서버에 저장할 수 있어요오오오오.
-          commentInput.value = "";
-          toggleCommentBox();
+        if (currentEditComment) {
+          currentEditComment.querySelector("p").textContent = commentText;
+          currentEditComment = null;
+        } else if (commentText) {
+          addCommentToDOM(userID, commentText);
+        }
+        commentInput.value = "";
+      }
+
+      // 댓글 수정 함수
+      function editComment(button) {
+        const commentElement = button.closest(".comment");
+        const commentTextElement = commentElement.querySelector("p");
+        const commentInput = document.getElementById("commentInput");
+        commentInput.value = commentTextElement.textContent;
+        currentEditComment = commentElement;
+      }
+
+      // 댓글 삭제 함수
+      function deleteComment(button) {
+        const commentElement = button.closest(".comment");
+        if (confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
+          commentElement.remove();
         }
       }
-      // 피드 올리는 아이콘 클릭시 feed.ejs 파일로 ㄱ
+
+      // 다른 화면 클릭 시 댓글창 닫기
+      document.addEventListener("click", function (e) {
+        const commentBox = document.getElementById("commentBox");
+        const plusIcon = document.querySelector(".plus-icon");
+        if (
+          !e.target.closest(".comment-box") &&
+          !e.target.closest(".icon-container img")
+        ) {
+          commentBox.classList.remove("active");
+          plusIcon.style.display = "block";
+        }
+      });
+
+      // 피드 올리는 아이콘 클릭 시 feed.ejs로 이동
       function goToFeed() {
         window.location.href = "./feed";
       }
