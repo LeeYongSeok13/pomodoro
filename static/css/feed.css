@@ -22,7 +22,7 @@ body {
 .feed-item {
   background-color: #fff;
   border: 1px solid #dbdbdb;
-  border-radius: 8px;
+  border-radius: 20px;
   margin-bottom: 20px;
   width: 100%;
   overflow: hidden;
@@ -218,10 +218,10 @@ body {
 }
 
 .create-button {
-  background-color: #c9383e;
+  background-color: #c5373d;
   color: #fff;
-  border: #c9383e;
-  border-radius: 10px;
+  border: #c5373d;
+  border-radius: 50px;
   width: 80%;
   height: 30px;
   margin-top: 20px;
