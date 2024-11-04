@@ -2,6 +2,10 @@
   display: flex;
   justify-content: center;
 }
+.calender > div:nth-child(2) {
+  display: flex;
+  justify-content: center;
+}
 .leftbutton {
   background-image: url("/static/svg/arrow-left.svg");
   background-size: 50%;
@@ -15,9 +19,19 @@
   padding: 0 10px;
   font-size: 24px;
   line-height: 44px;
+  font-weight: 700;
+}
+#year {
+  display: block;
+  padding: 0 15px;
+  font-size: 16px;
+  line-height: 25px;
+  background-color: #4b3134;
+  color: #ffffff;
+  border-radius: 30px;
 }
 
-.calender > div:nth-child(2) {
+.calender > div:nth-child(3) {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -26,7 +40,7 @@
 .dayContainer {
   flex-grow: 1;
   height: 100%;
-  width: 80vw;
+  width: 100vw;
   overflow: hidden;
 }
 .dayList {
@@ -42,13 +56,15 @@
 }
 
 .dayList > li {
-  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 10px 1vw;
   transition-duration: 200ms;
   color: white;
   background-color: #4b3134;
   border-radius: 15px;
   width: 18vw;
-  margin-left: 2vw;
   height: 100px;
   padding: 10px;
   box-sizing: border-box;

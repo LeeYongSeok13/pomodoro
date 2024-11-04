@@ -60,7 +60,42 @@ exports.get_Feed = (req, res) => {
 };
 
 exports.get_Calender = (req, res) => {
-  res.render("calender");
+  const today = new Date();
+
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+  const lastDay = new Date(year, month, 0).getDate();
+  const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
+  const firstDayOfMonth = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    1
+  ).getDay();
+
+  res.render("calender", {
+    year: year,
+    month: month,
+    lastDay: lastDay,
+    firstDayOfMonth: firstDayOfMonth,
+    dayNames: dayNames,
+  });
+};
+exports.get_Calender_currentData = (req, res) => {
+  const today = new Date();
+  let month = req.params.currentMonth;
+  let year = req.params.currentYear;
+  console.log(month, year);
+
+  const lastDay = new Date(year, month, 0).getDate();
+  const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
+  const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
+
+  res.json({
+    month: month,
+    lastDay: lastDay,
+    firstDayOfMonth: firstDayOfMonth,
+    dayNames: dayNames,
+  });
 };
 
 exports.get_Timer = (req, res) => {

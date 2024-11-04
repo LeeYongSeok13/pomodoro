@@ -16,6 +16,11 @@ router.get("/feed", controller.get_Feed);
 
 router.get("/calender", controller.get_Calender);
 
+router.get(
+  "/calender/:currentMonth/:currentYear",
+  controller.get_Calender_currentData
+);
+
 router.get("/timer", controller.get_Timer);
 
 router.get("/myPage", controller.get_MyPage);
