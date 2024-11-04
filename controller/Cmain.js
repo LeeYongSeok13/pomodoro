@@ -31,6 +31,9 @@ exports.get_Index = (req, res) => {
     res.render("index");
   }
 };
+exports.get_login = () => {
+  res.render("login");
+};
 
 exports.post_login = (req, res) => {
   const { email, password } = req.body;
@@ -44,7 +47,13 @@ exports.post_login = (req, res) => {
 };
 
 // Register post 요청 받아오기
-exports.post_Register = async (req, res) => {};
+exports.get_Register = async (req, res) => {
+  res.render("register");
+};
+
+exports.get_find = async (req, res) => {
+  res.render("find");
+};
 
 exports.get_Feed = (req, res) => {
   res.render("feed");
@@ -60,4 +69,8 @@ exports.get_Timer = (req, res) => {
 
 exports.get_MyPage = (req, res) => {
   res.render("myPage");
+};
+
+exports.post_Register = () => {
+  res.render("register");
 };

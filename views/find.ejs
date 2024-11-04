@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이메일 비밀번호 찾기</title>
+
+    <link rel="stylesheet" href="/static/css/reset.css" />
+    <link rel="stylesheet" href="/static/css/login.css">
+</head>
+
+<body>
+    <div class="logoSz">
+        <a href="/">
+            <img style="width: 100%; height: 100%;" src="../static/img/titleLogo.png" alt="">
+        </a>
+    </div>
+
+
+    <div class="findD">
+
+
+        <form action="/findEmail" method="POST" class="findForm">
+            <h2>이메일 찾기</h2>
+            <input class="loginBox" type="text" id="userName" name="userName" required placeholder="이름을 입력해 주세요">
+            <input class="loginBox" type="number" id="userNum" name="userNum" required placeholder="전화번호를 입력해 주세요">
+
+
+        </form>
+        <button class="findBt" type="submit">이메일 찾기</button>
+
+
+
+        <form action="/findPw" method="POST" class="findForm">
+            <h2>비밀번호 재설정</h2>
+
+            <input class="loginBox" type="text" id="userName" name="userName" required placeholder="이름을 입력해 주세요">
+            <input class="loginBox" type="number" id="userNum" name="userNum" required placeholder="전화번호를 입력해 주세요">
+            <input class="loginBox" type="text" id="userEmail" name="userEmail" required placeholder="이메일을 입력해 주세요">
+
+
+            <!-- 팝업으로 띄워줄내용 -->
+            <!-- <input class="loginBox" type="password" id="userPw" name="userPw" required placeholder="비밀번호를 입력해 주세요">
+            <input class="loginBox" type="password" id="userPw" name="userPw" required placeholder="비밀번호를 한번 더 입력해 주세요"> -->
+
+        </form>
+        <button class="findBt" type="submit">비밀번호 재설정</button>
+
+    </div>
+    <div class="isUser" style="margin-top: 7%;">
+        <p style="font-size:11px;">이미 계정이 있으신가요?</p>
+        <a class="lostEp" href="/login">로그인</a>
+    </div>
+    </div>
+</body>
+
+</html>
