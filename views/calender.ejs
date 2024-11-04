@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="/static/css/calender.css" />
     <link rel="stylesheet" href="/static/css/button.css" />
     <link rel="stylesheet" href="/static/css/todoItem.css" />
+    <!-- axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/static/js/navbar.js"></script>
     <script src="/static/js/calender.js"></script>
   </head>
@@ -21,38 +24,26 @@
     </header>
     <section class="calender">
       <div>
-        <button class="imgButton leftbutton">
+        <span id="year"><%= year %>년</span>
+      </div>
+      <div>
+        <button class="imgButton leftbutton minusmonth">
           <span class="text-hidden">왼쪽 이동 버튼</span>
         </button>
-        <span id="month">11월</span>
-        <button class="imgButton rightbutton">
+        <span id="month"><%= month %>월</span>
+        <button class="imgButton rightbutton plusmonth">
           <span class="text-hidden">오른쪽 이동 버튼</span>
         </button>
       </div>
       <div>
-        <button class="imgButton leftbutton">
+        <button class="imgButton leftbutton minusDays">
           <span class="text-hidden">왼쪽 이동 버튼</span>
         </button>
         <div class="dayContainer">
           <ul class="dayList">
-            <li class="today">
-              <span class="day">금</span><br /><span class="date">1</span>
-            </li>
-            <li>
-              <span class="day">토</span><br /><span class="date">2</span>
-            </li>
-            <li>
-              <span class="day">일</span><br /><span class="date">3</span>
-            </li>
-            <li>
-              <span class="day">월</span><br /><span class="date">4</span>
-            </li>
-            <li>
-              <span class="day">월</span><br /><span class="date">4</span>
-            </li>
-            <li>
-              <span class="day">월</span><br /><span class="date">4</span>
-            </li>
+            <% for( let index = 1; index <= lastDay; index++ ) { %>
+            <%-include("./shared/dayItem", {day: dayNames[(firstDayOfMonth +
+            index - 1) % 7] , date: `${index}`}) %> <% } %>
           </ul>
         </div>
         <button class="imgButton rightbutton plusDays">
