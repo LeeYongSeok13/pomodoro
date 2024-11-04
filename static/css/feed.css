@@ -19,15 +19,10 @@ body {
   align-items: center;
 }
 
-.logo {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
 .feed-item {
   background-color: #fff;
   border: 1px solid #dbdbdb;
-  border-radius: 8px;
+  border-radius: 20px;
   margin-bottom: 20px;
   width: 100%;
   overflow: hidden;
@@ -46,20 +41,47 @@ body {
   padding: 15px;
 }
 
+.content.profile-img {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #ccc;
+}
+
 .feed-item .content p {
   margin: 5px 0;
   font-size: 10px;
 }
 
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info .profile-img {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #ccc;
+  margin-right: 5px;
+}
+
 .get-tomato-sum {
-  background-color: #f1f1f1;
-  border: 1px solid #dbdbdb;
-  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f0f0f0;
+  border: 1px solid #f0f0f0;
+  border-radius: 7px;
   font-size: 13px;
   padding: 5px;
-  text-align: left;
   margin-top: 10px;
   height: 30px;
+}
+
+.get-tomato-sum .tomato {
+  width: 20px;
+  margin-left: auto;
 }
 
 .icon-container {
@@ -75,69 +97,11 @@ body {
   cursor: pointer;
 }
 
-.comment-box {
-  display: none;
-  position: fixed;
-  bottom: 48px;
-  left: 0;
-  width: 100%;
-  background-color: #fff;
-  border-top: 1px solid #dbdbdb;
-  padding: 10px;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  transform: translateY(100%);
-}
-
-.comment-box.active {
-  display: block;
-  transform: translateY(0);
-}
-.input-container {
-  position: relative;
-  width: 100%;
-}
-
-.comment-box input {
-  width: 90%;
-  padding: 10px;
-  border: 1px solid #dbdbdb;
-  border-radius: 5px;
-  font-size: 14px;
-}
-
-.comment-box button {
-  padding: 10px;
-  background-color: black;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.comment-box button:hover {
-  background-color: gray;
-}
-
-.icon-container2 {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-}
 .plus-icon img {
   position: fixed;
   bottom: 70px;
   right: 10px;
   width: 35px;
-}
-
-.icon-container2 img {
-  width: 24px;
-  height: 24px;
-  margin: 0 10px;
-}
-.house {
-  filter: invert(40%) sepia(100%) saturate(500%) hue-rotate(0deg);
 }
 
 /* 피드 생성 아이콘 눌렀을 때 나오는 모달ㄹ창 */
@@ -165,29 +129,34 @@ body {
   border-radius: 30px;
   width: 75%;
   height: auto;
+  position: relative;
 }
 /* 부모요소때문에 방해되던 정렬을 왼쪽으로 바꿈 (유저id) */
 .left-align {
+  display: flex;
   align-self: flex-start;
-  text-align: left;
 }
 
-.modal-content img {
-  width: 100%;
-  height: auto;
+.profile-img {
+  width: 30px;
+  height: 30px;
+  background-color: #ccc;
+  border-radius: 50%;
+  margin-right: 8px;
 }
 
 .close {
-  color: #efefef;
   position: absolute;
-  top: 20px;
+  top: 18px;
   right: 20px;
-  font-size: 30px;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
 }
 
 .close:hover {
   color: #000;
+  opacity: 0.7;
 }
 .upload-container {
   margin-top: 10px;
@@ -249,11 +218,11 @@ body {
 }
 
 .create-button {
-  background-color: #c9383e;
+  background-color: #c5373d;
   color: #fff;
-  border: #c9383e;
-  border-radius: 10px;
-  width: 230px;
+  border: #c5373d;
+  border-radius: 50px;
+  width: 80%;
   height: 30px;
   margin-top: 20px;
 }

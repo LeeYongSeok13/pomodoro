@@ -10,6 +10,7 @@ router.get("/login/register", controller.get_Register);
 
 router.get("/login/find", controller.get_find);
 
+
 router.get("/login", (req, res) => {
   res.render("login");
 });
@@ -24,5 +25,9 @@ router.get("/timer", controller.get_Timer);
 router.get("/myPage", controller.get_MyPage);
 
 router.post("/login", controller.post_login);
+
+router.get("/loading", (req, res) => {
+  res.render("loading");
+});
 
 module.exports = router;
