@@ -11,14 +11,18 @@
 </head>
 
 <body>
-    <h1>이메일 & 비밀번호찾기</h1>
+    <div class="logoSz">
+        <a href="/">
+            <img style="width: 100%; height: 100%;" src="../static/img/titleLogo.png" alt="">
+        </a>
+    </div>
 
 
     <div class="findD">
 
 
         <form action="/findEmail" method="POST" class="findForm">
-            <h2>사용자 정보</h2>
+            <h2>이메일 찾기</h2>
             <input class="loginBox" type="text" id="userName" name="userName" required placeholder="이름을 입력해 주세요">
             <input class="loginBox" type="number" id="userNum" name="userNum" required placeholder="전화번호를 입력해 주세요">
 
@@ -30,9 +34,15 @@
 
         <form action="/findPw" method="POST" class="findForm">
             <h2>비밀번호 재설정</h2>
+
+            <input class="loginBox" type="text" id="userName" name="userName" required placeholder="이름을 입력해 주세요">
+            <input class="loginBox" type="number" id="userNum" name="userNum" required placeholder="전화번호를 입력해 주세요">
             <input class="loginBox" type="text" id="userEmail" name="userEmail" required placeholder="이메일을 입력해 주세요">
-            <input class="loginBox" type="password" id="userPw" name="userPw" required placeholder="비밀번호를 입력해 주세요">
-            <input class="loginBox" type="password" id="userPw" name="userPw" required placeholder="비밀번호를 한번 더 입력해 주세요">
+
+
+            <!-- 팝업으로 띄워줄내용 -->
+            <!-- <input class="loginBox" type="password" id="userPw" name="userPw" required placeholder="비밀번호를 입력해 주세요">
+            <input class="loginBox" type="password" id="userPw" name="userPw" required placeholder="비밀번호를 한번 더 입력해 주세요"> -->
 
         </form>
         <button class="findBt" type="submit">비밀번호 재설정</button>
