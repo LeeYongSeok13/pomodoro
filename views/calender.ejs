@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/static/css/navbar.css" />
     <link rel="stylesheet" href="/static/css/calender.css" />
     <link rel="stylesheet" href="/static/css/button.css" />
+    <link rel="stylesheet" href="/static/css/todoItem.css" />
     <script src="/static/js/navbar.js"></script>
     <script src="/static/js/calender.js"></script>
   </head>
@@ -32,7 +33,7 @@
         <button class="imgButton leftbutton">
           <span class="text-hidden">왼쪽 이동 버튼</span>
         </button>
-        <div>
+        <div class="dayContainer">
           <ul class="dayList">
             <li class="today">
               <span class="day">금</span><br /><span class="date">1</span>
@@ -44,18 +45,51 @@
               <span class="day">일</span><br /><span class="date">3</span>
             </li>
             <li>
-              <span class="day">월</span><br /><span class="date">5</span>
+              <span class="day">월</span><br /><span class="date">4</span>
+            </li>
+            <li>
+              <span class="day">월</span><br /><span class="date">4</span>
+            </li>
+            <li>
+              <span class="day">월</span><br /><span class="date">4</span>
             </li>
           </ul>
         </div>
-        <button class="imgButton rightbutton">
+        <button class="imgButton rightbutton plusDays">
           <span class="text-hidden">오른쪽 이동 버튼</span>
         </button>
       </div>
     </section>
     <section class="list-Wrap">
-      <section class="todayTomato">오늘 수집한 토마토</section>
-      <section class="todo-container"></section>
+      <section class="todayTomato">
+        오늘 수집한 토마토
+        <p>+<span>0</span></p>
+      </section>
+      <section class="todo-container">
+        <%- include("./shared/todoItem") %>
+      </section>
+
+      <!-- 일정 추가 양식 -->
+      <section class="addList">
+        <h2>일정 추가</h2>
+        <form>
+          <label for="">주제</label>
+          <input type="text" placeholder="공부할 주제를 입력해 주세요" />
+          <label for="">세부 내용</label>
+          <textarea
+            type="text"
+            placeholder="세부 내용을 입력해 주세요"
+          ></textarea
+          ><br />
+          <button type="button" class="button middle addListButton">
+            추가
+          </button>
+        </form>
+      </section>
+
+      <button class="imgButton addTodo">
+        <span class="text-hidden">일정 추가 버튼</span>
+      </button>
     </section>
   </body>
 </html>

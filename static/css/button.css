@@ -3,6 +3,12 @@
 길이 : class"button long", middle, short
 색반전(취소버튼) : button_reverse
 */
+
+/* 
+  background-image: 
+  background-size:
+  별도 지정
+*/
 .imgButton {
   background-color: transparent;
   background-repeat: no-repeat;

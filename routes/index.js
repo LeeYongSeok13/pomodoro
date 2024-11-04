@@ -4,9 +4,7 @@ const controller = require("../controller/Cmain");
 
 router.get("/", controller.get_Index);
 
-router.get("/login", (req, res) => {
-  res.render("login");
-});
+router.get("/login", controller.get_login);
 
 router.get("/login/register", controller.get_Register);
 
