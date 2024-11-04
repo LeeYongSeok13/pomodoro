@@ -31,6 +31,9 @@ exports.get_Index = (req, res) => {
     res.render("index");
   }
 };
+exports.get_login = () => {
+  res.render("login");
+};
 
 exports.post_login = (req, res) => {
   const { email, password } = req.body;
@@ -66,4 +69,8 @@ exports.get_Timer = (req, res) => {
 
 exports.get_MyPage = (req, res) => {
   res.render("myPage");
+};
+
+exports.post_Register = () => {
+  res.render("register");
 };
