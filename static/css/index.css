@@ -19,15 +19,10 @@ body {
   align-items: center;
 }
 
-.logo {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
 .feed-item {
   background-color: #fff;
   border: 1px solid #dbdbdb;
-  border-radius: 8px;
+  border-radius: 20px;
   margin-bottom: 20px;
   width: 100%;
   overflow: hidden;
@@ -46,9 +41,29 @@ body {
   padding: 15px;
 }
 
+.content.profile-img {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #ccc;
+}
+
 .feed-item .content p {
   margin: 5px 0;
   font-size: 10px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info .profile-img {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #ccc;
+  margin-right: 5px;
 }
 
 .get-tomato-sum {
@@ -68,6 +83,7 @@ body {
   width: 20px;
   margin-left: auto;
 }
+
 .icon-container {
   display: flex;
   justify-content: left;
@@ -81,52 +97,107 @@ body {
   cursor: pointer;
 }
 
+/* 댓글 */
+.comments-container {
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.comment {
+  display: flex;
+  align-items: center;
+  margin: 6px 0;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
 .comment-box {
-  display: none;
   position: fixed;
-  bottom: 48px;
+  bottom: 0;
   left: 0;
-  width: 100%;
+  width: calc(100% - 20px);
   background-color: #fff;
   border-top: 1px solid #f9f9f9;
   padding: 10px;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   transform: translateY(100%);
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+/* 프로필 이미지 */
+.profile-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #ccc;
+  margin-right: 10px;
+}
+/* 댓글 내용 */
+.comment-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-content strong {
+  font-size: 0.8em;
+  margin-bottom: 2px;
+}
+.comment-content p {
+  font-size: 0.75em;
+  color: #555;
 }
 
 .comment-box.active {
-  display: block;
   transform: translateY(0);
 }
 
 .input-container {
-  position: relative;
-  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-top: 1px solid #ddd;
 }
 
 .comment-box input {
-  width: 80%;
-  padding: 10px 40px 10px 10px; /* 공간 확보 */
-  border: 1px solid #f0f0f0;
-  border-radius: 30px;
-  font-size: 14px;
+  flex: 1;
+  padding: 8px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 0.9em;
+}
+.comment-actions {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.comment-actions button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.8em;
+}
+
+.comment-actions button:hover {
+  text-decoration: underline;
 }
 
 .send-button {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
   background: none;
   border: none;
+  padding: 8px;
   cursor: pointer;
-  padding: 0;
-  color: black;
 }
 
 .send-button:hover {
   color: rgb(46, 46, 156);
+}
+.plus-icon {
+  display: block;
 }
 
 .plus-icon img {

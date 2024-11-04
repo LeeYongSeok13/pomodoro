@@ -24,4 +24,8 @@ router.get("/myPage", controller.get_MyPage);
 
 router.post("/login", controller.post_login);
 
+router.get("/loading", (req, res) => {
+  res.render("loading");
+});
+
 module.exports = router;

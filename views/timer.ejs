@@ -6,16 +6,86 @@
     <title>timer</title>
     <link rel="stylesheet" href="/static/css/reset.css" />
     <link rel="stylesheet" href="/static/css/navbar.css" />
-    <link rel="stylesheet" href="/static/css/button.css" />
+    <link rel="stylesheet" href="/static/css/timer.css" />
     <script src="/static/js/navbar.js"></script>
   </head>
   <body>
     <header>
+      <%- include("./shared/navbar") %>
+      <div class="background"></div>
       <a href="/" class="logo"
         ><img width="158" src="/static/img/logo.png" alt="로고 이미지"
       /></a>
     </header>
-    <h2>타이머 예정 입니다.</h2>
-    <%- include("./shared/navbar") %> <br />
+    <a href="/" class="timerTomato"
+      ><img width="158" src="/static/img/timerTomato.png" alt="토마토 이미지"
+    /></a>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="right"
+      width="30"
+      height="30"
+      fill="#473234"
+      class="bi bi-caret-right-fill"
+      viewBox="0 0 16 16"
+    >
+      <path
+        d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"
+      />
+    </svg>
+    <div class="timercontainer">
+      <div id="timer" class="timer">00 : 25 : 00</div>
+      <div class="buttonbox">
+        <div id="startBtn" onclick="">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="35px"
+            height="35px"
+            fill="#473234"
+            class="bi bi-play-circle"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+            />
+            <path
+              d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"
+            />
+          </svg>
+        </div>
+        <div id="stopBtn" onclick="">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="35px"
+            height="35px"
+            fill="#473234"
+            class="bi bi-stop-circle-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.5 5A1.5 1.5 0 0 0 5 6.5v3A1.5 1.5 0 0 0 6.5 11h3A1.5 1.5 0 0 0 11 9.5v-3A1.5 1.5 0 0 0 9.5 5z"
+            />
+          </svg>
+        </div>
+        <div id="resetBtn" onclick="">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="35px"
+            height="35px"
+            fill="#473234"
+            class="bi bi-arrow-counterclockwise"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"
+            />
+            <path
+              d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
