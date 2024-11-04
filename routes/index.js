@@ -4,18 +4,15 @@ const controller = require("../controller/Cmain");
 
 router.get("/", controller.get_Index);
 
-router.get("/login", (req, res) => {
-  res.render("login");
-});
+router.get("/login", controller.get_Login);
 
 router.get("/login/register", controller.get_Register);
 
-router.get("/login/find", controller.get_find);
+router.post("/login/register", controller.post_Register);
 
-router.get("/login", (req, res) => {
-  res.render("login");
-});
-router.post("/register", controller.post_Register);
+router.get("/login/find", controller.get_Find);
+
+router.post("/login/find", controller.post_Find);
 
 router.get("/feed", controller.get_Feed);
 

@@ -12,7 +12,7 @@ const image = (Sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    feedid: {
+    feed_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
