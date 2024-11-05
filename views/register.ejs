@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>회원가입</title>
     <link rel="stylesheet" href="/static/css/reset.css" />
     <link rel="stylesheet" href="/static/css/login.css" />
-  </head>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+</head>
 
 <body>
     <div class="logoSz">
@@ -15,55 +18,25 @@
         </a>
     </div>
     <form action="/login/register" method="POST" class="loginForm">
-      <input
-        class="loginBox"
-        type="text"
-        id="userName"
-        name="username"
-        required
-        placeholder="이름을 입력해 주세요"
-      />
-      <input
-        class="loginBox"
-        type="text"
-        id="userEmail"
-        name="emailAddr"
-        required
-        placeholder="이메일을 입력해 주세요"
-      />
+        <input class="loginBox" type="text" id="userName" name="username" required placeholder="이름을 입력해 주세요" />
+        <input class="loginBox" type="text" id="userEmail" name="emailAddr" required placeholder="이메일을 입력해 주세요" />
 
-      <input
-        class="loginBox"
-        type="password"
-        id="userPw"
-        name="password"
-        required
-        placeholder="비밀번호를 입력해 주세요"
-      />
-      <input
-        class="loginBox"
-        type="text"
-        id="userId"
-        name="nickname"
-        required
-        placeholder="닉네임을 입력해 주세요"
-      />
-      <input
-        class="loginBox"
-        type="number"
-        id="userNum"
-        name="phoneNumber"
-        required
-        placeholder="전화번호를 입력해 주세요"
-      />
+        <input class="loginBox" type="password" id="userPw" name="password" required placeholder="비밀번호를 입력해 주세요" />
+        <input class="loginBox" type="text" id="userId" name="nickname" required placeholder="닉네임을 입력해 주세요" />
+        <input class="loginBox" type="number" id="userNum" name="phoneNumber" required placeholder="전화번호를 입력해 주세요" />
 
-      <button class="loginBt" type="submit">회원가입</button>
+        <%- include('./modal') %>
 
-      <!-- <div class="button1"></div> -->
+            <button class="loginBt" type="submit">회원가입</button>
+
+            <!-- <div class="button1"></div> -->
     </form>
     <div class="isUser">
-      <p style="font-size: 11px">이미 계정이 있으신가요?</p>
-      <a class="lostEp" href="/login">로그인</a>
+        <p style="font-size: 11px">이미 계정이 있으신가요?</p>
+        <a class="lostEp" href="/login">로그인</a>
     </div>
-  </body>
+
+    <script src="../static/js/login.js"></script>
+</body>
+
 </html>

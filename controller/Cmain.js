@@ -121,6 +121,9 @@ exports.get_Find = async (req, res) => {
   res.render("find");
 };
 
+exports.get_modal = async (req, res) => {
+  res.render("modal");
+};
 exports.post_Find = async (req, res) => {
   const { username, phoneNumber } = req.body;
 
