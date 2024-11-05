@@ -18,6 +18,12 @@ window.addEventListener("load", async () => {
   const yearSpan = document.querySelector("#year");
   const dayList = document.querySelector(".dayList");
   const dayItem = document.querySelectorAll(`.dayList > li`);
+  const addTodo = document.querySelector(".addTodo");
+  const addList = document.querySelector(".addList");
+  const addListClose = document.querySelector(".addListClose");
+  const addListButton = document.querySelector(".addListButton");
+  const todoform = document.forms["todoform"];
+
   dayItem[date].classList.add("today");
   let currentMonth = +monthSpan.innerHTML.split("월").join("");
   let currentYear = +yearSpan.innerHTML.split("년").join("");
@@ -126,15 +132,51 @@ window.addEventListener("load", async () => {
       });
     });
   }
+  addTodo.addEventListener("click", () => {
+    openTodoList();
+  });
+  addListClose.addEventListener("click", () => {
+    closeTodoList();
+  });
+  addListButton.addEventListener("click", async () => {
+    try {
+      const title = todoform.title.value;
+      const description = todoform.description.value;
+      const today = +document.querySelector(".today > .date").innerHTML;
 
-  // // 각 월별 마지막 날짜 계산
-  // function getDaysInMonth(year, month) {
-  //   // month는 0부터 시작하므로 1을 더해줌
-  //   return new Date(year, month + 1, 0).getDate();
-  // }
-  // // 마지막 날짜 정리
-  // for (let month = 0; month < 12; month++) {
-  //   const days = getDaysInMonth(year, month);
-  //   lastdays.push(days);
-  // }
+      const { data } = await axios({
+        method: "POST",
+        url: "/calender/addTodo",
+        data: {
+          title: title,
+          description: description,
+          year: currentYear,
+          month: currentMonth,
+          today: today,
+        },
+      });
+
+      todoform.title.value = "";
+      todoform.description.value = "";
+    } catch (err) {
+      console.error(err);
+    }
+  });
+
+  function openTodoList() {
+    addList.style.display = "block";
+    window.setTimeout(() => {
+      addList.style.bottom = "0vh";
+    }, 50);
+    addTodo.style.display = "none";
+  }
+
+  function closeTodoList() {
+    addList.style.bottom = "";
+    window.setTimeout(() => {
+      addList.style.display = "";
+    }, 400);
+
+    addTodo.style.display = "block";
+  }
 });

@@ -30,6 +30,8 @@ router.get(
   controller.get_Calender_currentData
 );
 
+router.post("/calender/addTodo", controller.post_addtodo);
+
 router.get("/timer", controller.get_Timer);
 
 router.get("/myPage", controller.get_MyPage);
