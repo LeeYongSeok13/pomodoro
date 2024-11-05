@@ -198,7 +198,3 @@ exports.get_Timer = (req, res) => {
 exports.get_MyPage = (req, res) => {
   res.render("myPage");
 };
-
-exports.post_Register = () => {
-  res.render("register");
-};
