@@ -52,6 +52,10 @@ exports.get_find = async (req, res) => {
   res.render("find");
 };
 
+exports.get_modal = async (req, res) => {
+  res.render("modal");
+};
+
 exports.get_Feed = (req, res) => {
   res.render("feed");
 };
