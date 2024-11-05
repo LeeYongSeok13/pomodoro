@@ -10,6 +10,13 @@ router.get("/login/register", controller.get_Register);
 
 router.post("/login/register", controller.post_Register);
 
+router.get("/login/modal", controller.get_modal);
+
+router.get("/login", (req, res) => {
+  res.render("login");
+});
+
+// router.post("/register", controller.post_Register);
 router.get("/login/find", controller.get_Find);
 
 router.post("/login/find", controller.post_FindEmail);
@@ -26,6 +33,8 @@ router.get(
   "/calender/:currentMonth/:currentYear",
   controller.get_Calender_currentData
 );
+
+router.post("/calender/addTodo", controller.post_addtodo);
 
 router.get("/timer", controller.get_Timer);
 

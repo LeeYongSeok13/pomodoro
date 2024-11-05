@@ -83,6 +83,7 @@
   padding: 10px;
   color: #4b3134;
   position: relative;
+  margin-bottom: 30vh;
 }
 .todayTomato {
   font-size: 16px;
@@ -126,6 +127,12 @@
   border-radius: 20px;
   margin-top: 20px;
   padding: 20px;
+  position: relative;
+  margin-bottom: 50px;
+
+  position: relative;
+  transition-duration: 300ms;
+  bottom: -100vh;
 }
 .addList > form {
   display: flex;
@@ -156,4 +163,12 @@ textarea {
 }
 .addListButton {
   align-self: center;
+}
+
+.addListClose {
+  background-image: url("/static/svg/x-circle.svg");
+  background-size: 30px;
+  position: absolute;
+  right: 20px;
+  top: 15px;
 }
