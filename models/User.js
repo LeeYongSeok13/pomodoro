@@ -14,20 +14,20 @@ const user = (Sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      real_name: {
+      username: {
         // 본인 이름
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(255),
         allowNull: false,
       },
       nickname: {
         // 닉네임
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: false,
         unique: true, // 닉네임 중복 불가 설정
       },
       emailAddr: {
         // 이메일 주소
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: false,
         unique: true, // 이메일 중복 불가 설정
         validate: {

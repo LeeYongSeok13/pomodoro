@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="/static/css/navbar.css" />
     <link rel="stylesheet" href="/static/css/calender.css" />
     <link rel="stylesheet" href="/static/css/button.css" />
+    <link rel="stylesheet" href="/static/css/todoItem.css" />
+    <!-- axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/static/js/navbar.js"></script>
     <script src="/static/js/calender.js"></script>
   </head>
@@ -20,42 +24,63 @@
     </header>
     <section class="calender">
       <div>
-        <button class="imgButton leftbutton">
+        <span id="year"><%= year %>년</span>
+      </div>
+      <div>
+        <button class="imgButton leftbutton minusmonth">
           <span class="text-hidden">왼쪽 이동 버튼</span>
         </button>
-        <span id="month">11월</span>
-        <button class="imgButton rightbutton">
+        <span id="month"><%= month %>월</span>
+        <button class="imgButton rightbutton plusmonth">
           <span class="text-hidden">오른쪽 이동 버튼</span>
         </button>
       </div>
       <div>
-        <button class="imgButton leftbutton">
+        <button class="imgButton leftbutton minusDays">
           <span class="text-hidden">왼쪽 이동 버튼</span>
         </button>
-        <div>
+        <div class="dayContainer">
           <ul class="dayList">
-            <li class="today">
-              <span class="day">금</span><br /><span class="date">1</span>
-            </li>
-            <li>
-              <span class="day">토</span><br /><span class="date">2</span>
-            </li>
-            <li>
-              <span class="day">일</span><br /><span class="date">3</span>
-            </li>
-            <li>
-              <span class="day">월</span><br /><span class="date">5</span>
-            </li>
+            <% for( let index = 1; index <= lastDay; index++ ) { %>
+            <%-include("./shared/dayItem", {day: dayNames[(firstDayOfMonth +
+            index - 1) % 7] , date: `${index}`}) %> <% } %>
           </ul>
         </div>
-        <button class="imgButton rightbutton">
+        <button class="imgButton rightbutton plusDays">
           <span class="text-hidden">오른쪽 이동 버튼</span>
         </button>
       </div>
     </section>
     <section class="list-Wrap">
-      <section class="todayTomato">오늘 수집한 토마토</section>
-      <section class="todo-container"></section>
+      <section class="todayTomato">
+        오늘 수집한 토마토
+        <p>+<span>0</span></p>
+      </section>
+      <section class="todo-container">
+        <%- include("./shared/todoItem") %>
+      </section>
+
+      <!-- 일정 추가 양식 -->
+      <section class="addList">
+        <h2>일정 추가</h2>
+        <form>
+          <label for="">주제</label>
+          <input type="text" placeholder="공부할 주제를 입력해 주세요" />
+          <label for="">세부 내용</label>
+          <textarea
+            type="text"
+            placeholder="세부 내용을 입력해 주세요"
+          ></textarea
+          ><br />
+          <button type="button" class="button middle addListButton">
+            추가
+          </button>
+        </form>
+      </section>
+
+      <button class="imgButton addTodo">
+        <span class="text-hidden">일정 추가 버튼</span>
+      </button>
     </section>
   </body>
 </html>
