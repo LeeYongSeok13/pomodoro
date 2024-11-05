@@ -8,17 +8,21 @@
     <link rel="stylesheet" href="/static/css/login.css" />
   </head>
 
-<body>
+  <body>
     <div class="logoSz">
-        <a href="/">
-            <img style="width: 100%; height: 100%;" src="../static/img/titleLogo.png" alt="">
-        </a>
+      <a href="/">
+        <img
+          style="width: 100%; height: 100%"
+          src="../static/img/titleLogo.png"
+          alt=""
+        />
+      </a>
     </div>
     <form action="/login/register" method="POST" class="loginForm">
       <input
         class="loginBox"
         type="text"
-        id="userName"
+        id="username"
         name="username"
         required
         placeholder="이름을 입력해 주세요"
@@ -26,7 +30,7 @@
       <input
         class="loginBox"
         type="text"
-        id="userEmail"
+        id="emailAddr"
         name="emailAddr"
         required
         placeholder="이메일을 입력해 주세요"
@@ -35,7 +39,7 @@
       <input
         class="loginBox"
         type="password"
-        id="userPw"
+        id="password"
         name="password"
         required
         placeholder="비밀번호를 입력해 주세요"
@@ -43,7 +47,7 @@
       <input
         class="loginBox"
         type="text"
-        id="userId"
+        id="nickname"
         name="nickname"
         required
         placeholder="닉네임을 입력해 주세요"
@@ -51,7 +55,7 @@
       <input
         class="loginBox"
         type="number"
-        id="userNum"
+        id="phoneNumber"
         name="phoneNumber"
         required
         placeholder="전화번호를 입력해 주세요"
@@ -65,5 +69,14 @@
       <p style="font-size: 11px">이미 계정이 있으신가요?</p>
       <a class="lostEp" href="/login">로그인</a>
     </div>
+
+    <div id="duplicateModal">
+      <div id="modalContent">
+        <p id="modalMessage">중복된 항목이 있습니다.</p>
+        <button onclick="closeModal()">확인</button>
+      </div>
+    </div>
+
+    <script src="../static/js/register.js"></script>
   </body>
 </html>

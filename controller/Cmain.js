@@ -44,15 +44,12 @@ exports.get_Index = (req, res) => {
     res.redirect("/login");
   }
 };
-exports.get_login = () => {
-  res.render("login");
-};
 
 exports.get_Login = (req, res) => {
   res.render("login");
 };
 
-exports.post_login = async (req, res) => {
+exports.post_Login = async (req, res) => {
   const { emailAddr, password } = req.body;
   console.log(req.body);
 
@@ -94,9 +91,21 @@ exports.post_Register = async (req, res) => {
     }
 
     // 이메일 중복 확인
-    const existingUser = await User.findOne({ where: { emailAddr } });
-    if (existingUser) {
+    const existingEmail = await User.findOne({ where: { emailAddr } });
+    if (existingEmail) {
       return res.status(409).json({ message: "Email already exist" });
+    }
+
+    // 닉네임 중복 확인
+    const existingNickname = await User.findOne({ where: { nickname } });
+    if (existingNickname) {
+      return res.status(409).json({ message: "Nickname already exist" });
+    }
+
+    // 휴대전화 번호 중복 확인
+    const existingPhoneNumber = await User.findOne({ where: { phoneNumber } });
+    if (existingPhoneNumber) {
+      return res.status(409).json({ message: "PhoneNumber already exist" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -121,30 +130,74 @@ exports.get_Find = async (req, res) => {
   res.render("find");
 };
 
-exports.post_Find = async (req, res) => {
+exports.post_FindEmail = async (req, res) => {
   const { username, phoneNumber } = req.body;
 
   try {
     // 이름과 전화번호로 사용자 검색
     const user = await User.findOne({
       where: {
-        username: req.body.username,
-        phoneNumber: req.body.phoneNumber,
+        username,
+        phoneNumber,
       },
     });
 
-    // 사용자가 존재하지 않으면 에러 메세지 반환
-    if (!user) {
-      return res
-        .status(400)
-        .json({ message: "No user found with that name and phone number" });
+    if (user) {
+      // 사용자가 있으면  반환
+      res.status(200).json({ emailAddr: user.emailAddr });
+    } else {
+      // 사용자가 없으면 404 상태코드 응답
+      res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
     }
-
-    // 이메일 반환
-    res.json({ emailAddr: user.emailAddr });
   } catch (error) {
-    console.error("Error finding email", error);
-    res.status(500).json({ message: "Error finding email" });
+    console.error(error);
+    res.status(500).json({ message: "서버 오류가 발생했습니다." });
+  }
+};
+
+exports.post_ResetPassword = async (req, res) => {
+  const { username, phoneNumber, emailAddr } = req.body;
+
+  try {
+    // 이름, 전화번호, 이메일로 비밀번호 재설정
+    const user = await User.findOne({
+      where: {
+        username,
+        phoneNumber,
+        emailAddr,
+      },
+    });
+
+    if (user) {
+      if (user.emailAddr !== emailAddr) {
+        return res.status(404).json({ message: "이메일이 일치하지 않습니다." });
+      }
+      // 사용자가 있으면 비밀번호 재설정 링크 반환 (모달 처리)
+      res.status(200).json({ message: "사용자를 찾았습니다.", id: user.id });
+    } else {
+      // 사용자가 없으면 404 상태코드 응답
+      return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "서버 오류가 발생했습니다." });
+  }
+};
+
+exports.update_Passowrd = async (req, res) => {
+  const { userId, newPassword } = req.body;
+
+  try {
+    // 비밀번호 해싱 처리
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // 사용자 비밀번호 업데이트
+    await User.update({ password: hashedPassword }, { where: { id: userId } });
+
+    res.status(200).json({ message: "비밀번호가 성공적으로 변경되었습니다." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "비밀번호 변경에 실패했습니다." });
   }
 };
 
@@ -197,8 +250,4 @@ exports.get_Timer = (req, res) => {
 
 exports.get_MyPage = (req, res) => {
   res.render("myPage");
-};
-
-exports.post_Register = () => {
-  res.render("register");
 };

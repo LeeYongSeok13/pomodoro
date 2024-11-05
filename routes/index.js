@@ -12,7 +12,11 @@ router.post("/login/register", controller.post_Register);
 
 router.get("/login/find", controller.get_Find);
 
-router.post("/login/find", controller.post_Find);
+router.post("/login/find", controller.post_FindEmail);
+
+router.post("/login/find", controller.post_ResetPassword);
+
+router.post("/login/find", controller.update_Passowrd);
 
 router.get("/feed", controller.get_Feed);
 
@@ -27,7 +31,7 @@ router.get("/timer", controller.get_Timer);
 
 router.get("/myPage", controller.get_MyPage);
 
-router.post("/login", controller.post_login);
+router.post("/login", controller.post_Login);
 
 router.get("/loading", (req, res) => {
   res.render("loading");
