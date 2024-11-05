@@ -11,7 +11,7 @@ const sessionConfig = {
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
-    maxAge: 1000 * 60 * 30,
+    maxAge: 1000 * 60 * 60,
   },
 };
 app.use(session(sessionConfig));

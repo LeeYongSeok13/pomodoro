@@ -4,9 +4,9 @@
  * @param {import("sequelize").DataTypes} DataTypes
  */
 
-const task = (Sequelize, DataTypes) => {
+const Task = (Sequelize, DataTypes) => {
   return Sequelize.define(
-    "task",
+    "Task",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -15,7 +15,7 @@ const task = (Sequelize, DataTypes) => {
         autoIncrement: true,
       },
       user_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(255),
         allowNull: false,
       },
       title: {
@@ -34,11 +34,11 @@ const task = (Sequelize, DataTypes) => {
         type: DataTypes.ENUM("pending", "ongoing", "done"),
         defaultValue: "pending",
       },
-      duration: {
-        // 각 할일의 걸린 시간을 초 단위로 저장
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
-      },
+      // duration: {
+      //   // 각 할일의 걸린 시간을 초 단위로 저장
+      //   type: DataTypes.INTEGER,
+      //   defaultValue: 0,
+      // },
       created_at: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
@@ -56,4 +56,4 @@ const task = (Sequelize, DataTypes) => {
   );
 };
 
-module.exports = task;
+module.exports = Task;

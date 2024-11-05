@@ -1,7 +1,9 @@
 const db = require("../models/index");
 const User = require("../models/index").User;
-const Task = require("../models/Task").Task;
-const Timer = require("../models/Timer").Timer;
+const Task = require("../models/index").Task;
+const Timer = require("../models/index").Timer;
+const { Op } = require("sequelize");
+
 // 비밀번호 암호화
 const bcrypt = require("bcrypt");
 const plainpassword = "user_password";
@@ -37,7 +39,7 @@ const uploadDetail = multer({
 
 exports.get_Index = (req, res) => {
   // 세션 권한 없으면 login으로 가야함!!!
-  if (req.session.isAuthenticated) {
+  if (req.session.nickname) {
     res.render("index");
   } else {
     // 데이터 구현시 index 대신 login 넣기!!!
@@ -70,7 +72,7 @@ exports.post_login = async (req, res) => {
     }
 
     // 로그인 성공
-    req.session.isAuthenticated = true; // 로그인 성공 시 세션 설정
+    req.session.nickname = user.nickname; // 로그인 성공 시 세션 설정
     res.redirect("/");
   } catch (error) {
     console.error("Error logging in", error);
@@ -152,9 +154,8 @@ exports.get_Feed = (req, res) => {
   res.render("feed");
 };
 
-exports.get_Calender = (req, res) => {
+exports.get_Calender = async (req, res) => {
   const today = new Date();
-
   const year = today.getFullYear();
   const month = today.getMonth() + 1;
   const lastDay = new Date(year, month, 0).getDate();
@@ -164,6 +165,30 @@ exports.get_Calender = (req, res) => {
     today.getMonth(),
     1
   ).getDay();
+  const user_id = req.session.nickname;
+
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const todos = await Task.findAll({
+    where: {
+      user_id: user_id,
+      due_date: {
+        [Op.gte]: startOfDay, // 시작일 이후
+        [Op.lte]: endOfDay, // 종료일 이전
+      },
+    },
+  });
+
+  const titles = todos.map((todo) => todo.title);
+  const description = todos.map((todo) => todo.description);
+  const state = todos.map((todo) => todo.state);
+
+  todos.forEach((todo) => {
+    console.log(todo.dataValues); // 각 todo의 실제 값 출력
+  });
 
   res.render("calender", {
     year: year,
@@ -171,6 +196,9 @@ exports.get_Calender = (req, res) => {
     lastDay: lastDay,
     firstDayOfMonth: firstDayOfMonth,
     dayNames: dayNames,
+    titles: titles,
+    description: description,
+    state: state,
   });
 };
 exports.get_Calender_currentData = (req, res) => {
@@ -190,6 +218,25 @@ exports.get_Calender_currentData = (req, res) => {
     dayNames: dayNames,
   });
 };
+exports.post_addtodo = async (req, res) => {
+  try {
+    const { title, description, year, month, today } = req.body;
+    const specificDate = new Date(year, month - 1, today);
+    const user_id = req.session.nickname;
+    console.log(specificDate.toString());
+
+    const newtask = await Task.create({
+      user_id,
+      title,
+      description,
+      due_date: specificDate,
+    });
+
+    res.status(201).json(newtask);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 exports.get_Timer = (req, res) => {
   res.render("timer");
@@ -197,8 +244,4 @@ exports.get_Timer = (req, res) => {
 
 exports.get_MyPage = (req, res) => {
   res.render("myPage");
-};
-
-exports.post_Register = () => {
-  res.render("register");
 };
