@@ -125,6 +125,7 @@ body {
   transform: translateY(100%);
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
+  z-index: 20;
 }
 /* 프로필 이미지 */
 .profile-img {
