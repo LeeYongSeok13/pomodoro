@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/static/css/reset.css" />
     <link rel="stylesheet" href="/static/css/navbar.css" />
     <link rel="stylesheet" href="/static/css/timer.css" />
+    <link rel="stylesheet" href="/static/css/button.css" />
+    <link rel="stylesheet" href="/static/css/todoItem.css" />
     <script src="/static/js/navbar.js"></script>
   </head>
   <body>
@@ -17,9 +19,9 @@
         ><img width="158" src="/static/img/logo.png" alt="로고 이미지"
       /></a>
     </header>
-    <a href="/" class="timerTomato"
+    <div class="timerTomato"
       ><img width="158" src="/static/img/timerTomato.png" alt="토마토 이미지"
-    /></a>
+    /></div>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="right"
@@ -36,24 +38,17 @@
     <div class="timercontainer">
       <div id="timer" class="timer">00 : 25 : 00</div>
       <div class="buttonbox">
-        <div id="startBtn" onclick="">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="35px"
-            height="35px"
-            fill="#473234"
-            class="bi bi-play-circle"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
-            />
-            <path
-              d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"
-            />
+        <div id="startBtn" onclick="togglePlayPause()">
+          <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" fill="#473234" class="bi bi-play-circle" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+              <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445" />
           </svg>
-        </div>
-        <div id="stopBtn" onclick="">
+          <svg id="pauseIcon" xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" fill="#473234" class="bi bi-pause-circle" viewBox="0 0 16 16" style="display: none;">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+              <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z" />
+          </svg>
+      </div>
+        <div id="stopBtn" onclick="stopTimer()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="35px"
@@ -67,7 +62,7 @@
             />
           </svg>
         </div>
-        <div id="resetBtn" onclick="">
+        <div id="resetBtn" onclick="resetTimer()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="35px"
@@ -75,6 +70,7 @@
             fill="#473234"
             class="bi bi-arrow-counterclockwise"
             viewBox="0 0 16 16"
+            onclick="toggleTimer()"
           >
             <path
               fill-rule="evenodd"
@@ -87,5 +83,189 @@
         </div>
       </div>
     </div>
+  </section>
+  <section class="list-Wrap">
+    <section class="todayTomato">
+      오늘 수집한 토마토
+      <p>+<span>0</span></p>
+    </section>
+    <section class="todo-container">
+      <%- include("./shared/todoItem") %>
+    </section>
+
+    <!-- 일정 추가 양식 -->
+    <section class="addList">
+      <!-- 모달 구조 추가 -->
+      <div class="modal" id="addListModal">
+        <div class="modal-content">
+          <span class="close" id="closeModal">&times;</span>
+          <h2>일정 추가</h2><br>
+          <form>
+            <label for="">주제</label>
+            <textarea type="text" placeholder="공부할 주제를 입력해 주세요" ></textarea>
+            <label for="">세부 내용</label>
+            <textarea type="text" placeholder="세부 내용을 입력해 주세요"></textarea>
+            <br />
+            <button type="button" class="button middle addListButton">추가</button>
+          </form>
+        </div>
+      </div>
+
+    <button class="imgButton addTodo">
+      <span class="text-hidden">일정 추가 버튼</span>
+    </button>
+  </section>
+  <script>
+    const modal = document.getElementById("addListModal");
+    const addTodoButton = document.querySelector(".addTodo");
+    const closeModalButton = document.getElementById("closeModal");
+  
+    // 모달 열기
+    addTodoButton.onclick = function() {
+      modal.style.display = "block";
+    };
+  
+    // 모달 닫기
+    closeModalButton.onclick = function() {
+      modal.style.display = "none";
+    };
+  
+    // 모달 외부 클릭 시 닫기
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    };
+
+// 타이머
+
+// 플레이 버튼 누르면 일시정지 버튼으로 바뀌는거.
+function togglePlayPause() {
+    const playIcon = document.getElementById("playIcon");
+    const pauseIcon = document.getElementById("pauseIcon");
+    
+    // 현재 아이콘에 따라 아이콘을 전환
+    if (playIcon.style.display === "none") {
+        playIcon.style.display = "block";
+        pauseIcon.style.display = "none";
+    } else {
+        playIcon.style.display = "none";
+        pauseIcon.style.display = "block";
+    }
+}
+
+let timerInterval;
+let timeRemaining = 25 * 60; // 25분 (초 단위)
+const timerDisplay = document.getElementById("timer");
+
+// 타이머 시작
+function startTimer() {
+    timerInterval = setInterval(() => {
+        if (timeRemaining > 0) {
+            timeRemaining--;
+            updateDisplay();
+        } else {
+            clearInterval(timerInterval);
+            alert("타이머가 완료되었습니다!");
+        }
+    }, 1000);
+}
+
+// 타이머 업데이트
+function updateDisplay() {
+    const hours = String(Math.floor(timeRemaining / 3600)).padStart(2, '0');
+    const minutes = String(Math.floor((timeRemaining % 3600) / 60)).padStart(2, '0');
+    const seconds = String(timeRemaining % 60).padStart(2, '0');
+    timerDisplay.textContent = `${hours} : ${minutes} : ${seconds}`;
+}
+
+// 타이머 일시정지
+function pauseTimer() {
+    clearInterval(timerInterval);
+}
+
+// 타이머 중지
+function stopTimer() {
+    if (confirm("정말로 타이머를 중단하시겠습니까?")) {
+        clearInterval(timerInterval);
+        timeRemaining = 25 * 60; // 시간을 초기화
+        updateDisplay();
+    }
+}
+
+// 타이머 초기화
+function resetTimer() {
+    clearInterval(timerInterval);
+    timeRemaining = 25 * 60; // 시간을 초기화
+    updateDisplay();
+}
+
+// 버튼 클릭 시 타이머 시작/일시정지
+function togglePlayPause() {
+    const playIcon = document.getElementById("playIcon");
+    const pauseIcon = document.getElementById("pauseIcon");
+
+    if (playIcon.style.display === "none") {
+        playIcon.style.display = "block"; // 플레이 아이콘 표시
+        pauseIcon.style.display = "none"; // 일시 정지 아이콘 숨기기
+        startTimer(); // 타이머 시작
+    } else {
+        playIcon.style.display = "none"; // 플레이 아이콘 숨기기
+        pauseIcon.style.display = "block"; // 일시 정지 아이콘 표시
+        pauseTimer(); // 타이머 일시정지
+    }
+}
+
+
+// let countdown; // 타이머를 위한 변수
+// let timeRemaining = 1500; // 25분을 초로 설정 (25 * 60 = 1500초)
+
+// const timerDisplay = document.getElementById('timer');
+// const startBtn = document.getElementById('startBtn');
+// const stopBtn = document.getElementById('stopBtn');
+// const resetBtn = document.getElementById('resetBtn');
+
+// function updateDisplay() {
+//     const minutes = Math.floor(timeRemaining / 60);
+//     const seconds = timeRemaining % 60;
+//     timerDisplay.textContent = `${String(minutes).padStart(2, '0')} : ${String(seconds).padStart(2, '0')} : 00`;
+// }
+
+// function startTimer() {
+//     if (countdown) return; // 이미 타이머가 실행 중이라면 무시
+
+//     countdown = setInterval(() => {
+//         if (timeRemaining <= 0) {
+//             clearInterval(countdown);
+//             countdown = null; // 타이머 중지 후 null로 설정
+//             alert("타이머가 종료되었습니다!"); // 알림 추가
+//         } else {
+//             timeRemaining--;
+//             updateDisplay(); // 디스플레이 업데이트
+//         }
+//     }, 1000); // 1초마다 실행
+// }
+
+// function stopTimer() {
+//     clearInterval(countdown);
+//     countdown = null; // 타이머 중지 후 null로 설정
+// }
+
+// function resetTimer() {
+//     stopTimer();
+//     timeRemaining = 1500; // 초기화 (25분으로 설정)
+//     updateDisplay(); // 디스플레이 업데이트
+// }
+
+// // 이벤트 리스너 추가
+// startBtn.onclick = startTimer;
+// stopBtn.onclick = stopTimer;
+// resetBtn.onclick = resetTimer;
+
+// // 초기 디스플레이 설정
+// updateDisplay();
+
+  </script>
+  
   </body>
 </html>
