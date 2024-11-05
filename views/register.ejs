@@ -22,13 +22,48 @@
       </a>
     </div>
     <form action="/login/register" method="POST" class="loginForm">
-        <input class="loginBox" type="text" id="userName" name="username" required placeholder="이름을 입력해 주세요" />
-        <input class="loginBox" type="text" id="userEmail" name="emailAddr" required placeholder="이메일을 입력해 주세요" />
 
-        <input class="loginBox" type="password" id="userPw" name="password" required placeholder="비밀번호를 입력해 주세요" />
-        <input class="loginBox" type="text" id="userId" name="nickname" required placeholder="닉네임을 입력해 주세요" />
-        <input class="loginBox" type="number" id="userNum" name="phoneNumber" required placeholder="전화번호를 입력해 주세요" />
+      <input
+        class="loginBox"
+        type="text"
+        id="username"
+        name="username"
+        required
+        placeholder="이름을 입력해 주세요"
+      />
+      <input
+        class="loginBox"
+        type="text"
+        id="emailAddr"
+        name="emailAddr"
+        required
+        placeholder="이메일을 입력해 주세요"
+      />
 
+      <input
+        class="loginBox"
+        type="password"
+        id="password"
+        name="password"
+        required
+        placeholder="비밀번호를 입력해 주세요"
+      />
+      <input
+        class="loginBox"
+        type="text"
+        id="nickname"
+        name="nickname"
+        required
+        placeholder="닉네임을 입력해 주세요"
+      />
+      <input
+        class="loginBox"
+        type="number"
+        id="phoneNumber"
+        name="phoneNumber"
+        required
+        placeholder="전화번호를 입력해 주세요"
+      />
         <%- include('./modal') %>
 
             <button class="loginBt" type="submit">회원가입</button>
