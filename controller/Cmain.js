@@ -120,7 +120,6 @@ exports.post_Register = async (req, res) => {
       phoneNumber,
     });
 
-    console.log(newuser);
     res.status(201).json(newuser);
   } catch (err) {
     console.log(err);
@@ -128,12 +127,11 @@ exports.post_Register = async (req, res) => {
   }
 };
 
-exports.get_Find = async (req, res) => {
+exports.get_Find = (req, res) => {
   res.render("find");
 };
 
 exports.post_FindEmail = async (req, res) => {
-
   const { username, phoneNumber } = req.body;
 
   try {
@@ -221,6 +219,7 @@ exports.get_Calender = async (req, res) => {
   ).getDay();
   const user_id = req.session.nickname;
 
+  // 오늘 0시부터 24시까지의 범위와 아이디로 일정을 탐색
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
   const endOfDay = new Date();
@@ -236,12 +235,15 @@ exports.get_Calender = async (req, res) => {
     },
   });
 
-  const titles = todos.map((todo) => todo.title);
-  const description = todos.map((todo) => todo.description);
-  const state = todos.map((todo) => todo.state);
-
-  todos.forEach((todo) => {
-    console.log(todo.dataValues); // 각 todo의 실제 값 출력
+  const titles = [];
+  const description = [];
+  const state = [];
+  const todoid = [];
+  todos.map((todo) => {
+    titles.push(todo.title);
+    description.push(todo.description);
+    state.push(todo.state);
+    todoid.push(todo.id);
   });
 
   res.render("calender", {
@@ -253,31 +255,99 @@ exports.get_Calender = async (req, res) => {
     titles: titles,
     description: description,
     state: state,
+    todoid: todoid,
   });
 };
+
+exports.get_changeDate = async (req, res) => {
+  const { year, month, day } = req.query;
+  const user_id = req.session.nickname;
+  console.log(year, month, day, user_id);
+
+  // 클릭 연 월 일 필요
+  const startOfDay = new Date(year, month, day);
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date(year, month, day);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const todos = await Task.findAll({
+    where: {
+      user_id: user_id,
+      due_date: {
+        [Op.gte]: startOfDay, // 시작일 이후
+        [Op.lte]: endOfDay, // 종료일 이전
+      },
+    },
+  });
+  const titles = [];
+  const description = [];
+  const state = [];
+  const todoid = [];
+
+  todos.map((todo) => {
+    titles.push(todo.title);
+    description.push(todo.description);
+    state.push(todo.state);
+    todoid.push(todo.id);
+  });
+
+  // res.json({
+  //   year: year,
+  //   month: month,
+  //   titles: titles,
+  //   description: description,
+  //   state: state,
+  // });
+  res.render("./shared/rotateTodoItem", {
+    titles: titles,
+    description: description,
+    state: state,
+    todoid: todoid,
+  });
+};
+
 exports.get_Calender_currentData = (req, res) => {
-  const today = new Date();
-  let month = req.params.currentMonth;
-  let year = req.params.currentYear;
-  console.log(month, year);
+  try {
+    const today = new Date();
+    let month = req.params.currentMonth;
+    let year = req.params.currentYear;
 
-  const lastDay = new Date(year, month, 0).getDate();
-  const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
-  const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
+    const lastDay = new Date(year, month, 0).getDate();
+    const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
+    const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
 
-  res.json({
-    month: month,
-    lastDay: lastDay,
-    firstDayOfMonth: firstDayOfMonth,
-    dayNames: dayNames,
-  });
+    res.json({
+      month: month,
+      lastDay: lastDay,
+      firstDayOfMonth: firstDayOfMonth,
+      dayNames: dayNames,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
+exports.delete_todo = async (req, res) => {
+  try {
+    const user_id = req.session.nickname;
+    const { dataId } = req.body;
+    await Task.destroy({
+      where: {
+        user_id: user_id,
+        id: dataId,
+      },
+    });
+    res.status(200).json({ delete: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ delete: false });
+  }
+};
+
 exports.post_addtodo = async (req, res) => {
   try {
     const { title, description, year, month, today } = req.body;
     const specificDate = new Date(year, month - 1, today);
     const user_id = req.session.nickname;
-    console.log(specificDate.toString());
 
     const newtask = await Task.create({
       user_id,
@@ -298,4 +368,16 @@ exports.get_Timer = (req, res) => {
 
 exports.get_MyPage = (req, res) => {
   res.render("myPage");
+};
+exports.get_modal = (req, res) => {
+  res.send("example");
+};
+
+exports.getComponent = (req, res) => {
+  const { title, description, dataId } = req.query;
+  res.render("./shared/rotateTodoItem", {
+    titles: title,
+    description: description,
+    todoid: dataId,
+  });
 };

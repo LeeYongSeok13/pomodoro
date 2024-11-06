@@ -172,3 +172,7 @@ textarea {
   right: 20px;
   top: 15px;
 }
+.todoItem {
+  transition-duration: 250ms;
+  position: relative;
+}
