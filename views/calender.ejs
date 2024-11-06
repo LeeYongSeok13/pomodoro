@@ -57,10 +57,13 @@
         <p>+<span>0</span></p>
       </section>
       <section class="todo-container">
-        <% for( let index = 0; index < titles.length; index++ ) { %>
-        <%-include("./shared/todoItem", {title: titles[index], description:
-        description[index]}) %> <% } %>
+        <%-include("./shared/rotateTodoItem", {titles: titles,
+        description:description, todoid: todoid}) %>
       </section>
+
+      <button class="imgButton addTodo">
+        <span class="text-hidden">일정 추가 버튼</span>
+      </button>
 
       <!-- 일정 추가 양식 -->
       <section class="addList">
@@ -89,10 +92,6 @@
           </button>
         </form>
       </section>
-
-      <button class="imgButton addTodo">
-        <span class="text-hidden">일정 추가 버튼</span>
-      </button>
     </section>
   </body>
 </html>
