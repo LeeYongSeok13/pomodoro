@@ -36,6 +36,9 @@ const uploadDetail = multer({
     limites: { fileSize: 5 * 1024 * 1024 }, //5MB
   }),
 });
+exports.get_modal = (req, res) => {
+  res.send("example");
+};
 
 exports.get_Index = (req, res) => {
   // 세션 권한 없으면 login으로 가야함!!!
@@ -133,7 +136,6 @@ exports.get_Find = async (req, res) => {
 };
 
 exports.post_FindEmail = async (req, res) => {
-
   const { username, phoneNumber } = req.body;
 
   try {
@@ -293,7 +295,13 @@ exports.post_addtodo = async (req, res) => {
 };
 
 exports.get_Timer = (req, res) => {
-  res.render("timer");
+  const todoItems = [
+    { title: "Task 1", description: "Description for task 1" },
+    { title: "Task 2", description: "Description for task 2" },
+    // 추가할 항목들
+  ];
+
+  res.render("timer", { todoItems });
 };
 
 exports.get_MyPage = (req, res) => {
