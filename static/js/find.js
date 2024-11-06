@@ -10,8 +10,8 @@ function closeModal() {
 
 // 이메일 찾기 함수
 async function findEmail() {
-  const username = document.getElementById("username").value;
-  const phoneNumber = document.getElementById("phoneNumber").value;
+  const username = document.querySelector(".username").value;
+  const phoneNumber = document.querySelector(".phoneNumber").value;
 
   console.log(username);
   console.log(phoneNumber);
@@ -72,9 +72,9 @@ function closeErrorModal() {
 
 // 비밀번호 재설정 요청 함수
 async function requestPasswordReset() {
-  const username = document.getElementById("usernamePw").value;
-  const phoneNumber = document.getElementById("phoneNumberPw").value;
-  const emailAddr = document.getElementById("emailAddrPw").value;
+  const username = document.querySelector(".username").value;
+  const phoneNumber = document.querySelector(".phoneNumber").value;
+  const emailAddr = document.querySelector(".emailAddr").value;
 
   try {
     const response = await fetch("/login/find", {

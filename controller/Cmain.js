@@ -36,6 +36,9 @@ const uploadDetail = multer({
     limites: { fileSize: 5 * 1024 * 1024 }, //5MB
   }),
 });
+exports.get_modal = (req, res) => {
+  res.send("example");
+};
 
 exports.get_Index = (req, res) => {
   // 세션 권한 없으면 login으로 가야함!!!
@@ -82,48 +85,70 @@ exports.get_Register = async (req, res) => {
 };
 
 exports.post_Register = async (req, res) => {
+  const {
+    username,
+    nickname,
+    emailAddr,
+    password,
+    password_confirm,
+    phoneNumber,
+  } = req.body;
+
+  const errors = {};
+
+  // 비밀번호와 비밀번호 확인 값이 일치하는지 확인
+  if (password !== password_confirm) {
+    errors.password_confirm = "패스워드가 일치하지 않습니다.";
+  }
+
   try {
-    const { username, nickname, emailAddr, password, phoneNumber } = req.body;
-
-    // 입력값 검증
-    if (!username || !emailAddr || !password) {
-      return res
-        .status(400)
-        .json({ message: "username, email, and password are required" });
-    }
-
-    // 이메일 중복 확인
+    // 중복 검사
     const existingEmail = await User.findOne({ where: { emailAddr } });
     if (existingEmail) {
-      return res.status(409).json({ message: "Email already exist" });
+      errors.emailAddr = "이미 존재하는 이메일입니다.";
     }
 
-    // 닉네임 중복 확인
     const existingNickname = await User.findOne({ where: { nickname } });
     if (existingNickname) {
-      return res.status(409).json({ message: "Nickname already exist" });
+      errors.nickname = "이미 존재하는 닉네임입니다.";
     }
 
-    // 휴대전화 번호 중복 확인
     const existingPhoneNumber = await User.findOne({ where: { phoneNumber } });
     if (existingPhoneNumber) {
-      return res.status(409).json({ message: "PhoneNumber already exist" });
+      errors.phoneNumber = "이미 존재하는 휴대전화 번호입니다.";
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // 오류가 있으면 반환
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({
+        success: false,
+        errors,
+      });
+    }
 
-    const newuser = await User.create({
+    // 비밀번호 해싱
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // 사용자 생성
+    const user = await User.create({
       username,
-      nickname,
       emailAddr,
       password: hashedPassword,
+      nickname,
       phoneNumber,
     });
 
-    res.status(201).json(newuser);
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("Interval Server Error!"); // 500 상태 코드 변환
+    return res.json({
+      success: true,
+      message: "Register successful",
+      username: user.username, // 회원가입한 사람의 username을 반환
+    });
+  } catch (error) {
+    console.error("Registration error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
   }
 };
 
@@ -200,6 +225,10 @@ exports.update_Passowrd = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "비밀번호 변경에 실패했습니다." });
   }
+};
+
+exports.get_modal = (req, res) => {
+  res.render("modal");
 };
 
 exports.get_Feed = (req, res) => {
@@ -363,7 +392,13 @@ exports.post_addtodo = async (req, res) => {
 };
 
 exports.get_Timer = (req, res) => {
-  res.render("timer");
+  const todoItems = [
+    { title: "Task 1", description: "Description for task 1" },
+    { title: "Task 2", description: "Description for task 2" },
+    // 추가할 항목들
+  ];
+
+  res.render("timer", { todoItems });
 };
 
 exports.get_MyPage = (req, res) => {

@@ -8,8 +8,14 @@
     <link rel="stylesheet" href="/static/css/navbar.css" />
     <link rel="stylesheet" href="/static/css/timer.css" />
     <link rel="stylesheet" href="/static/css/button.css" />
-    <link rel="stylesheet" href="/static/css/todoItem.css" />
     <script src="/static/js/navbar.js"></script>
+    <!-- 글씨체 -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <!-- axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
   <body>
     <header>
@@ -19,10 +25,10 @@
         ><img width="158" src="/static/img/logo.png" alt="로고 이미지"
       /></a>
     </header>
-    <div class="timerTomato"
-      ><img width="158" src="/static/img/timerTomato.png" alt="토마토 이미지"
-    /></div>
-    <svg
+    
+    <div id="rightBtn" onclick="toggleRight()">
+      <svg
+      id="rightIcon"
       xmlns="http://www.w3.org/2000/svg"
       class="right"
       width="30"
@@ -35,6 +41,24 @@
         d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"
       />
     </svg>
+    <div class="timerTomato"
+      ><img width="158" src="/static/img/timerTomato.png" alt="토마토 이미지"
+    /></div>
+    <!-- 그냥 타이머 -->
+    <div class="outer-timer-container">
+      <div id="main-timer" class="timer-body">
+        <div class="inner-cover1"></div>
+        <div id="tick-marks">
+          <div class="tick thick-tick"></div>
+        </div>
+        <div id="time-fins"></div>
+        <div class="inner-cover2"></div>
+      </div>
+    </div>
+    <svg id="leftIcon" xmlns="http://www.w3.org/2000/svg" class="left" width="30" height="30" fill="#473234" class="bi bi-caret-left-fill" viewBox="0 0 16 16" style="display: none;">
+      <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+    </svg>
+  </div>
     <div class="timercontainer">
       <div id="timer" class="timer">00 : 25 : 00</div>
       <div class="buttonbox">
@@ -83,61 +107,42 @@
         </div>
       </div>
     </div>
-  </section>
+  
   <section class="list-Wrap">
     <section class="todayTomato">
       오늘 수집한 토마토
       <p>+<span>0</span></p>
     </section>
     <section class="todo-container">
-      <%- include("./shared/todoItem") %>
-    </section>
+  <% todoItems.forEach(function(item) { %>
+    <%- include("./shared/todoItem", { title: item.title, description: item.description }) %>
+  <% }) %>
+</section>
 
-    <!-- 일정 추가 양식 -->
-    <section class="addList">
-      <!-- 모달 구조 추가 -->
-      <div class="modal" id="addListModal">
-        <div class="modal-content">
-          <span class="close" id="closeModal">&times;</span>
-          <h2>일정 추가</h2><br>
-          <form>
-            <label for="">주제</label>
-            <textarea type="text" placeholder="공부할 주제를 입력해 주세요" ></textarea>
-            <label for="">세부 내용</label>
-            <textarea type="text" placeholder="세부 내용을 입력해 주세요"></textarea>
-            <br />
-            <button type="button" class="button middle addListButton">추가</button>
-          </form>
-        </div>
-      </div>
-
-    <button class="imgButton addTodo">
-      <span class="text-hidden">일정 추가 버튼</span>
-    </button>
-  </section>
   <script>
-    const modal = document.getElementById("addListModal");
-    const addTodoButton = document.querySelector(".addTodo");
-    const closeModalButton = document.getElementById("closeModal");
-  
-    // 모달 열기
-    addTodoButton.onclick = function() {
-      modal.style.display = "block";
-    };
-  
-    // 모달 닫기
-    closeModalButton.onclick = function() {
-      modal.style.display = "none";
-    };
-  
-    // 모달 외부 클릭 시 닫기
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    };
+    // 오른쪽 왼쪽
+    function toggleRight() {
+    const rightIcon = document.getElementById("rightIcon");
+    const leftIcon = document.getElementById("leftIcon");
+    const timerTomato = document.querySelector(".timerTomato");
+    const outerTimerContainer = document.querySelector(".outer-timer-container");
 
-// 타이머
+    // 현재 아이콘에 따라 아이콘을 전환
+    if (rightIcon.style.display === "none") {
+        rightIcon.style.display = "block"; 
+        leftIcon.style.display = "none"; 
+        timerTomato.classList.remove("hide");
+        outerTimerContainer.classList.remove("show");
+    } else {
+        rightIcon.style.display = "none";
+        leftIcon.style.display = "block";
+        timerTomato.classList.add("hide");
+        outerTimerContainer.classList.add("show");
+    }
+}
+
+
+// 뽀모도로 타이머
 
 // 플레이 버튼 누르면 일시정지 버튼으로 바뀌는거.
 function togglePlayPause() {
@@ -153,7 +158,15 @@ function togglePlayPause() {
         pauseIcon.style.display = "block";
     }
 }
+function toggleTimer() {
+  const timerElement = document.getElementById('timer');
+  if (timerElement) {
+    timerElement.classList.toggle('show');
+  }
+}
 
+
+// 타이머 버튼 실행
 let timerInterval;
 let timeRemaining = 25 * 60; // 25분 (초 단위)
 const timerDisplay = document.getElementById("timer");
@@ -206,66 +219,92 @@ function togglePlayPause() {
     const pauseIcon = document.getElementById("pauseIcon");
 
     if (playIcon.style.display === "none") {
-        playIcon.style.display = "block"; // 플레이 아이콘 표시
-        pauseIcon.style.display = "none"; // 일시 정지 아이콘 숨기기
-        startTimer(); // 타이머 시작
+        playIcon.style.display = "block";
+        pauseIcon.style.display = "none";
+        pauseTimer();
     } else {
-        playIcon.style.display = "none"; // 플레이 아이콘 숨기기
-        pauseIcon.style.display = "block"; // 일시 정지 아이콘 표시
-        pauseTimer(); // 타이머 일시정지
+        playIcon.style.display = "none";
+        pauseIcon.style.display = "block";
+        startTimer();
     }
 }
 
+// 그냥 타이머
+const timer = document.getElementById("main-timer");
+      const lines = timer.querySelector("#tick-marks");
+      const fins = timer.querySelector("#time-fins");
+      const control = document.querySelector(".control-container #play-pause-control");
 
-// let countdown; // 타이머를 위한 변수
-// let timeRemaining = 1500; // 25분을 초로 설정 (25 * 60 = 1500초)
+      const endTime = 60;
+      let intervalID = null;
+      let progressTimeSec = 0;
+      let isPlay = true;
 
-// const timerDisplay = document.getElementById('timer');
-// const startBtn = document.getElementById('startBtn');
-// const stopBtn = document.getElementById('stopBtn');
-// const resetBtn = document.getElementById('resetBtn');
+      function paintTickMarks() {
+        for (let i = 0; i < 30; i++) {
+          if (i % 5 === 0) {
+            const tick = document.createElement("div");
+            tick.classList.add("tick", "thick-tick");
+            tick.style.transform = `rotate(${i * 6}deg)`;
+            lines.append(tick);
+          }
+        }
+      }
 
-// function updateDisplay() {
-//     const minutes = Math.floor(timeRemaining / 60);
-//     const seconds = timeRemaining % 60;
-//     timerDisplay.textContent = `${String(minutes).padStart(2, '0')} : ${String(seconds).padStart(2, '0')} : 00`;
-// }
+      function paintRemainingTime() {
+        for (let min = 0; min < endTime; min++) {
+          for (let sec = 0; sec < 60; sec++) {
+            const remainFin = document.createElement("div");
+            remainFin.classList.add("fin");
+            const deg = min * 6 + sec * 0.1;
+            remainFin.style.transform = `rotate(${-deg}deg)`;
+            fins.append(remainFin);
+          }
+        }
+      }
 
-// function startTimer() {
-//     if (countdown) return; // 이미 타이머가 실행 중이라면 무시
+      function tickSecond() {
+        progressTimeSec++;
+        if (progressTimeSec >= endTime * 60) pause();
+        const lastFin = fins.lastChild;
+        if (lastFin) {
+          lastFin.remove();
+        }
+      }
 
-//     countdown = setInterval(() => {
-//         if (timeRemaining <= 0) {
-//             clearInterval(countdown);
-//             countdown = null; // 타이머 중지 후 null로 설정
-//             alert("타이머가 종료되었습니다!"); // 알림 추가
-//         } else {
-//             timeRemaining--;
-//             updateDisplay(); // 디스플레이 업데이트
-//         }
-//     }, 1000); // 1초마다 실행
-// }
+      function play() {
+        intervalID = setInterval(tickSecond, 1000);
+        isPlay = true;
+        control.innerHTML = `<i class="fas fa-pause"></i>`;
+      }
 
-// function stopTimer() {
-//     clearInterval(countdown);
-//     countdown = null; // 타이머 중지 후 null로 설정
-// }
+      function pause() {
+        clearInterval(intervalID);
+        isPlay = false;
+        control.innerHTML = `<i class="fas fa-play"></i>`;
+      }
 
-// function resetTimer() {
-//     stopTimer();
-//     timeRemaining = 1500; // 초기화 (25분으로 설정)
-//     updateDisplay(); // 디스플레이 업데이트
-// }
+      function toggleControl() {
+        if (isPlay) {
+          pause();
+        } else {
+          play();
+        }
+      }
 
-// // 이벤트 리스너 추가
-// startBtn.onclick = startTimer;
-// stopBtn.onclick = stopTimer;
-// resetBtn.onclick = resetTimer;
+      if (lines) {
+        paintTickMarks();
+      }
 
-// // 초기 디스플레이 설정
-// updateDisplay();
+      if (fins) {
+        paintRemainingTime();
+      }
 
+      if (control) {
+        control.addEventListener("click", toggleControl);
+      }
+
+      play();
   </script>
-  
   </body>
 </html>
