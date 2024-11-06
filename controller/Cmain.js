@@ -19,6 +19,7 @@ bcrypt.hash(plainpassword, saltRounds, (err, hash) => {
 });
 
 const multer = require("multer");
+const e = require("express");
 const upload = multer({
   dest: "uploads/",
 });
@@ -369,6 +370,31 @@ exports.delete_todo = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ delete: false });
+  }
+};
+
+exports.modify_todo = async (req, res) => {
+  try {
+    const { title, description, dataId } = req.body;
+    await Task.update(
+      { title: title, description: description },
+      { where: { id: dataId } }
+    );
+    res.status(200).send("성공적으로 수정되었습니다.");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("수정 중 오류가 발생했습니다.");
+  }
+};
+
+exports.status_todo = async (req, res) => {
+  try {
+    const { status, id } = req.body;
+    await Task.update({ state: status }, { where: { id: id } });
+    res.status(200).send("성공적으로 수정되었습니다.");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("상태 업데이트 중 오류가 발생했습니다.");
   }
 };
 
