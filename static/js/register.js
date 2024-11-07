@@ -5,7 +5,10 @@ document
 
     // 모든 에러 메세지 초기화
     const errorElements = document.querySelectorAll(".error-text");
-    errorElements.forEach((elem) => (elem.textContent = ""));
+    errorElements.forEach((elem) => {
+      elem.textContent = ""; // 초기화
+      elem.classList.remove("show"); // 숨기기
+    });
 
     // 폼 데이터 가져오기
     const formData = {
@@ -16,6 +19,14 @@ document
       nickname: document.querySelector(".nickname").value,
       phoneNumber: document.querySelector(".phoneNumber").value,
     };
+
+    // 이메일 유효성 검사
+    if (!formData.emailAddr.includes("@")) {
+      const emailErrorElement = document.getElementById("emailAddrError");
+      emailErrorElement.textContent = "@가 이메일 주소에 포함되어야 합니다.";
+      emailErrorElement.classList.add("show");
+      return; // 서버에 요청 보내지 않고 함수 종료
+    }
 
     try {
       // 서버에 데이터 전송

@@ -25,22 +25,23 @@
 
     <form action="/login" method="POST" class="loginForm">
       <input
-
         type="text"
-        id="emailAddr"
+        class="emailAddr"
         name="emailAddr"
         required
         placeholder="이메일을 입력해 주세요"
       />
       <input
         type="password"
-        id="password"
+        class="password"
         name="password"
         required
         placeholder="비밀번호를 입력해 주세요"
       />
 
-      <button class="loginBt" type="submit">로그인</button>
+      <button class="loginBt" type="button" onclick="loginUser()">
+        로그인
+      </button>
 
       <div class="lostE">
         <p style="font-size: 11px">email 또는 비밀번호를 잊어버리셨나요?</p>
@@ -55,6 +56,14 @@
       <a class="lostEp" href="/login/register">회원가입</a>
     </div>
 
-    <script src="/pomodoro/js/login.js"></script>
+    <!-- 로그인 모달 -->
+    <div id="loginErrorModal" class="modal">
+      <div class="modal-content">
+        <p class="modal-message"></p>
+        <button class="close-btn" onclick="closeModal()">닫기</button>
+      </div>
+    </div>
+
+    <script src="/static/js/login.js"></script>
   </body>
 </html>

@@ -30,6 +30,8 @@
           required
           placeholder="이름을 입력해 주세요"
         />
+        <span id="usernameError" class="error-text"></span>
+
         <input
           type="number"
           class="phoneNumber"
@@ -37,6 +39,7 @@
           required
           placeholder="전화번호를 입력해 주세요"
         />
+        <span id="phoneNumberError" class="error-text"></span>
       </form>
       <button class="findBt" type="button" onclick="findEmail()">
         이메일 찾기
