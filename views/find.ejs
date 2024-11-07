@@ -6,7 +6,7 @@
     <title>이메일 비밀번호 찾기</title>
 
     <link rel="stylesheet" href="/static/css/reset.css" />
-    <link rel="stylesheet" href="/static/css/login.css" />
+    <link rel="stylesheet" href="/static/css/find.css" />
   </head>
 
   <body>
@@ -24,17 +24,15 @@
       <form action="/login/find" method="POST" class="findForm">
         <h2>사용자 정보</h2>
         <input
-          class="loginBox"
           type="text"
-          id="username"
+          class="username"
           name="username"
           required
           placeholder="이름을 입력해 주세요"
         />
         <input
-          class="loginBox"
           type="number"
-          id="phoneNumber"
+          class="phoneNumber"
           name="phoneNumber"
           required
           placeholder="전화번호를 입력해 주세요"
@@ -48,25 +46,22 @@
         <h2>비밀번호 재설정</h2>
 
         <input
-          class="loginBox"
           type="text"
-          id="usernamePw"
+          class="username"
           name="username"
           required
           placeholder="이름을 입력해 주세요"
         />
         <input
-          class="loginBox"
           type="number"
-          id="phoneNumberPw"
+          class="phoneNumber"
           name="phoneNumber"
           required
           placeholder="전화번호를 입력해 주세요"
         />
         <input
-          class="loginBox"
           type="text"
-          id="emailAddrPw"
+          class="emailAddr"
           name="emailAddr"
           required
           placeholder="이메일을 입력해 주세요"

@@ -11,7 +11,6 @@ const fs = require('fs');
 
 require('dotenv').config();
 
-console.log('feed', Feed);
 // 비밀번호 암호화
 const bcrypt = require("bcrypt");
 const plainpassword = "user_password";
@@ -29,6 +28,8 @@ bcrypt.hash(plainpassword, saltRounds, (err, hash) => {
 const multer = require("multer");
 const { log } = require("console");
 
+const e = require("express");
+
 // Multer 설정 (파일을 uploads/ 디렉터리에 저장)
 const upload = multer({ dest: "uploads/" });
 
@@ -37,7 +38,6 @@ const s3 = new S3Client({
   region : process.env.AWS_REGION,
   accessKeyId : process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey : process.env.AWS_SECRET_ACCESS_KEY,
-});
 
 // multer 세부 설정
 const uploadDetail = multer({
@@ -71,6 +71,9 @@ const uploadDetail = multer({
     }
   }
 });
+exports.get_modal = (req, res) => {
+  res.send("example");
+};
 
 // 파일 s3에 업로드
 const uploadToS3 = async (filePath, bucketName, keyName) => {
@@ -142,58 +145,78 @@ exports.get_Register = async (req, res) => {
 };
 
 exports.post_Register = async (req, res) => {
+  const {
+    username,
+    nickname,
+    emailAddr,
+    password,
+    password_confirm,
+    phoneNumber,
+  } = req.body;
+
+  const errors = {};
+
+  // 비밀번호와 비밀번호 확인 값이 일치하는지 확인
+  if (password !== password_confirm) {
+    errors.password_confirm = "패스워드가 일치하지 않습니다.";
+  }
+
   try {
-    const { username, nickname, emailAddr, password, phoneNumber } = req.body;
-
-    // 입력값 검증
-    if (!username || !emailAddr || !password) {
-      return res
-        .status(400)
-        .json({ message: "username, email, and password are required" });
-    }
-
-    // 이메일 중복 확인
+    // 중복 검사
     const existingEmail = await User.findOne({ where: { emailAddr } });
     if (existingEmail) {
-      return res.status(409).json({ message: "Email already exist" });
+      errors.emailAddr = "이미 존재하는 이메일입니다.";
     }
 
-    // 닉네임 중복 확인
     const existingNickname = await User.findOne({ where: { nickname } });
     if (existingNickname) {
-      return res.status(409).json({ message: "Nickname already exist" });
+      errors.nickname = "이미 존재하는 닉네임입니다.";
     }
 
-    // 휴대전화 번호 중복 확인
     const existingPhoneNumber = await User.findOne({ where: { phoneNumber } });
     if (existingPhoneNumber) {
-      return res.status(409).json({ message: "PhoneNumber already exist" });
+      errors.phoneNumber = "이미 존재하는 휴대전화 번호입니다.";
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // 오류가 있으면 반환
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({
+        success: false,
+        errors,
+      });
+    }
 
-    const newuser = await User.create({
+    // 비밀번호 해싱
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // 사용자 생성
+    const user = await User.create({
       username,
-      nickname,
       emailAddr,
       password: hashedPassword,
+      nickname,
       phoneNumber,
     });
 
-    console.log(newuser);
-    res.status(201).json(newuser);
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("Interval Server Error!"); // 500 상태 코드 변환
+    return res.json({
+      success: true,
+      message: "Register successful",
+      username: user.username, // 회원가입한 사람의 username을 반환
+    });
+  } catch (error) {
+    console.error("Registration error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
   }
 };
 
-exports.get_Find = async (req, res) => {
+exports.get_Find = (req, res) => {
   res.render("find");
 };
 
 exports.post_FindEmail = async (req, res) => {
-
   const { username, phoneNumber } = req.body;
 
   try {
@@ -262,6 +285,10 @@ exports.update_Passowrd = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "비밀번호 변경에 실패했습니다." });
   }
+};
+
+exports.get_modal = (req, res) => {
+  res.render("modal");
 };
 
 exports.get_Feed = (req, res) => {
@@ -339,6 +366,7 @@ exports.get_Calender = async (req, res) => {
   ).getDay();
   const user_id = req.session.nickname;
 
+  // 오늘 0시부터 24시까지의 범위와 아이디로 일정을 탐색
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
   const endOfDay = new Date();
@@ -354,12 +382,15 @@ exports.get_Calender = async (req, res) => {
     },
   });
 
-  const titles = todos.map((todo) => todo.title);
-  const description = todos.map((todo) => todo.description);
-  const state = todos.map((todo) => todo.state);
-
-  todos.forEach((todo) => {
-    console.log(todo.dataValues); // 각 todo의 실제 값 출력
+  const titles = [];
+  const description = [];
+  const state = [];
+  const todoid = [];
+  todos.map((todo) => {
+    titles.push(todo.title);
+    description.push(todo.description);
+    state.push(todo.state);
+    todoid.push(todo.id);
   });
 
   res.render("calender", {
@@ -371,31 +402,124 @@ exports.get_Calender = async (req, res) => {
     titles: titles,
     description: description,
     state: state,
+    todoid: todoid,
   });
 };
+
+exports.get_changeDate = async (req, res) => {
+  const { year, month, day } = req.query;
+  const user_id = req.session.nickname;
+  console.log(year, month, day, user_id);
+
+  // 클릭 연 월 일 필요
+  const startOfDay = new Date(year, month, day);
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date(year, month, day);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const todos = await Task.findAll({
+    where: {
+      user_id: user_id,
+      due_date: {
+        [Op.gte]: startOfDay, // 시작일 이후
+        [Op.lte]: endOfDay, // 종료일 이전
+      },
+    },
+  });
+  const titles = [];
+  const description = [];
+  const state = [];
+  const todoid = [];
+
+  todos.map((todo) => {
+    titles.push(todo.title);
+    description.push(todo.description);
+    state.push(todo.state);
+    todoid.push(todo.id);
+  });
+
+  // res.json({
+  //   year: year,
+  //   month: month,
+  //   titles: titles,
+  //   description: description,
+  //   state: state,
+  // });
+  res.render("./shared/rotateTodoItem", {
+    titles: titles,
+    description: description,
+    state: state,
+    todoid: todoid,
+  });
+};
+
 exports.get_Calender_currentData = (req, res) => {
-  const today = new Date();
-  let month = req.params.currentMonth;
-  let year = req.params.currentYear;
-  console.log(month, year);
+  try {
+    const today = new Date();
+    let month = req.params.currentMonth;
+    let year = req.params.currentYear;
 
-  const lastDay = new Date(year, month, 0).getDate();
-  const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
-  const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
+    const lastDay = new Date(year, month, 0).getDate();
+    const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
+    const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
 
-  res.json({
-    month: month,
-    lastDay: lastDay,
-    firstDayOfMonth: firstDayOfMonth,
-    dayNames: dayNames,
-  });
+    res.json({
+      month: month,
+      lastDay: lastDay,
+      firstDayOfMonth: firstDayOfMonth,
+      dayNames: dayNames,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
+exports.delete_todo = async (req, res) => {
+  try {
+    const user_id = req.session.nickname;
+    const { dataId } = req.body;
+    await Task.destroy({
+      where: {
+        user_id: user_id,
+        id: dataId,
+      },
+    });
+    res.status(200).json({ delete: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ delete: false });
+  }
+};
+
+exports.modify_todo = async (req, res) => {
+  try {
+    const { title, description, dataId } = req.body;
+    await Task.update(
+      { title: title, description: description },
+      { where: { id: dataId } }
+    );
+    res.status(200).send("성공적으로 수정되었습니다.");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("수정 중 오류가 발생했습니다.");
+  }
+};
+
+exports.status_todo = async (req, res) => {
+  try {
+    const { status, id } = req.body;
+    await Task.update({ state: status }, { where: { id: id } });
+    res.status(200).send("성공적으로 수정되었습니다.");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("상태 업데이트 중 오류가 발생했습니다.");
+  }
+};
+
 exports.post_addtodo = async (req, res) => {
   try {
     const { title, description, year, month, today } = req.body;
     const specificDate = new Date(year, month - 1, today);
     const user_id = req.session.nickname;
-    console.log(specificDate.toString());
 
     const newtask = await Task.create({
       user_id,
@@ -411,7 +535,13 @@ exports.post_addtodo = async (req, res) => {
 };
 
 exports.get_Timer = (req, res) => {
-  res.render("timer");
+  const todoItems = [
+    { title: "Task 1", description: "Description for task 1" },
+    { title: "Task 2", description: "Description for task 2" },
+    // 추가할 항목들
+  ];
+
+  res.render("timer", { todoItems });
 };
 
 exports.get_MyPage = (req, res) => {
@@ -420,4 +550,13 @@ exports.get_MyPage = (req, res) => {
 
 exports.get_modal = (req, res) => {
   res.send("example");
+};
+
+exports.getComponent = (req, res) => {
+  const { title, description, dataId } = req.query;
+  res.render("./shared/rotateTodoItem", {
+    titles: title,
+    description: description,
+    todoid: dataId,
+  });
 };

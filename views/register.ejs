@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>회원가입</title>
     <link rel="stylesheet" href="/static/css/reset.css" />
-    <link rel="stylesheet" href="/static/css/login.css" />
+    <link rel="stylesheet" href="/static/css/register.css" />
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-
-</head>
+  </head>
 
   <body>
     <div class="logoSz">
@@ -21,61 +19,75 @@
         />
       </a>
     </div>
-    <form action="/login/register" method="POST" class="loginForm">
-
+    <form action="/login/register" method="POST" id="registerForm">
       <input
-        class="loginBox"
         type="text"
-        id="username"
+        class="username"
         name="username"
         required
         placeholder="이름을 입력해 주세요"
       />
+
       <input
-        class="loginBox"
         type="text"
-        id="emailAddr"
+        class="emailAddr"
         name="emailAddr"
         required
         placeholder="이메일을 입력해 주세요"
       />
+      <span id="emailAddrError" class="error-text"></span>
 
       <input
-        class="loginBox"
         type="password"
-        id="password"
+        class="password"
         name="password"
         required
         placeholder="비밀번호를 입력해 주세요"
       />
+
       <input
-        class="loginBox"
+        type="password"
+        class="password_confirm"
+        name="password_confirm"
+        required
+        placeholder="비밀번호 확인"
+      />
+      <span id="password_confirmError" class="error-text"></span>
+
+      <input
         type="text"
-        id="nickname"
+        class="nickname"
         name="nickname"
         required
         placeholder="닉네임을 입력해 주세요"
       />
+      <span id="nicknameError" class="error-text"></span>
+
       <input
-        class="loginBox"
         type="number"
-        id="phoneNumber"
+        class="phoneNumber"
         name="phoneNumber"
         required
         placeholder="전화번호를 입력해 주세요"
       />
-        <%- include('./modal') %>
+      <span id="phoneNumberError" class="error-text"></span>
 
-            <button class="loginBt" type="submit">회원가입</button>
-
-            <!-- <div class="button1"></div> -->
+      <button class="loginBt" type="submit">회원가입</button>
     </form>
-    <div class="isUser">
-        <p style="font-size: 11px">이미 계정이 있으신가요?</p>
-        <a class="lostEp" href="/login">로그인</a>
+
+    <div id="successModal">
+      <div class="modal">
+        <h2>회원가입 완료!</h2>
+        <p></p>
+        <button class="modalOffBt"><a href="/login">완료</a></button>
+      </div>
     </div>
 
-    <script src="../static/js/login.js"></script>
-</body>
+    <div class="isUser">
+      <p style="font-size: 11px">이미 계정이 있으신가요?</p>
+      <a class="lostEp" href="/login">로그인</a>
+    </div>
 
+    <script src="../static/js/register.js"></script>
+  </body>
 </html>
