@@ -46,6 +46,10 @@ router.get("/calender/changeDate", controller.get_changeDate);
 
 router.delete("/calender/delete", controller.delete_todo);
 
+router.patch("/calender/modify", controller.modify_todo);
+
+router.patch("/calender/status", controller.status_todo);
+
 router.get("/timer", controller.get_Timer);
 
 router.get("/myPage", controller.get_MyPage);
