@@ -18,14 +18,29 @@
     </div>
 
     <div class="findD">
-        <form action="/login/find" method="POST" class="findForm">
-            <h2>사용자 정보</h2>
-            <input type="text" class="username" name="username" required placeholder="이름을 입력해 주세요" />
-            <input type="number" class="phoneNumber" name="phoneNumber" required placeholder="전화번호를 입력해 주세요" />
-        </form>
-        <button class="findBt" type="button" onclick="findEmail()">
-            이메일 찾기
-        </button>
+      <form action="/login/find" method="POST" class="findForm">
+        <h2>사용자 정보</h2>
+        <input
+          type="text"
+          class="username"
+          name="username"
+          required
+          placeholder="이름을 입력해 주세요"
+        />
+        <span id="usernameError" class="error-text"></span>
+
+        <input
+          type="number"
+          class="phoneNumber"
+          name="phoneNumber"
+          required
+          placeholder="전화번호를 입력해 주세요"
+        />
+        <span id="phoneNumberError" class="error-text"></span>
+      </form>
+      <button class="findBt" type="button" onclick="findEmail()">
+        이메일 찾기
+      </button>
 
         <form action="/findPw" method="POST" class="findForm">
             <h2>비밀번호 재설정</h2>

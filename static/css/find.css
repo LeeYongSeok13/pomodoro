@@ -92,6 +92,17 @@ input::placeholder {
   background-image: url("/static/svg/lock-fill.svg");
 }
 
+/* 에러 텍스트 표시 */
+.error-text {
+  color: red;
+  font-size: 0.9em;
+  display: none; /* 기본적으로 숨김처리 */
+}
+
+.error-text.show {
+  display: block; /* 오류 발생 시 표시 */
+}
+
 .findBt {
   background-color: #da2337;
   border-width: 0;

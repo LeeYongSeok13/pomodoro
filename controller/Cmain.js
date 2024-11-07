@@ -113,8 +113,7 @@ exports.get_Login = (req, res) => {
 };
 
 exports.post_Login = async (req, res) => {
-  const { id,emailAddr, password } = req.body;
-  console.log("post_login",req.body);
+  const { emailAddr, password } = req.body;
 
   // 입력 값 검증
   if (!emailAddr || !password) {
@@ -126,17 +125,20 @@ exports.post_Login = async (req, res) => {
     const user = await User.findOne({ where: { emailAddr } });
     // 사용자가 존재하지 않거나 비밀번호가 틀린 경우
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res
+        .status(400)
+        .json({ message: "이메일 또는 비밀번호를 확인 해 주세요." });
     }
 
     // 로그인 성공
     req.session.userId = user.id; // 사용자 id값 저장
     req.session.nickname = user.nickname; // 로그인 성공 시 세션 설정
-    console.log("세션에 저장된 userId:", req.session.userId);
-    res.redirect("/");
+    return res.status(200).json({ success: true, message: "Login successful" });
   } catch (error) {
     console.error("Error logging in", error);
-    res.status(500).json({ message: "Error logging in" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Error logging in" });
   }
 };
 
@@ -196,6 +198,7 @@ exports.post_Register = async (req, res) => {
       password: hashedPassword,
       nickname,
       phoneNumber,
+      g,
     });
 
     return res.json({
@@ -220,21 +223,29 @@ exports.post_FindEmail = async (req, res) => {
   const { username, phoneNumber } = req.body;
 
   try {
-    // 이름과 전화번호로 사용자 검색
     const user = await User.findOne({
-      where: {
-        username,
-        phoneNumber,
-      },
+      where: { username, phoneNumber },
     });
 
-    if (user) {
-      // 사용자가 있으면  반환
-      res.status(200).json({ emailAddr: user.emailAddr });
-    } else {
-      // 사용자가 없으면 404 상태코드 응답
-      res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
+    if (!user) {
+      // 이름이 틀린 경우
+      const userByName = await User.findOne({ where: { username: username } });
+      if (!userByName) {
+        return res.status(404).json({ error: "username" });
+      }
+
+      // 전화번호가 틀린 경우
+      const userByPhoneNumber = await User.findOne({ where: { phoneNumber } });
+      if (!userByPhoneNumber) {
+        return res.status(404).json({ error: "phoneNumber" });
+      }
+
+      // 이름과 전화번호가 모드 틀린 경우
+      return res.status(404).json({ error: "mismatch" });
     }
+
+    // 이름과 전화번호 모두 일치하면 이메일 반환
+    return res.status(200).json({ emailAddr: user.emailAddr });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "서버 오류가 발생했습니다." });
