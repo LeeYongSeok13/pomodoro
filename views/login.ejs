@@ -21,6 +21,7 @@
     </div>
 
     <form action="/login" method="POST" class="loginForm">
+
         <div class="inD">
             <input type="text" class="emailAddr" name="emailAddr" required placeholder="이메일을 입력해 주세요" />
             <span id="emailAddrError" class="error-text">존재하는 이메일이 있습니다</span>
@@ -37,6 +38,17 @@
         </div>
 
         <!-- <div class="button1"></div> -->
+
+
+      <button class="loginBt" type="submit">로그인</button>
+
+      <div class="lostE">
+        <p style="font-size: 11px">email 또는 비밀번호를 잊어버리셨나요?</p>
+        <a class="lostEp" href="/login/find">email & 비밀번호 찾기</a>
+      </div>
+
+      <!-- <div class="button1"></div> -->
+
     </form>
 
     <div class="newUser">

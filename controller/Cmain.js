@@ -2,7 +2,14 @@ const db = require("../models/index");
 const User = require("../models/index").User;
 const Task = require("../models/index").Task;
 const Timer = require("../models/index").Timer;
+const Feed = require("../models/index").Feed;
 const { Op } = require("sequelize");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const uuid = require('uuid').v4;
+const path = require('path');
+const fs = require('fs');
+
+require('dotenv').config();
 
 // 비밀번호 암호화
 const bcrypt = require("bcrypt");
@@ -19,9 +26,19 @@ bcrypt.hash(plainpassword, saltRounds, (err, hash) => {
 });
 
 const multer = require("multer");
-const upload = multer({
-  dest: "uploads/",
-});
+const { log } = require("console");
+
+const e = require("express");
+
+// Multer 설정 (파일을 uploads/ 디렉터리에 저장)
+const upload = multer({ dest: "uploads/" });
+
+// s3 설정
+const s3 = new S3Client({
+  region : process.env.AWS_REGION,
+  accessKeyId : process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey : process.env.AWS_SECRET_ACCESS_KEY,
+
 // multer 세부 설정
 const uploadDetail = multer({
   storage: multer.diskStorage({
@@ -29,16 +46,57 @@ const uploadDetail = multer({
       done(null, "uploads/");
     },
     filename(req, file, done) {
-      const ext = path.extname(file.originalname);
-      done(null, path.basename(file.originalname, ext) + Date.now() + ext);
+      // 파일이름에 uuid 설정
+      // const ext = path.extname(file.originalname);
+      const uniqueName = uuid() + path.extname(file.originalname);
+      done(null, uniqueName);
     },
-
-    limites: { fileSize: 5 * 1024 * 1024 }, //5MB
   }),
+  limits : { fileSize: 5 * 1024 * 1024 }, //5MB
+  fileFilter(req, file, done) {
+    // 확장자 검사
+    // 정규표현식 업로드 허용된 파일 확장자 목록
+    const allowedTypes = /jpeg|jpg|png|bmp/;
+    // 파일의 확장자를 추출하는 코드
+    // toLowerCase() 확장자를 소문자로 변환하여 대소문자 구분없이 검사 가능
+    // JPG나 jpg
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    // MIME 타입이 image/jpeg image/png 검사함
+    // 조건이 맞으면 true 아니면 false
+    const mimetype = allowedTypes.test(file.mimetype);
+    if (extname && mimetype) {
+      return done(null, true);
+    } else {
+      return done(new Error('허용되지 않는 확장자 입니다.'));
+    }
+  }
 });
 exports.get_modal = (req, res) => {
   res.send("example");
 };
+
+// 파일 s3에 업로드
+const uploadToS3 = async (filePath, bucketName, keyName) => {
+  try {
+    // 업로드할 파일 경로 및 내용 준비
+    const fileStream = fs.createReadStream(filePath);
+
+    // s3에 업로드할 객체 설정
+    const uploadParms = {
+      Bucket : bucketName,
+      Key : keyName,
+      Body : fileStream
+    };
+
+    // s3에 파일 업로드
+    const data = await s3.send(new PutObjectCommand(uploadParms));
+    console.log("Success, file uploaded to S3", data);
+    return `https://${bucketName}.s3.amazonaws.com/${keyName}`;
+  } catch (err) {
+    console.error("Error uploading file to S3", err);
+    throw err; // 에러 처리
+  }
+}
 
 exports.get_Index = (req, res) => {
   // 세션 권한 없으면 login으로 가야함!!!
@@ -55,8 +113,8 @@ exports.get_Login = (req, res) => {
 };
 
 exports.post_Login = async (req, res) => {
-  const { emailAddr, password } = req.body;
-  console.log(req.body);
+  const { id,emailAddr, password } = req.body;
+  console.log("post_login",req.body);
 
   // 입력 값 검증
   if (!emailAddr || !password) {
@@ -72,7 +130,9 @@ exports.post_Login = async (req, res) => {
     }
 
     // 로그인 성공
+    req.session.userId = user.id; // 사용자 id값 저장
     req.session.nickname = user.nickname; // 로그인 성공 시 세션 설정
+    console.log("세션에 저장된 userId:", req.session.userId);
     res.redirect("/");
   } catch (error) {
     console.error("Error logging in", error);
@@ -235,6 +295,64 @@ exports.get_Feed = (req, res) => {
   res.render("feed");
 };
 
+// 피드 업로드
+exports.post_feedUpload = (req,res) => {
+    // multer 를 사용하여 파일 업로드
+    // 문제해결
+    // form 데이터를 가져왔을때 이미지와 본문 내용을 가져오면
+    // 이미지 업로드를 먼저처리한뒤 body 값을 가져와야한다.
+    // req bdoy 값을 먼저 가져오면 해당값이 비어있어 값을 가져오지 못하게 됨
+    uploadDetail.single('file')(req,res, async(err) => {
+      if (err) {
+        return res.status(400).json({ error : "file upload failed",details : err.message});
+      }
+
+      if(!req.file) {
+        return res.status(400).json({ error : "No file uploaded" });
+      }
+
+      const { content } = req.body;
+      // 세션에서 userId 값을 불러오기
+      const { userId } = req.session;
+
+      console.log(content);
+      
+
+      try {
+        const filename = req.file.filename;
+        const filePath = req.file.path;
+        const bucketName = "feedimageup"
+        const keyName = `images/${filename}`;
+
+        // S3에 파일 업로드
+        const fileUrl = await uploadToS3(filePath,bucketName,keyName);
+
+        // db에 게시글 정보와 함꼐 파일 url 및 사용자의 id 저장
+        const feedData = {
+          content : content,
+          file_url: fileUrl,  // 컬럼명 수정
+          user_id: userId  // user_id로 수정
+        };
+
+        // DB에 피드 데이터 저장
+        const feed = await Feed.create(feedData);
+
+        try {
+          // 업로드 후 임시파일 삭제
+          fs.unlinkSync(filePath);
+        } catch (unlinkSync) {
+          console.err("failed to delete file", unlinkErr);
+        }
+        
+        //성공 응답
+        res.status(200).json({message : "feed uploaded success", fileUrl});
+      } catch (err) {
+        console.log("error during feed upload", err);
+        res.status(500).json({ error : "failed to upload feed", details : err.message});
+      }
+    });
+};
+
 exports.get_Calender = async (req, res) => {
   const today = new Date();
   const year = today.getFullYear();
@@ -372,6 +490,31 @@ exports.delete_todo = async (req, res) => {
   }
 };
 
+exports.modify_todo = async (req, res) => {
+  try {
+    const { title, description, dataId } = req.body;
+    await Task.update(
+      { title: title, description: description },
+      { where: { id: dataId } }
+    );
+    res.status(200).send("성공적으로 수정되었습니다.");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("수정 중 오류가 발생했습니다.");
+  }
+};
+
+exports.status_todo = async (req, res) => {
+  try {
+    const { status, id } = req.body;
+    await Task.update({ state: status }, { where: { id: id } });
+    res.status(200).send("성공적으로 수정되었습니다.");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("상태 업데이트 중 오류가 발생했습니다.");
+  }
+};
+
 exports.post_addtodo = async (req, res) => {
   try {
     const { title, description, year, month, today } = req.body;
@@ -404,6 +547,7 @@ exports.get_Timer = (req, res) => {
 exports.get_MyPage = (req, res) => {
   res.render("myPage");
 };
+
 exports.get_modal = (req, res) => {
   res.send("example");
 };

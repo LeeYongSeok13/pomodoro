@@ -226,3 +226,7 @@ body {
   height: 30px;
   margin-top: 20px;
 }
+.create-button:hover {
+  font-weight: 900;
+  background-color: #cb2931;
+}
