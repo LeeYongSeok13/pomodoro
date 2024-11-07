@@ -11,13 +11,6 @@ router.post("/login", controller.post_Login);
 router.get("/login/register", controller.get_Register);
 
 router.post("/login/register", controller.post_Register);
-router.get("/login/modal", controller.get_modal);
-
-// router.get("/login", (req, res) => {
-//   res.render("login");
-// });
-
-// router.post("/register", controller.post_Register);
 
 router.get("/login/find", controller.get_Find);
 
@@ -33,6 +26,8 @@ router.get("/login/modal", controller.get_modal);
 
 router.get("/feed", controller.get_Feed);
 
+router.post("/feed/upload",controller.post_feedUpload);
+
 router.get("/calender", controller.get_Calender);
 
 router.get(
@@ -45,6 +40,10 @@ router.post("/calender/addTodo", controller.post_addtodo);
 router.get("/calender/changeDate", controller.get_changeDate);
 
 router.delete("/calender/delete", controller.delete_todo);
+
+router.patch("/calender/modify", controller.modify_todo);
+
+router.patch("/calender/status", controller.status_todo);
 
 router.get("/timer", controller.get_Timer);
 
