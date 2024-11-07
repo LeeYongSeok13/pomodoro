@@ -45,51 +45,50 @@ input {
   border-width: 0;
   width: 283px;
   height: 40px;
-  margin-top: 5%;
+  /* margin-top: 5%; */
   border-radius: 30px;
+  box-sizing: border-box;
+  padding-left: 25px;
+}
+
+.inD {
+  width: 283px;
+  height: 55px;
+  display: flex;
+  flex-direction: column;
 }
 
 input::placeholder {
+  opacity: 0.7;
   font-weight: 400;
-  opacity: 0.5;
   color: #b2b2b2;
-  padding-left: 40px;
+  padding-left: 30px;
+  background-position: center left 3px;
+  background-repeat: no-repeat;
 }
 
-.username {
+.username::placeholder {
   background-image: url("/static/svg/person-vcard.svg");
-  background-position: center left 15px;
-  background-repeat: no-repeat;
 }
 
-.emailAddr {
+.emailAddr::placeholder {
   background-image: url("/static/svg/envelope-fill.svg");
-  background-position: center left 15px;
-  background-repeat: no-repeat;
 }
 
-.password {
+.password::placeholder {
   background-image: url("/static/svg/lock-fill.svg");
-  background-position: center left 15px;
-  background-repeat: no-repeat;
 }
 
-.password_confirm {
+.password_confirm::placeholder {
   background-image: url("/static/svg/lock-fill.svg");
-  background-position: center left 15px;
-  background-repeat: no-repeat;
 }
 
-.nickname {
+.nickname::placeholder {
   background-image: url("/static/svg/person-fill.svg");
-  background-position: center left 15px;
-  background-repeat: no-repeat;
 }
 
-.phoneNumber {
+.phoneNumber::placeholder {
   background-image: url("/static/svg/telephone-fill.svg");
-  background-position: center left 15px;
-  background-repeat: no-repeat;
 }
 
 .loginBt {
@@ -99,6 +98,10 @@ input::placeholder {
   height: 40px;
   margin-top: 6%;
   border-radius: 30px;
+
+  font-weight: 900;
+  color: #ffffff;
+  text-align: center;
 }
 
 .isUser {
@@ -125,11 +128,12 @@ input::placeholder {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 75%;
-  height: 20%;
+  height: 35%;
   background-color: #fbfbfb;
   /* box-shadow: 3px 3px 3px 3px rgba(34, 36, 38, 0.15); */
   box-shadow: 0px 1px 4px #adb5bd;
   z-index: 999;
+  border-radius: 15px;
 }
 
 .modal {
@@ -142,6 +146,7 @@ input::placeholder {
   height: 100%;
   text-align: center;
   background-color: #f9f9f9;
+  border-radius: 15px;
 }
 
 .modal h2 {
@@ -153,30 +158,46 @@ input::placeholder {
   margin-bottom: 20%;
 }
 
+.modalBtBox {
+  display: flex;
+  margin-top: 5%;
+  justify-content: center;
+}
 .modalOffBt {
   background-color: #da2337;
   border-width: 0;
-  width: 50%;
-  height: 40px;
+
   border-radius: 30px;
-  font-weight: 500;
+  font-weight: 900;
   color: #ffffff;
   text-align: center;
+
+  width: 97px;
+  height: 40px;
 }
 
-.modalOffBt:hover {
-  color: #f9f9f9;
+.modalBt {
+  background-color: #ffffff;
+  border: 3px solid #da2337;
+  border-radius: 30px;
+  font-weight: 900;
+  color: #da2337;
+  text-align: center;
+
+  width: 97px;
+  height: 40px;
+  margin-left: 4%;
 }
 
-.d-none {
+/* .d-none {
   display: none;
-}
+} */
 
 /* unique 값이 중복되었을 때 error-text의 스타일 */
 .error-text {
   color: red;
-  font-size: 0.9em;
-  display: none; /* 기본적으로 숨김처리 */
+  font-size: 12px;
+  display: none; /*기본적으로 숨김처리 */
 }
 
 .error-text.show {

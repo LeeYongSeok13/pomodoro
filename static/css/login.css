@@ -44,58 +44,31 @@ input {
   border-width: 0;
   width: 283px;
   height: 40px;
-  margin-top: 5%;
   border-radius: 30px;
+  box-sizing: border-box;
+  padding-left: 25px;
 }
-
 input::placeholder {
+  opacity: 0.7;
   font-weight: 400;
-  opacity: 0.5;
   color: #b2b2b2;
-  padding-left: 40px;
-}
-
-.findForm {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-top: 7%;
-}
-
-.findD {
-  margin-top: 15%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-}
-
-.emailAddr {
-  background-image: url("/static/svg/envelope-fill.svg");
-  background-position: center left 15px;
+  padding-left: 30px;
+  background-position: center left 3px;
   background-repeat: no-repeat;
 }
-
-.password {
-  background-image: url("/static/svg/lock-fill.svg");
-  background-position: center left 15px;
-  background-repeat: no-repeat;
-}
-
-.loginBox {
-  background-color: #f0f0f0;
-  border-width: 0;
+.inD {
   width: 283px;
-  height: 40px;
-  margin-top: 5%;
-  border-radius: 30px;
+  height: 55px;
+  display: flex;
+  flex-direction: column;
 }
 
-.loginBox::placeholder {
-  font-weight: 400;
-  opacity: 0.5;
-  color: #b2b2b2;
-  padding-left: 40px;
+.emailAddr::placeholder {
+  background-image: url("/static/svg/envelope-fill.svg");
+}
+
+.password::placeholder {
+  background-image: url("/static/svg/lock-fill.svg");
 }
 
 .loginBt {
@@ -103,27 +76,9 @@ input::placeholder {
   border-width: 0;
   width: 283px;
   height: 40px;
-  margin-top: 6%;
+  margin-top: 2%;
   border-radius: 30px;
-}
-
-.findBt {
-  background-color: #da2337;
-  border-width: 0;
-  width: 131px;
-  height: 40px;
-  margin-top: 6%;
-  border-radius: 30px;
-}
-
-button.loginBt {
-  font-weight: 500;
-  color: #ffffff;
-  text-align: center;
-}
-
-button.findBt {
-  font-weight: 500;
+  font-weight: 900;
   color: #ffffff;
   text-align: center;
 }
@@ -155,12 +110,22 @@ button.findBt {
   white-space: nowrap;
 }
 
-.isUser {
+/* .isUser {
   margin-top: 5%;
   display: flex;
   justify-content: center;
   align-items: center;
   white-space: nowrap;
+} */
+
+.error-text {
+  color: red;
+  font-size: 12px;
+  display: none; /*기본적으로 숨김처리 */
+}
+
+.error-text.show {
+  display: block; /* 오류 발생 시 표시 */
 }
 
 /* 모달 스타일 */

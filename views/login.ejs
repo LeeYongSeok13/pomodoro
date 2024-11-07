@@ -1,7 +1,8 @@
 <!-- views/login.ejs -->
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>로그인</title>
@@ -10,17 +11,13 @@
 
     <!-- axios CDN -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  </head>
+</head>
 
-  <body>
+<body>
     <div class="logoSz">
-      <a href="/">
-        <img
-          style="width: 100%; height: 100%"
-          src="../static/img/titleLogo.png"
-          alt=""
-        />
-      </a>
+        <a href="/">
+            <img style="width: 100%; height: 100%" src="../static/img/titleLogo.png" alt="" />
+        </a>
     </div>
 
     <form action="/login" method="POST" class="loginForm">
@@ -51,13 +48,13 @@
       </div>
 
       <!-- <div class="button1"></div> -->
+
     </form>
 
     <div class="newUser">
-      <p style="font-size: 11px">계정이 없으신가요?</p>
-      <a class="lostEp" href="/login/register">회원가입</a>
+        <p style="font-size: 11px">계정이 없으신가요?</p>
+        <a class="lostEp" href="/login/register">회원가입</a>
     </div>
-
     <!-- 로그인 모달 -->
     <div id="loginErrorModal" class="modal">
       <div class="modal-content">
