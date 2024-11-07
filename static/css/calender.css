@@ -147,7 +147,9 @@
   font-weight: 500;
 }
 .addList > form > input,
-textarea {
+textarea,
+.modifyInput,
+.modifyTextarea {
   border-radius: 20px;
   outline: none;
   border: none;
@@ -155,6 +157,15 @@ textarea {
   width: 90%;
   padding-left: 15px;
   background-color: #f0f0f0;
+}
+.modifyInput {
+  margin-bottom: 11px;
+  font-size: 15px;
+}
+.modifyTextarea {
+  font-size: 15px;
+  border-radius: 10px;
+  padding-top: 5px;
 }
 .addList > form > textarea {
   margin-bottom: 10px;

@@ -17,6 +17,7 @@
   border: none;
   width: 44px;
   height: 44px;
+  transition-duration: 200ms;
 }
 .button {
   font-size: 14px;
@@ -50,9 +51,9 @@
   width: 97px;
 }
 
-button:hover {
+/* button:hover {
   background-color: #a81f2b;
-}
+} */
 
 .long {
   width: 283px;
