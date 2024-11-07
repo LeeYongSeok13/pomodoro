@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="/static/css/reset.css" />
     <link rel="stylesheet" href="/static/css/navbar.css" />
     <link rel="stylesheet" href="/static/css/myPage.css" />
+    <link rel="stylesheet" href="/static/css/alert.css" />
     <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/mypage.js"></script>
   </head>
   <body>
     <header>
@@ -18,27 +20,42 @@
       /></a>
     </header>
     <main>
-      <section>
+      <section class="profile-section">
         <img src="/static/img/profile.png" alt="프로필 이미지" width="150px" />
-        <h2>user_id</h2>
-        <h3>홍길동</h3>
+        <h2 class="user-id">user_id</h2>
+        <h3 class="user-name">홍길동</h3>
       </section>
-      <section>
-        <article class="feed-info">
-          <span>올린피드</span>
+
+      <section class="feed-info-section">
+        <button class="feed-info btn">
+          <span class="feed-label">올린피드</span>
           <span><span class="feed-count">05</span> 개</span>
-        </article>
+        </button>
+
         <article class="button-grid">
-          <button>수집한 토마토 <span class="tomato-count">10</span></button>
-          <button>좋아요 누른 피드 <span class="like-count">10</span></button>
-          <button>완료한 일정 <span class="done-count">10</span></button>
-          <button>미흡했던 일정 <span class="ongoing-count">3</span></button>
+          <button class="tomato-button btn">
+            수집한 토마토 <span class="tomato-count count">10</span>
+          </button>
+          <button class="like-button btn">
+            좋아요 누른 피드 <span class="like-count count">10</span>
+          </button>
+          <button class="done-button btn">
+            완료한 일정 <span class="done-count count">10</span>
+          </button>
+          <button class="ongoing-button btn">
+            미흡했던 일정 <span class="ongoing-count count">3</span>
+          </button>
         </article>
+
         <article class="study-success">
-          <span class="study-label">내 공부 성공률은?</span>
-          <span class="stydy-percentage">90%</span>
+          <span class="study-label"
+            >내 공부 <br />
+            성공률은?</span
+          >
+          <span class="study-percentage">90%</span>
         </article>
-        <figcaption>
+
+        <figcaption class="study-time-analysis">
           이번 주 학습 시간 분석
           <canvas id="myChart"></canvas>
         </figcaption>
@@ -57,14 +74,11 @@
               label: "공부 시간",
               data: [1, 3, 2, 5, 3, 4, 2],
               borderWidth: 2,
-              borderColor: Utils.CHART_COLORS.red,
-              backgroundColor: Utils.transparentize(
-                Utils.CHART_COLORS.red,
-                0.5
-              ),
+              borderColor: "#DA2337",
+              backgroundColor: "#DA2337",
               pointStyle: "circle",
-              pointRadius: 10,
-              pointHoverRadius: 15,
+              pointRadius: 5,
+              pointHoverRadius: 10,
               tension: 0.4,
               pointBackgroundColor: "#DA2337",
               pointBorderColor: "#DA2337",

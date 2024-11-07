@@ -1,3 +1,124 @@
+.profile-section > img {
+  display: block;
+  margin: 0 auto;
+}
+.profile-section > h2 {
+  text-align: center;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.profile-section > h3 {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.feed-info-section {
+  padding: 30px;
+}
+.btn {
+  border: none;
+  outline: none;
+  background-color: #ffffff;
+}
+.feed-info {
+  padding: 0 55px 0 20px;
+  margin-bottom: 20px;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  border-radius: 20px;
+  line-height: 60px;
+  font-weight: 400;
+  font-size: 15px;
+  background-image: url("/static/svg/arrow-right.svg");
+  background-repeat: no-repeat;
+  background-position: 90% center;
+}
+.feed-label {
+  align-self: flex-start;
+}
+.feed-count {
+  font-size: 20px;
+  font-weight: bold;
+}
+.button-grid {
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+.button-grid > button {
+  box-sizing: border-box;
+  padding-top: 55px;
+  border-radius: 20px;
+  font-size: 14px;
+  width: 45%;
+  height: 140px;
+
+  background-size: 33px;
+  background-repeat: no-repeat;
+  background-position: 50% 20%;
+}
+.tomato-button {
+  margin: 0 10px 20px 0;
+  background-image: url("/static/img/tomato.png");
+}
+.like-button {
+  margin: 0 0 20px 10px;
+  background-image: url("/static/svg/suit-heart-fill.svg");
+}
+.done-button {
+  margin: 0 10px 20px 0;
+  background-image: url("/static/svg/check-circle-fill_green.svg");
+}
+.ongoing-button {
+  margin: 0 0 20px 10px;
+  background-image: url("/static/svg/exclamation-circle-fill_yellow.svg");
+}
+.count {
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 50px;
+}
+.study-success {
+  display: flex;
+  justify-content: space-between;
+  background-color: #ffffff;
+  letter-spacing: 1px;
+  line-height: 1.3;
+  padding: 30px 30px 30px 70px;
+
+  border-radius: 20px;
+
+  background-size: 35px;
+  background-repeat: no-repeat;
+  background-position: 20px center;
+  background-image: url("/static/svg/trophy-fill.svg");
+}
+.study-label {
+  font-size: 20px;
+  font-weight: 600;
+}
+.study-percentage {
+  font-size: 32px;
+  font-weight: 700;
+  color: #da2337;
+}
+
 figcaption {
-  width: 80vw;
+  margin-top: 20px;
+  background-color: #ffffff;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: 20px;
+  margin-bottom: 50px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+#myChart {
+  margin-top: 20px;
 }
