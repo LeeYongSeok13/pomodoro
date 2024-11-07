@@ -27,6 +27,8 @@ router.post("/login/find", controller.update_Passowrd);
 
 router.get("/feed", controller.get_Feed);
 
+router.post("/feed/upload",controller.post_feedUpload);
+
 router.get("/calender", controller.get_Calender);
 
 router.get(
