@@ -148,6 +148,90 @@
       </div>
     </div>
 
+    <div id="restModal">
+      <div class="restmodal">
+        <h2>25분이 지났습니다!</h2>
+        <p>5분 휴식을 시작할까요?</p>
+        <br />
+        <button class="restend">종료</button>
+        <button class="restok">확인</button>
+      </div>
+    </div>
+    <div id="restendModal">
+      <div class="restendmodal">
+        <h2>5분 휴식이 끝났습니다!</h2>
+        <p>공부를 다시 시작 할까요?</p>
+        <br />
+        <button class="resttheend">종료</button>
+        <button class="resttheok">확인</button>
+      </div>
+    </div>
+    <div id="stopModal">
+      <div class="stopmodal">
+        <h2>정말로 중단하시겠습니까?</h2>
+        <p>타이머가 종료되며 결과가 합산됩니다.</p>
+        <br />
+        <button class="stopend">취소</button>
+        <button class="stopok">확인</button>
+      </div>
+    </div>
+    <div id="doneModal">
+      <div class="donemodal">
+        <h2>수고하셨습니다!</h2>
+        <div id="timer" class="timer">00 : 25 : 00</div>
+        <section class="todayTomato">
+          획득한 토마토
+          <p>+<span>0</span></p>
+        </section>
+        <section class="todayresult">오늘의 성과</section>
+        <section class="improvement">추가 개선이 필요한 업무</section>
+        <section class="RemainingWork">남은 업무</section>
+        <br />
+        <button class="done" onclick="gomyPage()">완료</button>
+      </div>
+    </div>
+    <section class="list-Wrap">
+      <section class="todayTomato">
+        오늘 수집한 토마토
+        <p>+<span>0</span></p>
+      </section>
+      <section class="todo-container">
+        <%-include("./shared/rotateTodoItem", {titles: titles,
+        description:description, todoid: todoid}) %>
+      </section>
+
+      <button class="imgButton addTodo">
+        <span class="text-hidden">일정 추가 버튼</span>
+      </button>
+
+      <!-- 일정 추가 양식 -->
+      <section class="addList">
+        <button class="imgButton addListClose">
+          <span class="text-hidden">닫기 버튼</span>
+        </button>
+        <h2>일정 추가</h2>
+        <form name="todoform">
+          <label for="title">주제</label>
+          <input
+            type="text"
+            name="title"
+            id="title"
+            placeholder="공부할 주제를 입력해 주세요"
+          />
+          <label for="description">세부 내용</label>
+          <textarea
+            type="text"
+            placeholder="세부 내용을 입력해 주세요"
+            name="description"
+            id="description"
+          ></textarea
+          ><br />
+          <button type="button" class="button middle addListButton">
+            추가
+          </button>
+        </form>
+      </section>
+    </section>
     <script>
       // 오른쪽 왼쪽
       function toggleRight() {
@@ -157,14 +241,12 @@
         const outerTimerContainer = document.querySelector(
           ".outer-timer-container"
         );
-        // 토마토 이미지가 보일 때
+
         if (timerTomato.classList.contains("hide")) {
-          // 토마토 이미지가 숨겨졌을 때는 00:00:00부터 무한대로 시작
-          timeRemaining = 0; // 00:00:00부터 시작
+          timeRemaining = 0;
           updateDisplay();
         } else {
-          // 토마토 이미지가 보일 때는 00:25:00에서 카운트다운
-          timeRemaining = 25 * 60; // 25분 (25 * 60초)
+          timeRemaining = 25 * 60;
           updateDisplay();
         }
         if (rightIcon.style.display === "none") {
@@ -179,7 +261,7 @@
           leftIcon.style.display = "block";
           timerTomato.classList.add("hide");
           outerTimerContainer.classList.add("active");
-          timeRemaining = 0; // 00:00:00으로 초기화
+          timeRemaining = 0;
           updateDisplay();
         }
       }
@@ -202,17 +284,15 @@
       // 타이머 시작
       function startTimer() {
         timerInterval = setInterval(() => {
-          // 토마토 이미지일 때는 카운트다운
           if (
             timeRemaining > 0 &&
             !document.querySelector(".timerTomato").classList.contains("hide")
           ) {
             timeRemaining--;
           } else {
-            // 이미지 전환 후에는 시간이 무한대로 증가
             timeRemaining++;
           }
-          updateDisplay(); // 타이머 화면 업데이트
+          updateDisplay();
         }, 1000);
       }
 
@@ -225,7 +305,13 @@
       function stopTimer() {
         if (confirm("정말로 타이머를 중단하시겠습니까?")) {
           clearInterval(timerInterval);
-          timeRemaining = 0; // 시간을 초기화
+          if (
+            !document.querySelector(".timerTomato").classList.contains("hide")
+          ) {
+            timeRemaining = 25 * 60;
+          } else {
+            timeRemaining = 0;
+          }
           updateDisplay();
         }
       }
@@ -233,13 +319,13 @@
       // 타이머 초기화
       function resetTimer() {
         clearInterval(timerInterval);
-        // 토마토 이미지가 보일 때만 00:25:00으로 설정
+
         if (
           !document.querySelector(".timerTomato").classList.contains("hide")
         ) {
-          timeRemaining = 25 * 60; // 00:25:00으로 초기화
+          timeRemaining = 25 * 60;
         } else {
-          timeRemaining = 0; // 다른 화면일 경우 00:00:00으로 초기화
+          timeRemaining = 0;
         }
         updateDisplay();
       }
@@ -261,7 +347,7 @@
         }
       }
       // 초기화
-      timeRemaining = 25 * 60; // 기본 타이머는 00:25:00에서 시작
+      timeRemaining = 25 * 60;
       updateDisplay(); // 초기 화면 설정
 
       // 그냥 타이머
@@ -342,6 +428,11 @@
       }
 
       play();
+
+      // 완료 버튼 누르면 마이페이지로 가게.
+      function gomyPage() {
+        window.location.href = "./myPage";
+      }
     </script>
   </body>
 </html>

@@ -392,13 +392,15 @@ exports.post_addtodo = async (req, res) => {
 };
 
 exports.get_Timer = (req, res) => {
-  const todoItems = [
-    { title: "Task 1", description: "Description for task 1" },
-    { title: "Task 2", description: "Description for task 2" },
-    // 추가할 항목들
-  ];
+  const titles = ["Todo Item 1", "Todo Item 2"]; // 예시
+  const description = ["Description 1", "Description 2"]; // 예시
+  const todoid = [1, 2]; // 예시
 
-  res.render("timer", { todoItems });
+  res.render("timer", {
+    titles: titles,
+    description: description,
+    todoid: todoid,
+  });
 };
 
 exports.get_MyPage = (req, res) => {
