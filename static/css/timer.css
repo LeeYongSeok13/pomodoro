@@ -1,9 +1,12 @@
-/* html {
-  overflow: hidden;
-} */
+html {
+  overflow-x: hidden;
+  height: 100%;
+}
 body {
   background-color: #fef8f1;
   position: relative;
+  overflow-x: hidden;
+  height: 100%;
 }
 .logo {
   position: relative;
@@ -14,7 +17,7 @@ body {
   background-color: #f2eae0;
   position: absolute;
   width: 100%;
-  height: 47%;
+  height: 25%;
   top: 0;
   left: 0;
 }
@@ -22,7 +25,7 @@ body {
 /* overflow: hidden; */
 .timerTomato {
   position: absolute;
-  top: 20%;
+  top: 11%; /*20%*/
   left: 50%;
   transform: translate(-55%, 10%);
   z-index: 2;
@@ -30,17 +33,18 @@ body {
 }
 .hide {
   transform: translateX(-250%); /* -250% */
+  transition: transform 0.5s ease;
 }
 
 .right {
   position: absolute;
-  top: 43%;
+  top: 23%; /* 43% */
   right: 2%;
   z-index: 100;
 }
 .left {
   position: absolute;
-  top: 43%;
+  top: 23%; /* 43%; */
   left: 2%;
   z-index: 100;
   overflow: hidden;
@@ -49,7 +53,7 @@ body {
 .timercontainer {
   text-align: center;
   position: absolute;
-  top: 20%;
+  top: 10%; /* 20% */
   left: 50%;
   transform: translate(-50%, 140%);
 }
@@ -58,6 +62,296 @@ body {
   font-size: 200%;
   color: #473234;
 }
+
+/* 5분 휴식 모달 */
+#restModal {
+  position: absolute;
+  display: none;
+  justify-content: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  height: 35%;
+  background-color: #fbfbfb;
+  /* box-shadow: 3px 3px 3px 3px rgba(34, 36, 38, 0.15); */
+  box-shadow: 0px 1px 4px #adb5bd;
+  z-index: 999;
+  border-radius: 15px;
+}
+.restmodal {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 40px;
+  height: 70%;
+  text-align: center;
+  align-content: center;
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  box-shadow: 0px 0px 20px 0px gray;
+}
+.restmodal h2 {
+  margin-bottom: 10%;
+  font-size: x-large;
+}
+
+.restok {
+  background-color: #da2337;
+  border-width: 0;
+  border-radius: 30px;
+  font-weight: 900;
+  color: #ffffff;
+  text-align: center;
+  width: 120px;
+  height: 40px;
+  margin-top: 5%;
+}
+.restok:hover {
+  color: #f9f9f9;
+}
+.restend {
+  background-color: #ffffff;
+  border-color: #da2337;
+  border-width: 3px;
+  border-style: solid;
+  outline: none;
+  border-radius: 30px;
+  font-weight: 900;
+  color: #da2337;
+  text-align: center;
+  width: 120px;
+  height: 40px;
+  margin-top: 5%;
+}
+.restend:hover {
+  color: #f9f9f9;
+}
+
+/* 5분 휴식 끝 모달 */
+#restendModal {
+  position: absolute;
+  display: none;
+  justify-content: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  height: 35%;
+  background-color: #fbfbfb;
+  /* box-shadow: 3px 3px 3px 3px rgba(34, 36, 38, 0.15); */
+  box-shadow: 0px 1px 4px #adb5bd;
+  z-index: 999;
+  border-radius: 15px;
+}
+.restendmodal {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 40px;
+  height: 70%;
+  text-align: center;
+  align-content: center;
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  box-shadow: 0px 0px 20px 0px gray;
+}
+.restendmodal h2 {
+  margin-bottom: 10%;
+  font-size: x-large;
+}
+
+.resttheok {
+  background-color: #da2337;
+  border-width: 0;
+  border-radius: 30px;
+  font-weight: 900;
+  color: #ffffff;
+  text-align: center;
+  width: 120px;
+  height: 40px;
+  margin-top: 5%;
+}
+.resttheok:hover {
+  color: #f9f9f9;
+}
+.resttheend {
+  background-color: #ffffff;
+  border-color: #da2337;
+  border-width: 3px;
+  border-style: solid;
+  outline: none;
+  border-radius: 30px;
+  font-weight: 900;
+  color: #da2337;
+  text-align: center;
+  width: 120px;
+  height: 40px;
+  margin-top: 5%;
+}
+.resttheend:hover {
+  color: #f9f9f9;
+}
+
+/* 완전중지 모달 */
+#stopModal {
+  position: absolute;
+  display: none;
+  justify-content: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  height: 35%;
+  background-color: #fbfbfb;
+  /* box-shadow: 3px 3px 3px 3px rgba(34, 36, 38, 0.15); */
+  box-shadow: 0px 1px 4px #adb5bd;
+  z-index: 999;
+  border-radius: 15px;
+}
+.stopmodal {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 40px;
+  height: 70%;
+  text-align: center;
+  align-content: center;
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  box-shadow: 0px 0px 20px 0px gray;
+}
+.stopmodal h2 {
+  margin-bottom: 10%;
+  font-size: x-large;
+}
+/*
+/* .modal p {
+  margin-bottom: 20%;
+} */
+.stopok {
+  background-color: #da2337;
+  border-width: 0;
+  border-radius: 30px;
+  font-weight: 900;
+  color: #ffffff;
+  text-align: center;
+  width: 120px;
+  height: 40px;
+  margin-top: 5%;
+}
+.stopok:hover {
+  color: #f9f9f9;
+}
+.stopend {
+  background-color: #ffffff;
+  border-color: #da2337;
+  border-width: 3px;
+  border-style: solid;
+  outline: none;
+  border-radius: 30px;
+  font-weight: 900;
+  color: #da2337;
+  text-align: center;
+  width: 120px;
+  height: 40px;
+  margin-top: 5%;
+}
+.stopend:hover {
+  color: #f9f9f9;
+}
+/* 완전 완료 모달 */
+#doneModal {
+  position: absolute;
+  display: none;
+  justify-content: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  height: 35%;
+  background-color: #f0f0f0;
+  /* box-shadow: 3px 3px 3px 3px rgba(34, 36, 38, 0.15); */
+  box-shadow: 0px 1px 4px #adb5bd;
+  z-index: 999;
+  border-radius: 15px;
+}
+.donemodal {
+  position: absolute;
+  width: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 40px;
+  height: 210%;
+  text-align: center;
+  align-content: center;
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  box-shadow: 0px 0px 20px 0px gray;
+}
+.donemodal > h2 {
+  margin-bottom: 10%;
+  font-size: x-large;
+}
+.todayresult {
+  margin-top: 30px;
+  padding: 20px 30px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 20%;
+  font-weight: 700;
+  font-size: 15px;
+}
+.improvement {
+  margin-top: 30px;
+  padding: 20px 30px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 20%;
+  font-weight: 700;
+  font-size: 15px;
+}
+.RemainingWork {
+  margin-top: 30px;
+  padding: 20px 30px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 20%;
+  font-weight: 700;
+  font-size: 15px;
+}
+.done {
+  background-color: #da2337;
+  border-width: 0;
+  border-radius: 30px;
+  font-weight: 900;
+  color: #ffffff;
+  text-align: center;
+  width: 120px;
+  height: 40px;
+  margin-top: 5%;
+}
+.done:hover {
+  color: #f9f9f9;
+}
+
+/* 캘린더에서 추가한거 */
 .buttonbox {
   display: flex;
   flex-direction: row;
@@ -68,16 +362,17 @@ body {
   padding: 10px;
   color: #4b3134;
   position: relative;
-  z-index: 10;
-  transform: translate(0%, 120%);
+  margin-bottom: 60vh;
+  top: 40%;
 }
 .todayTomato {
   font-size: 16px;
   font-weight: 600;
-  /* margin-top: 30px; */
+  margin-top: 30px;
   padding: 20px 30px;
   border-radius: 10px;
   background-color: #ffffff;
+
   background-image: url("/static/img/tomato.png");
   background-repeat: no-repeat;
   background-size: 33px;
@@ -96,28 +391,28 @@ body {
   font-size: 32px;
   margin-left: 5px;
 }
-/* 이 버튼이 플러스 버튼 */
+
 .addTodo {
   background-image: url("/static/svg/plus-circle.svg");
   background-size: 80%;
   position: absolute;
   left: 50%;
-  transform: translate(-20px, 0px);
+  transform: translateX(-50%);
 }
 .addList {
-  /* visibility: hidden;
-  opacity: 0; */
-  transition: visibility 0s, opacity 0.5s linear;
+  display: none;
   font-size: 20px;
   font-weight: 700;
   background-color: #ffffff;
   border-radius: 20px;
   margin-top: 20px;
   padding: 20px;
-}
-.addList.show {
-  visibility: visible;
-  opacity: 1;
+  position: relative;
+  margin-bottom: 50px;
+
+  position: relative;
+  transition-duration: 300ms;
+  bottom: -100vh;
 }
 .addList > form {
   display: flex;
@@ -149,13 +444,17 @@ textarea {
 .addListButton {
   align-self: center;
 }
+
+.addListClose {
+  background-image: url("/static/svg/x-circle.svg");
+  background-size: 30px;
+  position: absolute;
+  right: 20px;
+  top: 15px;
+}
 .todoItem {
-  background-color: #ffffff;
-  padding: 10px 20px;
-  margin-top: 10px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
+  transition-duration: 250ms;
+  position: relative;
 }
 
 /* 그냥타이머 */
@@ -180,18 +479,15 @@ textarea {
   border: 10px solid rgb(55, 55, 55);
   box-shadow: inset 0 0 3px 3px rgba(50, 50, 50, 0.3),
     inset 0 0 1px 2px rgba(50, 50, 50, 0.2);
-  visibility: hidden;
   position: absolute;
-  transform: translate(-50%, 10%) translateX(100%);
+  right: 0;
+  transform: translateX(100%);
   z-index: 2;
-  opacity: 0;
-  transition: left 0.5s ease, opacity 0.5s ease, visibility 0s 0.5s;
+  transition: transform 0.5s ease;
 }
-.outer-timer-container.show {
-  visibility: visible;
-  transform: translate(75%, 10%) translateX(0);
-  opacity: 1;
-  transition: transform 0.5s ease, opacity 0.5s ease, visibility 0s 0s;
+.outer-timer-container.active {
+  transform: translate(-78%, 13%);
+  transition: transform 0.5s ease;
 }
 
 /* 타이머 본체 */
