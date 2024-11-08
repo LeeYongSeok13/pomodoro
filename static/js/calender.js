@@ -151,11 +151,17 @@ window.addEventListener("load", async () => {
 
         todoContainer.innerHTML = data;
         deletebuttonActive();
+        modifyButtonActive();
+        statusChange();
       });
     });
   }
   addTodo.addEventListener("click", () => {
-    openTodoList();
+    addList.style.display = "block";
+    window.setTimeout(() => {
+      addList.style.bottom = "0vh";
+    }, 50);
+    addTodo.style.display = "none";
   });
   addListClose.addEventListener("click", () => {
     closeTodoList();
@@ -197,6 +203,7 @@ window.addEventListener("load", async () => {
           title: titles,
           description: descriptions,
           dataId: dataIds,
+          state: ["pending"],
         },
       });
       // DOMParser 인스턴스 생성
@@ -223,14 +230,6 @@ window.addEventListener("load", async () => {
     }
   });
 
-  function openTodoList() {
-    addList.style.display = "block";
-    window.setTimeout(() => {
-      addList.style.bottom = "0vh";
-    }, 50);
-    addTodo.style.display = "none";
-  }
-
   function closeTodoList() {
     addList.style.bottom = "";
     window.setTimeout(() => {
@@ -242,6 +241,7 @@ window.addEventListener("load", async () => {
   }
 
   function statusChange() {
+    // 상태를 변화시켜서 DB에 업데이트한다.
     const statusButton = document.querySelectorAll(".state");
     let status = "pending";
     statusButton.forEach((item) => {

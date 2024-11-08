@@ -8,25 +8,34 @@
     <link rel="stylesheet" href="/static/css/navbar.css" />
     <link rel="stylesheet" href="/static/css/timer.css" />
     <link rel="stylesheet" href="/static/css/button.css" />
-    <script src="/static/js/navbar.js"></script>
-    <!-- 글씨체 -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" href="/static/css/calender.css" />
+    <link rel="stylesheet" href="/static/css/todoItem.css" />
+    <link rel="stylesheet" href="/static/css/alert.css" />
     <!-- axios CDN -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/timer.js"></script>
+    <!-- <script src="/static/js/calender.js"></script> -->
+    <!-- nav css에 이미  폰트다운받는 코드가 있음 -->
+    <!-- 글씨체 --> 
+    <!-- <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    /> -->
+    
   </head>
   <body>
     <header>
       <%- include("./shared/navbar") %>
-      <div class="background"></div>
+      <!-- <div class="background"></div> -->
       <a href="/" class="logo"
         ><img width="158" src="/static/img/logo.png" alt="로고 이미지"
       /></a>
     </header>
 
     <div id="rightBtn" onclick="toggleRight()">
+      <!-- 오른쪽 이동 버튼 -->
       <svg
         id="rightIcon"
         xmlns="http://www.w3.org/2000/svg"
@@ -41,13 +50,17 @@
           d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"
         />
       </svg>
-      <div class="timerTomato">
+
+      <!-- 토마토 이미지 -->
+      <!-- <div class="timerTomato">
+      </div> -->
         <img
           width="158"
           src="/static/img/timerTomato.png"
           alt="토마토 이미지"
+          class="timerTomato"
         />
-      </div>
+      
       <!-- 그냥 타이머 -->
       <div class="outer-timer-container">
         <div id="main-timer" class="timer-body">
@@ -59,6 +72,8 @@
           <div class="inner-cover2"></div>
         </div>
       </div>
+
+      <!-- 왼쪽 화살표 -->
       <svg
         id="leftIcon"
         xmlns="http://www.w3.org/2000/svg"
@@ -75,10 +90,11 @@
         />
       </svg>
     </div>
+
     <div class="timercontainer">
       <div id="timer" class="timer">00 : 00 : 00</div>
       <div class="buttonbox">
-        <div id="startBtn" onclick="togglePlayPause()">
+        <button class="stopWatch-btn" id="startBtn" onclick="togglePlayPause()">
           <svg
             id="playIcon"
             xmlns="http://www.w3.org/2000/svg"
@@ -112,8 +128,8 @@
               d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z"
             />
           </svg>
-        </div>
-        <div id="stopBtn" onclick="stopTimer()">
+        </button class="stopWatch-btn">
+        <button class="stopWatch-btn" id="stopBtn" onclick="stopTimer()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="35px"
@@ -126,8 +142,8 @@
               d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.5 5A1.5 1.5 0 0 0 5 6.5v3A1.5 1.5 0 0 0 6.5 11h3A1.5 1.5 0 0 0 11 9.5v-3A1.5 1.5 0 0 0 9.5 5z"
             />
           </svg>
-        </div>
-        <div id="resetBtn" onclick="resetTimer()">
+        </button class="stopWatch-btn">
+        <button class="stopWatch-btn" id="resetBtn" onclick="resetTimer()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="35px"
@@ -144,11 +160,15 @@
               d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466"
             />
           </svg>
-        </div>
+        </button class="stopWatch-btn">
       </div>
     </div>
+
+    <%- include("./shared/list-Wrap"), {titles: titles, description: description, todoid: todoid, state: state} %>
+
     <!-- 이건 5분 휴식으로 변할때, 뒤에 스포트 라이트 -->
     <div class="spotlight"></div>
+
     <div id="restModal">
       <div class="restmodal">
         <h2>25분이 지났습니다!</h2>
@@ -191,48 +211,7 @@
         <button class="done" onclick="gomyPage()">완료</button>
       </div>
     </div>
-    <section class="list-Wrap">
-      <section class="todayTomato">
-        오늘 수집한 토마토
-        <p>+<span>0</span></p>
-      </section>
-      <section class="todo-container">
-        <%-include("./shared/rotateTodoItem", {titles: titles,
-        description:description, todoid: todoid}) %>
-      </section>
 
-      <button class="imgButton addTodo">
-        <span class="text-hidden">일정 추가 버튼</span>
-      </button>
-
-      <!-- 일정 추가 양식 -->
-      <section class="addList">
-        <button class="imgButton addListClose">
-          <span class="text-hidden">닫기 버튼</span>
-        </button>
-        <h2>일정 추가</h2>
-        <form name="todoform">
-          <label for="title">주제</label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            placeholder="공부할 주제를 입력해 주세요"
-          />
-          <label for="description">세부 내용</label>
-          <textarea
-            type="text"
-            placeholder="세부 내용을 입력해 주세요"
-            name="description"
-            id="description"
-          ></textarea
-          ><br />
-          <button type="button" class="button middle addListButton">
-            추가
-          </button>
-        </form>
-      </section>
-    </section>
     <script>
       // 오른쪽 왼쪽
       function toggleRight() {
