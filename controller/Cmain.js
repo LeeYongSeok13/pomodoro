@@ -663,7 +663,6 @@ exports.post_addtodo = async (req, res) => {
   }
 };
 
-
 exports.get_MyPage = async (req, res) => {
   const user_id = req.session.nickname;
   // 완료한 업무 검색
