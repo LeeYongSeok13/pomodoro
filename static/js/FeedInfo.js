@@ -12,20 +12,19 @@ window.onload = function() {
     fetch(`/get-feeds?page=${currentPage}`)
       .then(response => response.json())
       .then(data => {
+        console.log('요청받은 데이터', data);
         const feedContainer = document.querySelector('.feed-container'); 
 
-        console.log(feedContainer);
-        
         // 피드 데이터가 존재하면 화면에 추가
-        if (data.feeds && data.feeds.length > 0) {
-          data.feeds.forEach(feed => {
+        if (data && data.length > 0) {
+          data.forEach(feed => {
             const feedElement = document.createElement('div');
             feedElement.classList.add('feed-item');
             feedElement.innerHTML = `
               <div class="content">
                 <p class="user-info">
                   <span class="profile-img"></span>
-                  <strong>${feed.User.nickname}</strong>
+                  <strong>${feed.user.nickname}</strong>
                 </p>
                 <img src="${feed.file_url}" alt="post" />
                 <p>${feed.content}</p>
