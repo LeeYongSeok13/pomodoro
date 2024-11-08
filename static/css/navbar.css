@@ -52,12 +52,76 @@ nav {
 .navbar > li > a > svg.active {
   transform: scale(1.2) translate(0, -2px);
 }
-
+#user-info {
+  display: none;
+}
+.logout {
+  display: none;
+}
 /* 태블릿 스타일 */
 @media screen and (min-width: 768px) {
-  body {
-    font-size: 18px;
-    /* 태블릿 전용 스타일 */
+  nav {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 185px;
+    padding: 50px 20px 10px;
+    box-sizing: border-box;
+
+    background-color: #f7f7f7;
+  }
+  #user-info {
+    display: block;
+  }
+  #user-info > img {
+    display: block;
+    margin: 0 auto 10px;
+  }
+  #user-info > h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  #user-info > h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #626262;
+    margin-bottom: 30px;
+  }
+
+  .navbar {
+    display: block;
+  }
+  .navbar > li {
+    margin-bottom: 10px;
+  }
+
+  .navbar > li > a {
+    position: relative;
+    display: block;
+    background-color: #ffffff;
+    border-radius: 10px;
+    /* padding: 13px 10px; */
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    box-sizing: border-box;
+    line-height: 50px;
+  }
+  .navbar > li > a > svg {
+    flex-grow: 0;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .navbar > li > a > svg.active {
+    transform: scale(1.2) translateY(-50%);
+  }
+  .logout {
+    position: absolute;
+    bottom: 10px;
   }
 }
 
