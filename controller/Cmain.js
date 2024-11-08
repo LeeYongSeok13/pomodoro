@@ -551,15 +551,11 @@ exports.post_addtodo = async (req, res) => {
 };
 
 exports.get_Timer = (req, res) => {
-  const titles = ["Todo Item 1", "Todo Item 2"]; // 예시
-  const description = ["Description 1", "Description 2"]; // 예시
-  const todoid = [1, 2]; // 예시
+  const titles = ["Title1", "Title2", "Title3"]; // 예시 데이터
+  const description = "Example description"; // 예시 데이터
+  const todoid = 123; // 예시 데이터
 
-  res.render("timer", {
-    titles: titles,
-    description: description,
-    todoid: todoid,
-  });
+  res.render("timer", { titles, description, todoid });
 };
 
 exports.get_MyPage = (req, res) => {

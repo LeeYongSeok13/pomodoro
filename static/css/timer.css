@@ -3,7 +3,7 @@ html {
   height: 100%;
 }
 body {
-  background-color: #fef8f1;
+  background-color: #fef8f1; /* #473c52 */
   position: relative;
   overflow-x: hidden;
   height: 100%;
@@ -14,12 +14,25 @@ body {
 }
 
 .background {
-  background-color: #f2eae0;
+  background-color: #f2eae0; /* #654f76 */
   position: absolute;
   width: 100%;
   height: 25%;
   top: 0;
   left: 0;
+}
+/* 5분타이머때 바뀌는거 */
+.spotlight {
+  background-image: url("/static/img/spotlight.png");
+  width: 80%;
+  height: 80%;
+  position: absolute;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  top: -18%;
+  left: 10%;
+  display: none;
 }
 
 /* overflow: hidden; */
