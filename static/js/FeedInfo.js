@@ -12,7 +12,6 @@ window.onload = function() {
     fetch(`/get-feeds?page=${currentPage}`)
       .then(response => response.json())
       .then(data => {
-        console.log('요청받은 데이터', data);
         const feedContainer = document.querySelector('.feed-container'); 
 
         // 피드 데이터가 존재하면 화면에 추가
@@ -41,7 +40,6 @@ window.onload = function() {
           });
 
           currentPage++; // 페이지 번호 증가
-          console.log('페이지 번호 증가값 : ',currentPage);
         }
 
         isLoading = false; // 로딩 종료
