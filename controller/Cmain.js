@@ -380,34 +380,10 @@ exports.get_Calender = async (req, res) => {
     today.getMonth(),
     1
   ).getDay();
-  const user_id = req.session.nickname;
 
-  // 오늘 0시부터 24시까지의 범위와 아이디로 일정을 탐색
-  const startOfDay = new Date();
-  startOfDay.setHours(0, 0, 0, 0);
-  const endOfDay = new Date();
-  endOfDay.setHours(23, 59, 59, 999);
-
-  const todos = await Task.findAll({
-    where: {
-      user_id: user_id,
-      due_date: {
-        [Op.gte]: startOfDay, // 시작일 이후
-        [Op.lte]: endOfDay, // 종료일 이전
-      },
-    },
-  });
-
-  const titles = [];
-  const description = [];
-  const state = [];
-  const todoid = [];
-  todos.map((todo) => {
-    titles.push(todo.title);
-    description.push(todo.description);
-    state.push(todo.state);
-    todoid.push(todo.id);
-  });
+  const { titles, description, state, todoid } = await get_today_todoList(
+    req.session.nickname
+  );
 
   res.render("calender", {
     year: year,
@@ -415,6 +391,18 @@ exports.get_Calender = async (req, res) => {
     lastDay: lastDay,
     firstDayOfMonth: firstDayOfMonth,
     dayNames: dayNames,
+    titles: titles,
+    description: description,
+    state: state,
+    todoid: todoid,
+  });
+};
+exports.get_Timer = async (req, res) => {
+  const { titles, description, state, todoid } = await get_today_todoList(
+    req.session.nickname
+  );
+
+  res.render("timer", {
     titles: titles,
     description: description,
     state: state,
@@ -550,20 +538,64 @@ exports.post_addtodo = async (req, res) => {
   }
 };
 
-exports.get_Timer = (req, res) => {
-  const titles = ["Todo Item 1", "Todo Item 2"]; // 예시
-  const description = ["Description 1", "Description 2"]; // 예시
-  const todoid = [1, 2]; // 예시
-
-  res.render("timer", {
-    titles: titles,
-    description: description,
-    todoid: todoid,
+exports.get_MyPage = async (req, res) => {
+  const user_id = req.session.nickname;
+  // 완료한 업무 검색
+  const done_data = await Task.findAll({
+    where: {
+      user_id: user_id,
+      state: "done",
+    },
   });
-};
+  const done_titles = [];
+  const done_descriptions = [];
+  done_data.forEach((item) => {
+    done_titles.push(item.dataValues.title);
+    done_descriptions.push(item.dataValues.description);
+  });
 
-exports.get_MyPage = (req, res) => {
-  res.render("myPage");
+  // 미흡한 업무 검색
+  const ongoing_data = await Task.findAll({
+    where: {
+      user_id: user_id,
+      state: "ongoing",
+    },
+  });
+  const ongoing_titles = [];
+  const ongoing_descriptions = [];
+  ongoing_data.forEach((item) => {
+    ongoing_titles.push(item.dataValues.title);
+    ongoing_descriptions.push(item.dataValues.description);
+  });
+  //미완료 업무 검색
+  const pending_data = await Task.findAll({
+    where: {
+      user_id: user_id,
+      state: "pending",
+    },
+  });
+  const pending_titles = [];
+  const pending_descriptions = [];
+  pending_data.forEach((item) => {
+    pending_titles.push(item.dataValues.title);
+    pending_descriptions.push(item.dataValues.description);
+  });
+  // 모든 업무의 개수
+  const allListNum =
+    done_titles.length + ongoing_titles.length + pending_titles.length;
+
+  // 업무 성공률
+  const successPercentage = Math.round((done_titles.length / allListNum) * 100);
+  res.render("myPage", {
+    done_titles: done_titles,
+    done_descriptions: done_descriptions,
+    ongoing_titles: ongoing_titles,
+    ongoing_descriptions: ongoing_descriptions,
+    pending_titles: pending_titles,
+    pending_descriptions: pending_descriptions,
+    allListNum: allListNum,
+    successPercentage: successPercentage,
+  });
 };
 
 exports.get_modal = (req, res) => {
@@ -571,10 +603,49 @@ exports.get_modal = (req, res) => {
 };
 
 exports.getComponent = (req, res) => {
-  const { title, description, dataId } = req.query;
+  const { title, description, dataId, state } = req.query;
   res.render("./shared/rotateTodoItem", {
     titles: title,
     description: description,
     todoid: dataId,
+    state: state,
   });
 };
+// 타이머, 캘린더에서 표시할 오늘 일정 불러오는 함수(접어두고 사용)
+async function get_today_todoList(nickname) {
+  const user_id = nickname;
+
+  // 오늘 0시부터 24시까지의 범위와 아이디로 일정을 탐색
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const todos = await Task.findAll({
+    where: {
+      user_id: user_id,
+      due_date: {
+        [Op.gte]: startOfDay, // 시작일 이후
+        [Op.lte]: endOfDay, // 종료일 이전
+      },
+    },
+  });
+
+  const titles = [];
+  const description = [];
+  const state = [];
+  const todoid = [];
+
+  todos.map((todo) => {
+    titles.push(todo.title);
+    description.push(todo.description);
+    state.push(todo.state);
+    todoid.push(todo.id);
+  });
+  return {
+    titles,
+    description,
+    state,
+    todoid,
+  };
+}
