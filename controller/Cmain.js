@@ -200,7 +200,6 @@ exports.post_Register = async (req, res) => {
       password: hashedPassword,
       nickname,
       phoneNumber,
-      g,
     });
 
     return res.json({
@@ -538,7 +537,6 @@ exports.post_addtodo = async (req, res) => {
   }
 };
 
-
 exports.get_MyPage = async (req, res) => {
   const user_id = req.session.nickname;
   // 완료한 업무 검색
@@ -554,7 +552,6 @@ exports.get_MyPage = async (req, res) => {
     done_titles.push(item.dataValues.title);
     done_descriptions.push(item.dataValues.description);
   });
-
 
   // 미흡한 업무 검색
   const ongoing_data = await Task.findAll({

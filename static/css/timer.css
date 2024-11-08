@@ -13,9 +13,7 @@ body {
   z-index: 10;
 }
 
-
-
-header::after {
+header {
   content: "";
   background-color: #f2eae0;
   position: absolute;
@@ -353,7 +351,7 @@ header::after {
   font-weight: 700;
   font-size: 15px;
 }
-/* .done {
+.donedone {
   background-color: #da2337;
   border-width: 0;
   border-radius: 30px;
@@ -364,9 +362,9 @@ header::after {
   height: 40px;
   margin-top: 5%;
 }
-.done:hover {
+.donedone:hover {
   color: #f9f9f9;
-} */
+}
 
 /* 캘린더에서 추가한거 */
 .buttonbox {
@@ -375,12 +373,14 @@ header::after {
   gap: 50px;
   justify-content: center;
 }
+/* 
 .list-Wrap {
   padding: 10px;
   color: #4b3134;
   position: relative;
   margin-bottom: 60vh;
-  top: 40%;
+  top: 50%;
+  margin-bottom: 450px;
 }
 .todayTomato {
   font-size: 16px;
@@ -472,7 +472,7 @@ textarea {
 .todoItem {
   transition-duration: 250ms;
   position: relative;
-}
+} */
 
 /* 그냥타이머 */
 
@@ -498,12 +498,12 @@ textarea {
     inset 0 0 1px 2px rgba(50, 50, 50, 0.2);
   position: absolute;
   right: 0;
-  transform: translateX(100%);
+  transform: translate(100%, 50%);
   z-index: 2;
   transition: transform 0.5s ease;
 }
 .outer-timer-container.active {
-  transform: translate(-78%, 13%);
+  transform: translate(-76%, 50%);
   transition: transform 0.5s ease;
 }
 
