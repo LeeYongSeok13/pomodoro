@@ -307,12 +307,12 @@
             clearInterval(timerInterval); // 타이머 정지
             isTimerRunning = false; // 타이머 실행 중 플래그 초기화
           }
-          // 타이머가 종료되었을 때, 타이머가 아닌 상태에서 시간 증가 (예: '타이머 + 무한 타이머' 화면)
+          // 얘는 그냥 타이머때 시간 증가 하는거
           else {
             timeRemaining++;
           }
           updateDisplay();
-        }, 1000); // 1초마다 타이머 실행
+        }, 1000);
       }
       // 25분 타이머 종료 후 알람창을 띄우는 함수
       function showRestModal() {
@@ -334,56 +334,47 @@
 
       // 5분 휴식 타이머 시작
       function startRestTimer() {
-        timeRemaining = 5 * 60; // 5분
+        timeRemaining = 5 * 60;
         updateDisplay();
         startRestPeriod();
-        startTimer(); // 5분 타이머 시작
+        startTimer();
       }
 
       function startRestPeriod() {
-        // 배경색과 타이머 색상 변경
-        document.body.style.backgroundColor = "#473c52";
-        document.querySelector(".background").style.backgroundColor = "#654f76";
+        document.body.style.backgroundColor = "#654f76";
+        document.querySelector(".background").style.backgroundColor = "#473c52";
         document.querySelector(".timer").style.color = "#fff";
 
-        // 5분 휴식 동안 버튼 아이콘 색상 변경
         const icons = document.querySelectorAll(".buttonbox svg");
         icons.forEach((icon) => {
-          icon.style.fill = "#fff"; // 버튼 아이콘 색상 변경
+          icon.style.fill = "#fff";
         });
 
         const rightIcon = document.querySelector("#rightBtn svg");
         if (rightIcon) {
-          rightIcon.style.fill = "#fff"; // 오른쪽 버튼 아이콘 색상 변경
+          rightIcon.style.fill = "#fff";
         }
-
-        // .spotlight 보이게 하기
         const spotlight = document.querySelector(".spotlight");
         if (spotlight) {
-          spotlight.style.display = "block"; // 5분 휴식 중 spotlight 보이게 함
+          spotlight.style.display = "block";
         }
 
-        // 5분 후, 배경색과 버튼 아이콘 색상을 원래 상태로 되돌림
+        // 5분 후, 원래 상태로 되돌리기
         setTimeout(function () {
-          // 배경색과 타이머 색상 원래대로 돌리기
-          document.body.style.backgroundColor = "#fef8f1"; // 원래 배경색
+          document.body.style.backgroundColor = "#fef8f1";
           document.querySelector(".background").style.backgroundColor =
-            "#f2eae0"; // 원래 배경색
+            "#f2eae0";
           document.querySelector(".timer").style.color = "#473234";
-
-          // 버튼 아이콘 색상 원래대로 되돌리기
           icons.forEach((icon) => {
-            icon.style.fill = "#473234"; // 원래 버튼 아이콘 색상
+            icon.style.fill = "#473234";
           });
           if (rightIcon) {
-            rightIcon.style.fill = "#473234"; // 원래 오른쪽 버튼 색상
+            rightIcon.style.fill = "#473234";
           }
-
-          // .spotlight 숨기기
           if (spotlight) {
-            spotlight.style.display = "none"; // 5분 후 spotlight 숨기기
+            spotlight.style.display = "none";
           }
-        }, 5 * 60 * 1000); // 5분(300,000ms) 후에 원래 상태로 돌아옴
+        }, 5 * 60 * 1000);
       }
 
       // 타이머 일시정지
