@@ -122,3 +122,15 @@ figcaption {
 #myChart {
   margin-top: 20px;
 }
+/* 태블릿 스타일 */
+@media screen and (min-width: 768px) {
+  header {
+    padding-left: 185px;
+  }
+  main {
+    width: calc(100% - 185px);
+    padding-left: 185px;
+    max-width: 55vw;
+    margin: 0 auto;
+  }
+}

@@ -10,6 +10,7 @@ body {
 }
 
 .feed-container {
+  margin: 0 auto;
   width: 80%;
   max-width: 600px;
   margin-top: 50px;
@@ -35,6 +36,9 @@ body {
   height: auto;
   cursor: pointer;
 }
+.content > img {
+  border-radius: 15px;
+}
 
 .feed-item .content {
   padding: 15px;
@@ -50,13 +54,15 @@ body {
   font-size: 14px;
   font-weight: 500;
 }
-.content p {
+.content .profile-img {
   margin: 5px 0;
   font-size: 15px;
   line-height: 1.6;
   font-weight: 400;
 }
-
+.content > p {
+  margin: 20px 0;
+}
 .user-info {
   display: flex;
   align-items: center;
@@ -207,4 +213,18 @@ body {
   bottom: 70px;
   right: 10px;
   width: 35px;
+}
+
+/* 태블릿 스타일 */
+@media screen and (min-width: 768px) {
+  header {
+    padding-left: 185px;
+  }
+  body > main {
+    width: calc(100% - 185px);
+    padding-left: 185px;
+  }
+  .plus-icon img {
+    bottom: 20px;
+  }
 }
