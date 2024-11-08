@@ -183,9 +183,23 @@
         formData.append("file", file); // 파일추가
 
         // 서버로 FormData 전송
-        fetch("/feed/upload", {
-          method: "POST",
-          body: formData,
+
+        fetch('/feed/upload', {
+          method : 'POST',
+          body : formData
+        })
+        .then(response => {
+          if (response.ok) {
+            console.log('업로드 성공');
+            // 모달창 닫기 및 페이지 리다이렉트
+            document.getElementById("modal").style.display = "none";
+            window.location.href = "/";
+          } else {
+            Swal.fire({
+              icon : 'error',
+              text : '허용되지 않은 확장자 입니다. 파일명을 확인해주세요.'
+            })
+          }
         })
           .then((response) => {
             if (response.ok) {

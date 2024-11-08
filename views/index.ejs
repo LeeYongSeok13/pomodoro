@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/static/css/index.css" />
     <script src="/static/js/navbar.js"></script>
     <script src="/static/js/index.js"></script>
+    <script src="/static/js/FeedInfo.js"></script>
     <title>메인 페이지</title>
     <!-- 글씨체 -->
     <link
@@ -25,7 +26,40 @@
         ><img width="158" src="/static/img/logo.png" alt="로고 이미지"
       /></a>
     </header>
-    <%- include("./shared/feedItem") %>
+
+    
+    <div class = "feed-container">
+      <% feeds.forEach(feed => { %>
+      <div class="feed-item">
+        <div class="content">
+          <p class="user-info">
+            <span class="profile-img"></span>
+            <strong><%= feed.user.nickname %></strong>
+          </p>
+          <img src="<%= feed.file_url %>" alt="post" />
+          <p>
+          <%= feed.content %>
+          </p>
+          <div class="get-tomato-sum">
+            획득한 토마토<img
+              class="tomato"
+              src="/static/img/tomato.png"
+              alt="획득 토마토"
+            />
+          </div>
+          <div class="icon-container">
+            <img src="../static/svg/suit-heart.svg" alt="하트 아이콘" />
+            <img
+              src="../static/svg/chat.svg"
+              alt="채팅 아이콘"
+              onclick="toggleCommentBox()"
+            />
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+
     <!-- 댓글 입력창 -->
     <div class="comment-box" id="commentBox">
       <div id="commentsContainer" class="comments-container"></div>

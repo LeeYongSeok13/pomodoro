@@ -4,6 +4,8 @@ const controller = require("../controller/Cmain");
 
 router.get("/", controller.get_Index);
 
+router.get('/get-feeds', controller.get_Feeds);
+
 router.get("/login", controller.get_Login);
 
 router.post("/login", controller.post_Login);
