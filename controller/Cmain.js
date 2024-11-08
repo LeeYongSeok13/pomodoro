@@ -39,6 +39,7 @@ const s3 = new S3Client({
   accessKeyId : process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey : process.env.AWS_SECRET_ACCESS_KEY,
 });
+
 // multer 세부 설정
 const uploadDetail = multer({
   storage: multer.diskStorage({
@@ -248,25 +249,37 @@ exports.post_FindEmail = async (req, res) => {
       where: { username, phoneNumber },
     });
 
-    if (!user) {
-      // 이름이 틀린 경우
-      const userByName = await User.findOne({ where: { username: username } });
-      if (!userByName) {
-        return res.status(404).json({ error: "username" });
+    const userByName = await User.findOne({ where: { username: username } });
+    const userByPhoneNumber = await User.findOne({ where: { phoneNumber } });
+
+    if (user) {
+      // 이름과 전화번호 모두 일치하면 이메일 반환
+      return res.status(200).json({ emailAddr: user.emailAddr });
+    } else {
+      // 이름만 틀린 경우
+      if (!userByName && userByPhoneNumber) {
+        return res.status(404).json({
+          error: "username",
+          message: "해당 이름을 가진 사용자를 찾을 수 없습니다.",
+        });
       }
 
       // 전화번호가 틀린 경우
-      const userByPhoneNumber = await User.findOne({ where: { phoneNumber } });
-      if (!userByPhoneNumber) {
-        return res.status(404).json({ error: "phoneNumber" });
+      if (!userByPhoneNumber && userByName) {
+        return res.status(404).json({
+          error: "phoneNumber",
+          message: "해당 휴대전화번호를 가진 사용자를 찾을 수 없습니다.",
+        });
       }
 
-      // 이름과 전화번호가 모드 틀린 경우
-      return res.status(404).json({ error: "mismatch" });
+      if (!userByName && !userByPhoneNumber) {
+        // 이름과 전화번호가 모두 틀린 경우
+        return res.status(404).json({
+          error: "mismatch",
+          message: "이름과 전화번호가 일치하지 않습니다.",
+        });
+      }
     }
-
-    // 이름과 전화번호 모두 일치하면 이메일 반환
-    return res.status(200).json({ emailAddr: user.emailAddr });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "서버 오류가 발생했습니다." });
@@ -277,50 +290,116 @@ exports.post_ResetPassword = async (req, res) => {
   const { username, phoneNumber, emailAddr } = req.body;
 
   try {
-    // 이름, 전화번호, 이메일로 비밀번호 재설정
+    // 이름, 전화번호, 이메일로 사용자를 조회
     const user = await User.findOne({
-      where: {
-        username,
-        phoneNumber,
-        emailAddr,
-      },
+      where: { username, phoneNumber, emailAddr },
     });
 
+    const userByName = await User.findOne({ where: { username: username } });
+    const userByPhoneNumber = await User.findOne({ where: { phoneNumber } });
+    const userByEmailAddr = await User.findOne({ where: { emailAddr } });
+
     if (user) {
-      if (user.emailAddr !== emailAddr) {
-        return res.status(404).json({ message: "이메일이 일치하지 않습니다." });
-      }
-      // 사용자가 있으면 비밀번호 재설정 링크 반환 (모달 처리)
-      res.status(200).json({ message: "사용자를 찾았습니다.", id: user.id });
-    } else {
-      // 사용자가 없으면 404 상태코드 응답
-      return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
+      return res.status(200).json({
+        success: true,
+        message: "사용자가 조회되었습니다. 비밀번호 변경을 진행합니다.",
+        showResetModal: true,
+        userId: user.id, // 사용자 ID를 반환
+        emailAddr: user.emailAddr,
+      });
+    }
+
+    // 이름만 틀린 경우
+    if (!userByName && userByPhoneNumber && userByEmailAddr) {
+      return res.status(404).json({
+        error: "username",
+        message: "해당 이름을 가진 사용자를 찾을 수 없습니다.",
+      });
+    }
+
+    // 전화번호만 틀린 경우
+    if (!userByPhoneNumber && userByName && userByEmailAddr) {
+      return res.status(404).json({
+        error: "phoneNumber",
+        message: "해당 휴대전화번호를 가진 사용자를 찾을 수 없습니다.",
+      });
+    }
+
+    // 이메일만 틀린 경우
+    if (!userByEmailAddr && userByName && userByPhoneNumber) {
+      return res.status(404).json({
+        error: "emailAddr",
+        message: "해당 이메일을 가진 사용자를 찾을 수 없습니다.",
+      });
+    }
+
+    // 이름, 전화번호 틀린 경우
+    if (!userByName && !userByPhoneNumber && userByEmailAddr) {
+      return res.status(404).json({
+        error: "username & phoneNumber",
+        message: "해당 이름과 휴대전화번호를 가진 사용자를 찾을 수 없습니다.",
+      });
+    }
+
+    // 이름, 이메일 틀린 경우
+    if (!userByName && !userByEmailAddr && userByPhoneNumber) {
+      return res.status(404).json({
+        error: "username & emailAddr",
+        message: "해당 이름과 이메일을 가진 사용자를 찾을 수 없습니다.",
+      });
+    }
+
+    // 전화번호, 이메일 틀린 경우
+    if (!userByPhoneNumber && !userByEmailAddr && userByName) {
+      return res.status(404).json({
+        error: "phoneNumber & emailAddr",
+        message: "해당 휴대전화번호와 이메일을 가진 사용자를 찾을 수 없습니다.",
+      });
+    }
+
+    // 이름과 전화번호가 모두 틀린 경우
+    if (!userByName && !userByPhoneNumber && !userByEmailAddr) {
+      return res.status(404).json({
+        error: "mismatch",
+        message: "이름, 전화번호, 이메일이 일치하지 않습니다.",
+      });
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error in post_ResetPassword:", error); // 정확한 에러 메세지 확인
     res.status(500).json({ message: "서버 오류가 발생했습니다." });
   }
 };
 
-exports.update_Passowrd = async (req, res) => {
+exports.update_Password = async (req, res) => {
   const { userId, newPassword } = req.body;
 
+  if (!userId || !newPassword) {
+    return res
+      .status(400)
+      .json({ message: "사용자 ID와 새 비밀번호를 모두 제공해야 합니다." });
+  }
+
   try {
-    // 비밀번호 해싱 처리
+    // 새 비밀번호 해싱 처리
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // 사용자 비밀번호 업데이트
-    await User.update({ password: hashedPassword }, { where: { id: userId } });
+    // 비밀번호 업데이트 시 에러가 발생할 수 있으므로
+    const [updated] = await User.update(
+      { password: hashedPassword },
+      { where: { id: userId } }
+    );
 
-    res.status(200).json({ message: "비밀번호가 성공적으로 변경되었습니다." });
+    if (updated) {
+      return res
+        .status(200)
+        .json({ message: "비밀번호가 성공적으로 변경되었습니다." });
+    } else {
+      return res.status(400).json({ message: "비밀번호 변경에 실패했습니다." });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "비밀번호 변경에 실패했습니다." });
   }
-};
-
-exports.get_modal = (req, res) => {
-  res.render("modal");
 };
 
 exports.get_Feed = (req, res) => {
@@ -589,6 +668,7 @@ exports.post_addtodo = async (req, res) => {
     console.error(error);
   }
 };
+
 
 exports.get_MyPage = async (req, res) => {
   const user_id = req.session.nickname;

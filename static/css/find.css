@@ -134,7 +134,8 @@ input::placeholder {
 /* find에 Modal로 띄워지는 스타일 */
 #resultModal,
 #resetPasswordModal,
-#errorModal {
+#errorModal,
+#userFoundModal {
   position: absolute;
   display: none;
   justify-content: center;
@@ -152,7 +153,8 @@ input::placeholder {
 
 #modalContent,
 #resetPasswordContent,
-#errorContent {
+#errorContent,
+#userFoundModalContent {
   position: absolute;
   width: 100%;
   top: 50%;
@@ -181,7 +183,6 @@ input::placeholder {
   font-weight: 900;
   color: #da2337;
   text-align: center;
-
   width: 97px;
   height: 40px;
   margin-left: 4%;
