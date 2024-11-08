@@ -35,9 +35,9 @@ const upload = multer({ dest: "uploads/" });
 
 // s3 설정
 const s3 = new S3Client({
-  region: process.env.AWS_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region : process.env.AWS_REGION,
+  accessKeyId : process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey : process.env.AWS_SECRET_ACCESS_KEY,
 });
 // multer 세부 설정
 const uploadDetail = multer({
@@ -100,10 +100,30 @@ const uploadToS3 = async (filePath, bucketName, keyName) => {
   }
 };
 
-exports.get_Index = (req, res) => {
+exports.get_Index = async (req, res) => {
   // 세션 권한 없으면 login으로 가야함!!!
+  // 처음 페이지 랜딩 시 피드 데이터 호출하기
   if (req.session.nickname) {
-    res.render("index");
+    try {
+      const limit = 3;
+      const offset = 0; // 첫 페이지에 대한 오프셋
+
+      // 첫 페이지 피드 데이터 가져오기
+      const feeds = await Feed.findAll({
+        attributes : ['id', 'content','file_url','user_id'],
+        include : [{
+          model : require('../models/index').User,
+          attributes : ['nickname'],
+        }],
+        order : [['created_at', 'DESC']],
+        limit : limit,
+        offset : offset
+      });
+      res.render("index", { feeds });
+    } catch (error) {
+      console.error('Error fetching initial feeds : ', error);
+      res.status(500).send('Error loading initial page');
+    }
   } else {
     // 데이터 구현시 index 대신 login 넣기!!!
     res.redirect("/login");
@@ -368,6 +388,37 @@ exports.post_feedUpload = (req, res) => {
     }
   });
 };
+
+// 피드 목록 가져오기 [ 페이징 ]
+exports.get_Feeds = async (req, res) => {
+  try {
+    // 요청받은 페이지 정보
+    const page = parseInt(req.query.page)
+    console.log('전달받은 page값 : ', page);
+    const limit = 5; // 한페이지에 보여줄 피드 개수
+    const offset = (page - 1) * limit;
+
+    console.log(`Page: ${page}, Limit: ${limit}, Offset: ${offset}`);
+
+    // 피드 데이터 조회
+    const feeds = await Feed.findAll({
+      attributes : ['id','content','file_url','user_id'],
+      include : [{
+        model : require('../models/index').User,
+        attributes : ['nickname'], // 유저 닉네임
+      }],
+      order : [['created_at','DESC']], // 최신 피드 순으로 정렬
+      limit : limit, // 한 페이지에 5개 피드
+      offset : offset // 페이지에 맞는 offset 적용
+    });
+
+     // JSON 데이터 반환
+     res.json(feeds);
+  } catch (error) {
+    console.error('Error fetching feeds :', error);
+    res.status(500).json({message : 'Error fetching feeds'});
+  }
+}
 
 exports.get_Calender = async (req, res) => {
   const today = new Date();

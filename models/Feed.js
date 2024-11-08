@@ -5,7 +5,7 @@
  */
 
 const feed = (Sequelize, DataTypes) => {
-  return Sequelize.define(
+  const Feed = Sequelize.define(
     "feed",
     {
       id: {
@@ -37,11 +37,21 @@ const feed = (Sequelize, DataTypes) => {
       },
     },
     {
-      timestamps: true, // create_at과 update_at을 자동생성
+      timestamps: true, // create_at과 update_at을 자동 생성
       createdAt: "created_at",
       updatedAt: "updated_at",
     }
   );
+
+  // 모델 간 관계 정의
+  Feed.associate = (models) => {
+    Feed.belongsTo(models.User, {  // Feed는 하나의 User에 속함
+      foreignKey: "user_id",       // foreign key
+      targetKey: "id",             // target key (User 모델의 id와 매칭)
+    });
+  };
+
+  return Feed;
 };
 
 module.exports = feed;

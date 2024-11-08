@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/static/css/index.css" />
     <script src="/static/js/navbar.js"></script>
     <script src="/static/js/index.js"></script>
+    <script src="/static/js/FeedInfo.js"></script>
     <title>메인 페이지</title>
     <!-- 글씨체 -->
     <link
@@ -25,19 +26,18 @@
         ><img width="158" src="/static/img/logo.png" alt="로고 이미지"
       /></a>
     </header>
-    <div class="feed-container">
+    
+    <div class = "feed-container">
+      <% feeds.forEach(feed => { %>
       <div class="feed-item">
         <div class="content">
           <p class="user-info">
             <span class="profile-img"></span>
-            <strong>User123</strong>
+            <strong><%= feed.user.nickname %></strong>
           </p>
-          <img src="https://via.placeholder.com/600x400" alt="post" />
+          <img src="<%= feed.file_url %>" alt="post" />
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique
-            reiciendis odit, itaque aut labore consectetur nesciunt vel quidem
-            nulla nam nobis mollitia amet molestias dolore, quisquam blanditiis
-            natus. Rerum, asperiores.
+          <%= feed.content %>
           </p>
           <div class="get-tomato-sum">
             획득한 토마토<img
@@ -56,6 +56,7 @@
           </div>
         </div>
       </div>
+      <% }); %>
     </div>
 
     <!-- 댓글 입력창 -->
