@@ -14,11 +14,11 @@ router.post("/login/register", controller.post_Register);
 
 router.get("/login/find", controller.get_Find);
 
-router.post("/login/find", controller.post_FindEmail);
+router.post("/login/find/email", controller.post_FindEmail);
 
-router.post("/login/find", controller.post_ResetPassword);
+router.post("/login/find/password", controller.post_ResetPassword);
 
-router.post("/login/find", controller.update_Passowrd);
+router.post("/login/find/update", controller.update_Password);
 
 router.get("/login/modal", controller.get_modal);
 
@@ -26,7 +26,7 @@ router.get("/login/modal", controller.get_modal);
 
 router.get("/feed", controller.get_Feed);
 
-router.post("/feed/upload",controller.post_feedUpload);
+router.post("/feed/upload", controller.post_feedUpload);
 
 router.get("/calender", controller.get_Calender);
 

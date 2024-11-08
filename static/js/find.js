@@ -8,6 +8,15 @@ function closeModal() {
   document.getElementById("resultModal").style.display = "none";
 }
 
+function userFoundModal(message) {
+  document.getElementById("userFoundModalMessage").textContent = message;
+  document.getElementById("userFoundModal").style.display = "flex";
+}
+
+function closeUserFoundModal() {
+  document.getElementById("userFoundModal").style.display = "none";
+}
+
 function openResetModal() {
   document.getElementById("resetPasswordModal").style.display = "flex";
 }
@@ -26,25 +35,25 @@ function closeErrorModal() {
 }
 
 async function findEmail() {
-  const username = document.querySelector(".username").value;
-  const phoneNumber = document.querySelector(".phoneNumber").value;
+  const username = document.querySelector(".usernameId").value;
+  const phoneNumber = document.querySelector(".phoneNumberId").value;
 
   // 에러 메세지 초기화
-  const usernameErrorEl = document.getElementById("usernameError");
-  const phoneNumberErrorEl = document.getElementById("phoneNumberError");
+  const usernameIdErrorEl = document.getElementById("usernameIdError");
+  const phoneNumberIdErrorEl = document.getElementById("phoneNumberIdError");
 
   // 초기화 작업: 에러 메세지 지우기
-  if (usernameErrorEl) {
-    usernameErrorEl.classList.remove("show");
-    usernameErrorEl.textContent = ""; // 텍스트 초기화
+  if (usernameIdErrorEl) {
+    usernameIdErrorEl.classList.remove("show");
+    usernameIdErrorEl.textContent = ""; // 텍스트 초기화
   }
-  if (phoneNumberErrorEl) {
-    phoneNumberErrorEl.classList.remove("show");
-    phoneNumberErrorEl.textContent = ""; // 텍스트 초기화
+  if (phoneNumberIdErrorEl) {
+    phoneNumberIdErrorEl.classList.remove("show");
+    phoneNumberIdErrorEl.textContent = ""; // 텍스트 초기화
   }
 
   try {
-    const response = await fetch("/login/find", {
+    const response = await fetch("/login/find/email", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,26 +68,27 @@ async function findEmail() {
       openModal(`이메일 주소: ${data.emailAddr}`);
     } else if (response.status === 404) {
       // 오류 데이터에 따른 처리
-      if (data.error === "username" && usernameErrorEl) {
+      if (data.error === "username") {
         // 사용자 이름이 틀린 경우
-        usernameErrorEl.classList.add("show"); // 'show' 클래스 추가
-        usernameErrorEl.textContent = "해당되는 이름이 없습니다.";
+        usernameIdErrorEl.classList.add("show"); // 'show' 클래스 추가
+        usernameIdErrorEl.textContent = "해당되는 이름이 없습니다.";
       }
-      if (data.error === "phoneNumber" && phoneNumberErrorEl) {
+      if (data.error === "phoneNumber") {
         // 전화번호가 틀린 경우
-        phoneNumberErrorEl.classList.add("show"); // 'show' 클래스 추가
-        phoneNumberErrorEl.textContent = "해당되는 휴대전화 번호가 없습니다.";
+        phoneNumberIdErrorEl.classList.add("show"); // 'show' 클래스 추가
+        phoneNumberIdErrorEl.textContent = "해당되는 휴대전화 번호가 없습니다.";
       }
 
       // 이름과 전화번호 모두 틀렸을 때는 둘 다 표시
-      if (data.error === "mismatch") {
-        if (usernameErrorEl) {
-          usernameErrorEl.classList.add("show"); // 'show' 클래스 추가
-          usernameErrorEl.textContent = "해당되는 이름이 없습니다.";
+      else if (data.error === "mismatch") {
+        if (usernameIdErrorEl) {
+          usernameIdErrorEl.classList.add("show"); // 'show' 클래스 추가
+          usernameIdErrorEl.textContent = "해당되는 이름이 없습니다.";
         }
-        if (phoneNumberErrorEl) {
-          phoneNumberErrorEl.classList.add("show"); // 'show' 클래스 추가
-          phoneNumberErrorEl.textContent = "해당되는 휴대전화 번호가 없습니다.";
+        if (phoneNumberIdErrorEl) {
+          phoneNumberIdErrorEl.classList.add("show"); // 'show' 클래스 추가
+          phoneNumberIdErrorEl.textContent =
+            "해당되는 휴대전화 번호가 없습니다.";
         }
       }
     }
@@ -95,12 +105,31 @@ let userId; // 사용자 ID를 저장할 변수
 
 // 비밀번호 재설정 요청 함수
 async function requestPasswordReset() {
-  const username = document.querySelector(".username").value;
-  const phoneNumber = document.querySelector(".phoneNumber").value;
-  const emailAddr = document.querySelector(".emailAddr").value;
+  const username = document.querySelector(".usernamePw").value;
+  const phoneNumber = document.querySelector(".phoneNumberPw").value;
+  const emailAddr = document.querySelector(".emailAddrPw").value;
+
+  // 에러 메세지 초기화
+  const usernamePwErrorEl = document.getElementById("usernamePwError");
+  const phoneNumberPwErrorEl = document.getElementById("phoneNumberPwError");
+  const emailAddrPwErrorEl = document.getElementById("emailAddrPwError");
+
+  // 초기화 작업: 에러 메세지 지우기
+  if (usernamePwErrorEl) {
+    usernamePwErrorEl.classList.remove("show");
+    usernamePwErrorEl.textContent = ""; // 텍스트 초기화
+  }
+  if (phoneNumberPwErrorEl) {
+    phoneNumberPwErrorEl.classList.remove("show");
+    phoneNumberPwErrorEl.textContent = ""; // 텍스트 초기화
+  }
+  if (emailAddrPwErrorEl) {
+    emailAddrPwErrorEl.classList.remove("show");
+    emailAddrPwErrorEl.textContent = ""; // 텍스트 초기화
+  }
 
   try {
-    const response = await fetch("/login/request-reset", {
+    const response = await fetch("/login/find/password", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -108,19 +137,70 @@ async function requestPasswordReset() {
       body: JSON.stringify({ username, phoneNumber, emailAddr }),
     });
 
+    const data = await response.json();
+
     if (response.status === 200) {
-      const data = await response.json();
-      userId = data.id; // 사용자 ID 저장
-      openResetModal(); // 비밀번호 변경 모달 열기
+      // 사용자가 있을 경우, 사용자 ID를 받아오고 재설정 모달을 띄움
+      userId = data.userId; // 서버에서 받은 userId 저장
+      openResetModal();
     } else if (response.status === 404) {
-      // 404 오류 메시지 처리
-      const errorData = await response.json();
-      openErrorModal(errorData.message);
+      // 오류 데이터에 따른 처리
+      if (data.error === "username") {
+        // 사용자 이름만 틀린 경우
+        usernamePwErrorEl.classList.add("show"); // 'show' 클래스 추가
+        usernamePwErrorEl.textContent = "해당되는 이름이 없습니다.";
+      }
+      if (data.error === "phoneNumber") {
+        // 전화번호가 틀린 경우
+        phoneNumberPwErrorEl.classList.add("show"); // 'show' 클래스 추가
+        phoneNumberPwErrorEl.textContent = "해당되는 휴대전화 번호가 없습니다.";
+      }
+      if (data.error === "emailAddr") {
+        // 이메일이 틀린 경우
+        emailAddrPwErrorEl.classList.add("show"); // 'show' 클래스 추가
+        emailAddrPwErrorEl.textContent = "해당되는 이메일이 없습니다.";
+      } else if (data.error === "username & phoneNumber") {
+        // 이름, 전화번호 틀린 경우
+        usernamePwErrorEl.classList.add("show"); // 'show' 클래스 추가
+        usernamePwErrorEl.textContent = "해당되는 이름이 없습니다.";
+        phoneNumberPwErrorEl.classList.add("show"); // 'show' 클래스 추가
+        phoneNumberPwErrorEl.textContent = "해당되는 휴대전화 번호가 없습니다.";
+      } else if (data.error === "username & emailAddr") {
+        usernamePwErrorEl.classList.add("show"); // 'show' 클래스 추가
+        usernamePwErrorEl.textContent = "해당되는 이름이 없습니다.";
+        emailAddrPwErrorEl.classList.add("show"); // 'show' 클래스 추가
+        emailAddrPwErrorEl.textContent = "해당되는 이메일이 없습니다.";
+      } else if (data.error === "phoneNumber & emailAddr") {
+        phoneNumberPwErrorEl.classList.add("show"); // 'show' 클래스 추가
+        phoneNumberPwErrorEl.textContent = "해당되는 휴대전화 번호가 없습니다.";
+        emailAddrPwErrorEl.classList.add("show"); // 'show' 클래스 추가
+        emailAddrPwErrorEl.textContent = "해당되는 이메일이 없습니다.";
+      }
+
+      // 이름과 전화번호 모두 틀렸을 때는 둘 다 표시
+      else if (data.error === "mismatch") {
+        if (usernamePwErrorEl) {
+          usernamePwErrorEl.classList.add("show"); // 'show' 클래스 추가
+          usernamePwErrorEl.textContent = "해당되는 이름이 없습니다.";
+        }
+        if (phoneNumberPwErrorEl) {
+          phoneNumberPwErrorEl.classList.add("show"); // 'show' 클래스 추가
+          phoneNumberPwErrorEl.textContent =
+            "해당되는 휴대전화 번호가 없습니다.";
+        }
+        if (emailAddrPwErrorEl) {
+          emailAddrPwErrorEl.classList.add("show"); // 'show' 클래스 추가
+          emailAddrPwErrorEl.textContent = "해당되는 이메일이 없습니다.";
+          emailAddrPwErrorEl.classList.add("show"); // 'show' 클래스 추가
+          emailAddrPwErrorEl.textContent = "해당되는 이메일이 없습니다.";
+        }
+      }
     } else {
-      openErrorModal("서버 오류가 발생했습니다.");
+      // 그 외의 오류 처리
+      openErrorModal("서버에서 예상치 못한 오류가 발생했습니다.");
     }
   } catch (error) {
-    console.error("Error requesting password reset:", error);
+    console.error("Error requesting password reset", error);
     openErrorModal("서버 오류가 발생했습니다.");
   }
 }
@@ -130,13 +210,19 @@ async function updatePassword() {
   const newPassword = document.getElementById("newPassword").value;
   const confirmPassword = document.getElementById("confirmPassword").value;
 
+  // 비밀번호 일치 확인
   if (newPassword !== confirmPassword) {
-    openModal("비밀번호가 일치하지 않습니다.");
+    openErrorModal("비밀번호가 일치하지 않습니다.");
+    return;
+  }
+
+  if (!newPassword || !confirmPassword) {
+    openErrorModal("비밀번호를 입력해 주세요.");
     return;
   }
 
   try {
-    const response = await fetch("/login/password-reset", {
+    const response = await fetch("/login/find/update", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -144,15 +230,16 @@ async function updatePassword() {
       body: JSON.stringify({ userId, newPassword }),
     });
 
+    const data = await response.json();
+
     if (response.status === 200) {
-      const data = await response.json();
-      openModal(data.message); // 성공 메시지 표시
-      closeResetModal(); // 비밀번호 입력 모달 닫기
+      openErrorModal(data.message); // 비밀번호 변경 성공 메세지
+      closeResetModal(); // 모달창 닫기
     } else {
-      openModal("비밀번호 변경에 실패했습니다.");
+      openErrorModal(data.message || "비밀번호 변경에 실패했습니다.");
     }
   } catch (error) {
     console.error("Error updating password:", error);
-    openModal("서버 오류가 발생했습니다.");
+    openErrorModal("서버 오류가 발생했습니다.");
   }
 }
