@@ -92,7 +92,7 @@
     </div>
 
     <div class="timercontainer">
-      <div id="timer" class="timer">00 : 25 : 00</div>
+      <div id="timer" class="timer">00 : 00 : 00</div>
       <div class="buttonbox">
         <button class="stopWatch-btn" id="startBtn" onclick="togglePlayPause()">
           <svg
@@ -165,7 +165,10 @@
     </div>
 
     <%- include("./shared/list-Wrap"), {titles: titles, description: description, todoid: todoid, state: state} %>
-    
+
+    <!-- 이건 5분 휴식으로 변할때, 뒤에 스포트 라이트 -->
+    <div class="spotlight"></div>
+
     <div id="restModal">
       <div class="restmodal">
         <h2>25분이 지났습니다!</h2>
@@ -223,7 +226,7 @@
           timeRemaining = 0;
           updateDisplay();
         } else {
-          timeRemaining = 25 * 60;
+          timeRemaining = 1 * 60;
           updateDisplay();
         }
         if (rightIcon.style.display === "none") {
@@ -231,7 +234,7 @@
           leftIcon.style.display = "none";
           timerTomato.classList.remove("hide");
           outerTimerContainer.classList.remove("active");
-          timeRemaining = 25 * 60;
+          timeRemaining = 1 * 60;
           updateDisplay();
         } else {
           rightIcon.style.display = "none";
@@ -257,20 +260,100 @@
         const seconds = String(timeRemaining % 60).padStart(2, "0");
         timerDisplay.textContent = `${hours} : ${minutes} : ${seconds}`;
       }
-
+      let intervalId; // 타이머를 저장할 변수
+      let isTimerRunning = false; // 타이머가 실행 중인지 확인하는 플래그
       // 타이머 시작
       function startTimer() {
+        // 타이머가 실행 중이면 다시 시작하지 않음
+        if (isTimerRunning) return;
+
+        isTimerRunning = true; // 타이머 실행 중으로 설정
+
         timerInterval = setInterval(() => {
+          // 타이머가 0초 이상일 때 (25분 타이머로 가정)
           if (
             timeRemaining > 0 &&
             !document.querySelector(".timerTomato").classList.contains("hide")
           ) {
             timeRemaining--;
-          } else {
+          }
+          // 타이머가 0초에 도달한 경우 (타이머 종료 후 알람 띄우기)
+          else if (
+            timeRemaining <= 0 &&
+            !document.querySelector(".timerTomato").classList.contains("hide")
+          ) {
+            showRestModal();
+            clearInterval(timerInterval); // 타이머 정지
+            isTimerRunning = false; // 타이머 실행 중 플래그 초기화
+          }
+          // 얘는 그냥 타이머때 시간 증가 하는거
+          else {
             timeRemaining++;
           }
           updateDisplay();
         }, 1000);
+      }
+      // 25분 타이머 종료 후 알람창을 띄우는 함수
+      function showRestModal() {
+        const restModal = document.getElementById("restModal");
+        restModal.style.display = "flex";
+
+        const restOkButton = document.querySelector(".restok");
+        restOkButton.onclick = function () {
+          restModal.style.display = "none";
+          startRestTimer(); // 5분 휴식 타이머 시작
+        };
+
+        const restEndButton = document.querySelector(".restend");
+        restEndButton.onclick = function () {
+          restModal.style.display = "none";
+          stopTimer(); // 타이머 중지
+        };
+      }
+
+      // 5분 휴식 타이머 시작
+      function startRestTimer() {
+        timeRemaining = 5 * 60;
+        updateDisplay();
+        startRestPeriod();
+        startTimer();
+      }
+
+      function startRestPeriod() {
+        document.body.style.backgroundColor = "#654f76";
+        document.querySelector(".background").style.backgroundColor = "#473c52";
+        document.querySelector(".timer").style.color = "#fff";
+
+        const icons = document.querySelectorAll(".buttonbox svg");
+        icons.forEach((icon) => {
+          icon.style.fill = "#fff";
+        });
+
+        const rightIcon = document.querySelector("#rightBtn svg");
+        if (rightIcon) {
+          rightIcon.style.fill = "#fff";
+        }
+        const spotlight = document.querySelector(".spotlight");
+        if (spotlight) {
+          spotlight.style.display = "block";
+        }
+
+        // 5분 후, 원래 상태로 되돌리기
+        setTimeout(function () {
+          document.body.style.backgroundColor = "#fef8f1";
+          document.querySelector(".background").style.backgroundColor =
+            "#f2eae0";
+          document.querySelector(".timer").style.color = "#473234";
+          icons.forEach((icon) => {
+            icon.style.fill = "#473234";
+          });
+          if (rightIcon) {
+            rightIcon.style.fill = "#473234";
+          }
+          if (spotlight) {
+            spotlight.style.display = "none";
+          }
+        }, 5 * 60 * 1000);
       }
 
       // 타이머 일시정지
@@ -280,19 +363,38 @@
 
       // 타이머 중지
       function stopTimer() {
-        if (confirm("정말로 타이머를 중단하시겠습니까?")) {
+        clearInterval(intervalId); // 타이머를 정지
+        isTimerRunning = false;
+        const stopModal = document.getElementById("stopModal");
+        stopModal.style.display = "flex";
+        const stopOkButton = document.querySelector(".stopok");
+        stopOkButton.onclick = function () {
           clearInterval(timerInterval);
           if (
             !document.querySelector(".timerTomato").classList.contains("hide")
           ) {
-            timeRemaining = 25 * 60;
+            timeRemaining = 1 * 60;
           } else {
             timeRemaining = 0;
           }
           updateDisplay();
-        }
-      }
+          stopModal.style.display = "none";
+          const doneModal = document.getElementById("doneModal");
+          doneModal.style.display = "flex";
+        };
 
+        const stopEndButton = document.querySelector(".stopend");
+        stopEndButton.onclick = function () {
+          stopModal.style.display = "none";
+          isTimerRunning = false;
+        };
+      }
+      document.querySelector(".restok").addEventListener("click", function () {
+        // 5분 타이머를 시작할 때 중복 실행되지 않도록
+        if (!isTimerRunning) {
+          startTimer(); // 5분 타이머 시작
+        }
+      });
       // 타이머 초기화
       function resetTimer() {
         clearInterval(timerInterval);
@@ -300,7 +402,7 @@
         if (
           !document.querySelector(".timerTomato").classList.contains("hide")
         ) {
-          timeRemaining = 25 * 60;
+          timeRemaining = 1 * 60;
         } else {
           timeRemaining = 0;
         }
@@ -324,7 +426,7 @@
         }
       }
       // 초기화
-      timeRemaining = 25 * 60;
+      timeRemaining = 1 * 60;
       updateDisplay(); // 초기 화면 설정
 
       // 그냥 타이머
