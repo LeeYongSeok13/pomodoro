@@ -394,11 +394,8 @@ exports.get_Feeds = async (req, res) => {
   try {
     // 요청받은 페이지 정보
     const page = parseInt(req.query.page)
-    console.log('전달받은 page값 : ', page);
     const limit = 3; // 한페이지에 보여줄 피드 개수
     const offset = (page - 1) * limit;
-
-    
 
     // 피드 데이터 조회
     const feeds = await Feed.findAll({
@@ -411,9 +408,6 @@ exports.get_Feeds = async (req, res) => {
       limit : limit, // 한 페이지에 3개 피드
       offset : offset // 페이지에 맞는 offset 적용
     });
-    console.log(`Page: ${page}, Limit: ${limit}, Offset: ${offset}`);
-    console.log('피드 데이터', feeds);
-
      // JSON 데이터 반환
      res.json(feeds);
   } catch (error) {
