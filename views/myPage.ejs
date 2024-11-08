@@ -40,10 +40,14 @@
             좋아요 누른 피드 <span class="like-count count">10</span>
           </button>
           <button class="done-button btn">
-            완료한 일정 <span class="done-count count">10</span>
+            완료한 일정
+            <span class="done-count count"><%= done_titles.length %></span>
           </button>
           <button class="ongoing-button btn">
-            미흡했던 일정 <span class="ongoing-count count">3</span>
+            미흡했던 일정
+            <span class="ongoing-count count"
+              ><%= ongoing_titles.length %></span
+            >
           </button>
         </article>
 
@@ -52,7 +56,7 @@
             >내 공부 <br />
             성공률은?</span
           >
-          <span class="study-percentage">90%</span>
+          <span class="study-percentage"><%= successPercentage %>%</span>
         </article>
 
         <figcaption class="study-time-analysis">

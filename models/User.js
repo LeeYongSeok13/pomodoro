@@ -5,7 +5,7 @@
  */
 
 const user = (Sequelize, DataTypes) => {
-  return Sequelize.define(
+  const User = Sequelize.define(
     "user",
     {
       id: {
@@ -64,6 +64,16 @@ const user = (Sequelize, DataTypes) => {
       updatedAt: "update_at",
     }
   );
+
+  // 모델 간 관계 정의
+  User.associate = (models) => {
+    User.hasMany(models.Feed, {
+      foreignKey: "user_id",
+      sourceKey: "id",
+    });
+  };
+
+  return User;
 };
 
 module.exports = user;

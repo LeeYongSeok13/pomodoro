@@ -35,9 +35,9 @@ const upload = multer({ dest: "uploads/" });
 
 // s3 설정
 const s3 = new S3Client({
-  region: process.env.AWS_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region : process.env.AWS_REGION,
+  accessKeyId : process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey : process.env.AWS_SECRET_ACCESS_KEY,
 });
 
 // multer 세부 설정
@@ -101,10 +101,30 @@ const uploadToS3 = async (filePath, bucketName, keyName) => {
   }
 };
 
-exports.get_Index = (req, res) => {
+exports.get_Index = async (req, res) => {
   // 세션 권한 없으면 login으로 가야함!!!
+  // 처음 페이지 랜딩 시 피드 데이터 호출하기
   if (req.session.nickname) {
-    res.render("index");
+    try {
+      const limit = 3;
+      const offset = 0; // 첫 페이지에 대한 오프셋
+
+      // 첫 페이지 피드 데이터 가져오기
+      const feeds = await Feed.findAll({
+        attributes : ['id', 'content','file_url','user_id'],
+        include : [{
+          model : require('../models/index').User,
+          attributes : ['nickname'],
+        }],
+        order : [['created_at', 'DESC']],
+        limit : limit,
+        offset : offset
+      });
+      res.render("index", { feeds });
+    } catch (error) {
+      console.error('Error fetching initial feeds : ', error);
+      res.status(500).send('Error loading initial page');
+    }
   } else {
     // 데이터 구현시 index 대신 login 넣기!!!
     res.redirect("/login");
@@ -201,7 +221,6 @@ exports.post_Register = async (req, res) => {
       password: hashedPassword,
       nickname,
       phoneNumber,
-      g,
     });
 
     return res.json({
@@ -448,6 +467,39 @@ exports.post_feedUpload = (req, res) => {
   });
 };
 
+// 피드 목록 가져오기 [ 페이징 ]
+exports.get_Feeds = async (req, res) => {
+  try {
+    // 요청받은 페이지 정보
+    const page = parseInt(req.query.page)
+    console.log('전달받은 page값 : ', page);
+    const limit = 3; // 한페이지에 보여줄 피드 개수
+    const offset = (page - 1) * limit;
+
+    
+
+    // 피드 데이터 조회
+    const feeds = await Feed.findAll({
+      attributes : ['id','content','file_url','user_id'],
+      include : [{
+        model : require('../models/index').User,
+        attributes : ['nickname'], // 유저 닉네임
+      }],
+      order : [['created_at','DESC']], // 최신 피드 순으로 정렬
+      limit : limit, // 한 페이지에 3개 피드
+      offset : offset // 페이지에 맞는 offset 적용
+    });
+    console.log(`Page: ${page}, Limit: ${limit}, Offset: ${offset}`);
+    console.log('피드 데이터', feeds);
+
+     // JSON 데이터 반환
+     res.json(feeds);
+  } catch (error) {
+    console.error('Error fetching feeds :', error);
+    res.status(500).json({message : 'Error fetching feeds'});
+  }
+}
+
 exports.get_Calender = async (req, res) => {
   const today = new Date();
   const year = today.getFullYear();
@@ -459,34 +511,10 @@ exports.get_Calender = async (req, res) => {
     today.getMonth(),
     1
   ).getDay();
-  const user_id = req.session.nickname;
 
-  // 오늘 0시부터 24시까지의 범위와 아이디로 일정을 탐색
-  const startOfDay = new Date();
-  startOfDay.setHours(0, 0, 0, 0);
-  const endOfDay = new Date();
-  endOfDay.setHours(23, 59, 59, 999);
-
-  const todos = await Task.findAll({
-    where: {
-      user_id: user_id,
-      due_date: {
-        [Op.gte]: startOfDay, // 시작일 이후
-        [Op.lte]: endOfDay, // 종료일 이전
-      },
-    },
-  });
-
-  const titles = [];
-  const description = [];
-  const state = [];
-  const todoid = [];
-  todos.map((todo) => {
-    titles.push(todo.title);
-    description.push(todo.description);
-    state.push(todo.state);
-    todoid.push(todo.id);
-  });
+  const { titles, description, state, todoid } = await get_today_todoList(
+    req.session.nickname
+  );
 
   res.render("calender", {
     year: year,
@@ -494,6 +522,18 @@ exports.get_Calender = async (req, res) => {
     lastDay: lastDay,
     firstDayOfMonth: firstDayOfMonth,
     dayNames: dayNames,
+    titles: titles,
+    description: description,
+    state: state,
+    todoid: todoid,
+  });
+};
+exports.get_Timer = async (req, res) => {
+  const { titles, description, state, todoid } = await get_today_todoList(
+    req.session.nickname
+  );
+
+  res.render("timer", {
     titles: titles,
     description: description,
     state: state,
@@ -629,18 +669,65 @@ exports.post_addtodo = async (req, res) => {
   }
 };
 
-exports.get_Timer = (req, res) => {
-  const todoItems = [
-    { title: "Task 1", description: "Description for task 1" },
-    { title: "Task 2", description: "Description for task 2" },
-    // 추가할 항목들
-  ];
 
-  res.render("timer", { todoItems });
-};
+exports.get_MyPage = async (req, res) => {
+  const user_id = req.session.nickname;
+  // 완료한 업무 검색
+  const done_data = await Task.findAll({
+    where: {
+      user_id: user_id,
+      state: "done",
+    },
+  });
+  const done_titles = [];
+  const done_descriptions = [];
+  done_data.forEach((item) => {
+    done_titles.push(item.dataValues.title);
+    done_descriptions.push(item.dataValues.description);
+  });
 
-exports.get_MyPage = (req, res) => {
-  res.render("myPage");
+  // 미흡한 업무 검색
+  const ongoing_data = await Task.findAll({
+    where: {
+      user_id: user_id,
+      state: "ongoing",
+    },
+  });
+  const ongoing_titles = [];
+  const ongoing_descriptions = [];
+  ongoing_data.forEach((item) => {
+    ongoing_titles.push(item.dataValues.title);
+    ongoing_descriptions.push(item.dataValues.description);
+  });
+  //미완료 업무 검색
+  const pending_data = await Task.findAll({
+    where: {
+      user_id: user_id,
+      state: "pending",
+    },
+  });
+  const pending_titles = [];
+  const pending_descriptions = [];
+  pending_data.forEach((item) => {
+    pending_titles.push(item.dataValues.title);
+    pending_descriptions.push(item.dataValues.description);
+  });
+  // 모든 업무의 개수
+  const allListNum =
+    done_titles.length + ongoing_titles.length + pending_titles.length;
+
+  // 업무 성공률
+  const successPercentage = Math.round((done_titles.length / allListNum) * 100);
+  res.render("myPage", {
+    done_titles: done_titles,
+    done_descriptions: done_descriptions,
+    ongoing_titles: ongoing_titles,
+    ongoing_descriptions: ongoing_descriptions,
+    pending_titles: pending_titles,
+    pending_descriptions: pending_descriptions,
+    allListNum: allListNum,
+    successPercentage: successPercentage,
+  });
 };
 
 exports.get_modal = (req, res) => {
@@ -648,10 +735,49 @@ exports.get_modal = (req, res) => {
 };
 
 exports.getComponent = (req, res) => {
-  const { title, description, dataId } = req.query;
+  const { title, description, dataId, state } = req.query;
   res.render("./shared/rotateTodoItem", {
     titles: title,
     description: description,
     todoid: dataId,
+    state: state,
   });
 };
+// 타이머, 캘린더에서 표시할 오늘 일정 불러오는 함수(접어두고 사용)
+async function get_today_todoList(nickname) {
+  const user_id = nickname;
+
+  // 오늘 0시부터 24시까지의 범위와 아이디로 일정을 탐색
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const todos = await Task.findAll({
+    where: {
+      user_id: user_id,
+      due_date: {
+        [Op.gte]: startOfDay, // 시작일 이후
+        [Op.lte]: endOfDay, // 종료일 이전
+      },
+    },
+  });
+
+  const titles = [];
+  const description = [];
+  const state = [];
+  const todoid = [];
+
+  todos.map((todo) => {
+    titles.push(todo.title);
+    description.push(todo.description);
+    state.push(todo.state);
+    todoid.push(todo.id);
+  });
+  return {
+    titles,
+    description,
+    state,
+    todoid,
+  };
+}
