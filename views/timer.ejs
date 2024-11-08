@@ -8,71 +8,128 @@
     <link rel="stylesheet" href="/static/css/navbar.css" />
     <link rel="stylesheet" href="/static/css/timer.css" />
     <link rel="stylesheet" href="/static/css/button.css" />
-    <script src="/static/js/navbar.js"></script>
-    <!-- 글씨체 -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" href="/static/css/calender.css" />
+    <link rel="stylesheet" href="/static/css/todoItem.css" />
+    <link rel="stylesheet" href="/static/css/alert.css" />
     <!-- axios CDN -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/timer.js"></script>
+    <!-- <script src="/static/js/calender.js"></script> -->
+    <!-- nav css에 이미  폰트다운받는 코드가 있음 -->
+    <!-- 글씨체 --> 
+    <!-- <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    /> -->
+    
   </head>
   <body>
     <header>
       <%- include("./shared/navbar") %>
-      <div class="background"></div>
+      <!-- <div class="background"></div> -->
       <a href="/" class="logo"
         ><img width="158" src="/static/img/logo.png" alt="로고 이미지"
       /></a>
     </header>
-    
+
     <div id="rightBtn" onclick="toggleRight()">
+      <!-- 오른쪽 이동 버튼 -->
       <svg
-      id="rightIcon"
-      xmlns="http://www.w3.org/2000/svg"
-      class="right"
-      width="30"
-      height="30"
-      fill="#473234"
-      class="bi bi-caret-right-fill"
-      viewBox="0 0 16 16"
-    >
-      <path
-        d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"
-      />
-    </svg>
-    <div class="timerTomato"
-      ><img width="158" src="/static/img/timerTomato.png" alt="토마토 이미지"
-    /></div>
-    <!-- 그냥 타이머 -->
-    <div class="outer-timer-container">
-      <div id="main-timer" class="timer-body">
-        <div class="inner-cover1"></div>
-        <div id="tick-marks">
-          <div class="tick thick-tick"></div>
+        id="rightIcon"
+        xmlns="http://www.w3.org/2000/svg"
+        class="right"
+        width="30"
+        height="30"
+        fill="#473234"
+        class="bi bi-caret-right-fill"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"
+        />
+      </svg>
+
+      <!-- 토마토 이미지 -->
+      <!-- <div class="timerTomato">
+      </div> -->
+        <img
+          width="158"
+          src="/static/img/timerTomato.png"
+          alt="토마토 이미지"
+          class="timerTomato"
+        />
+      
+      <!-- 그냥 타이머 -->
+      <div class="outer-timer-container">
+        <div id="main-timer" class="timer-body">
+          <div class="inner-cover1"></div>
+          <div id="tick-marks">
+            <div class="tick thick-tick"></div>
+          </div>
+          <div id="time-fins"></div>
+          <div class="inner-cover2"></div>
         </div>
-        <div id="time-fins"></div>
-        <div class="inner-cover2"></div>
       </div>
+
+      <!-- 왼쪽 화살표 -->
+      <svg
+        id="leftIcon"
+        xmlns="http://www.w3.org/2000/svg"
+        class="left"
+        width="30"
+        height="30"
+        fill="#473234"
+        class="bi bi-caret-left-fill"
+        viewBox="0 0 16 16"
+        style="display: none"
+      >
+        <path
+          d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"
+        />
+      </svg>
     </div>
-    <svg id="leftIcon" xmlns="http://www.w3.org/2000/svg" class="left" width="30" height="30" fill="#473234" class="bi bi-caret-left-fill" viewBox="0 0 16 16" style="display: none;">
-      <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
-    </svg>
-  </div>
+
     <div class="timercontainer">
-      <div id="timer" class="timer">00 : 25 : 00</div>
+      <div id="timer" class="timer">00 : 00 : 00</div>
       <div class="buttonbox">
-        <div id="startBtn" onclick="togglePlayPause()">
-          <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" fill="#473234" class="bi bi-play-circle" viewBox="0 0 16 16">
-              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-              <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445" />
+        <button class="stopWatch-btn" id="startBtn" onclick="togglePlayPause()">
+          <svg
+            id="playIcon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="35px"
+            height="35px"
+            fill="#473234"
+            class="bi bi-play-circle"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+            />
+            <path
+              d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"
+            />
           </svg>
-          <svg id="pauseIcon" xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" fill="#473234" class="bi bi-pause-circle" viewBox="0 0 16 16" style="display: none;">
-              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-              <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z" />
+          <svg
+            id="pauseIcon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="35px"
+            height="35px"
+            fill="#473234"
+            class="bi bi-pause-circle"
+            viewBox="0 0 16 16"
+            style="display: none"
+          >
+            <path
+              d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+            />
+            <path
+              d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z"
+            />
           </svg>
-      </div>
-        <div id="stopBtn" onclick="stopTimer()">
+        </button class="stopWatch-btn">
+        <button class="stopWatch-btn" id="stopBtn" onclick="stopTimer()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="35px"
@@ -85,8 +142,8 @@
               d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.5 5A1.5 1.5 0 0 0 5 6.5v3A1.5 1.5 0 0 0 6.5 11h3A1.5 1.5 0 0 0 11 9.5v-3A1.5 1.5 0 0 0 9.5 5z"
             />
           </svg>
-        </div>
-        <div id="resetBtn" onclick="resetTimer()">
+        </button class="stopWatch-btn">
+        <button class="stopWatch-btn" id="resetBtn" onclick="resetTimer()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="35px"
@@ -94,7 +151,6 @@
             fill="#473234"
             class="bi bi-arrow-counterclockwise"
             viewBox="0 0 16 16"
-            onclick="toggleTimer()"
           >
             <path
               fill-rule="evenodd"
@@ -104,135 +160,282 @@
               d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466"
             />
           </svg>
-        </div>
+        </button class="stopWatch-btn">
       </div>
     </div>
-  
-  <section class="list-Wrap">
-    <section class="todayTomato">
-      오늘 수집한 토마토
-      <p>+<span>0</span></p>
-    </section>
-    <section class="todo-container">
-  <% todoItems.forEach(function(item) { %>
-  <% }) %>
-</section>
 
-  <script>
-    // 오른쪽 왼쪽
-    function toggleRight() {
-    const rightIcon = document.getElementById("rightIcon");
-    const leftIcon = document.getElementById("leftIcon");
-    const timerTomato = document.querySelector(".timerTomato");
-    const outerTimerContainer = document.querySelector(".outer-timer-container");
+    <%- include("./shared/list-Wrap"), {titles: titles, description: description, todoid: todoid, state: state} %>
 
-    // 현재 아이콘에 따라 아이콘을 전환
-    if (rightIcon.style.display === "none") {
-        rightIcon.style.display = "block"; 
-        leftIcon.style.display = "none"; 
-        timerTomato.classList.remove("hide");
-        outerTimerContainer.classList.remove("show");
-    } else {
-        rightIcon.style.display = "none";
-        leftIcon.style.display = "block";
-        timerTomato.classList.add("hide");
-        outerTimerContainer.classList.add("show");
-    }
-}
+    <!-- 이건 5분 휴식으로 변할때, 뒤에 스포트 라이트 -->
+    <div class="spotlight"></div>
 
+    <div id="restModal">
+      <div class="restmodal">
+        <h2>25분이 지났습니다!</h2>
+        <p>5분 휴식을 시작할까요?</p>
+        <br />
+        <button class="restend">종료</button>
+        <button class="restok">확인</button>
+      </div>
+    </div>
+    <div id="restendModal">
+      <div class="restendmodal">
+        <h2>5분 휴식이 끝났습니다!</h2>
+        <p>공부를 다시 시작 할까요?</p>
+        <br />
+        <button class="resttheend">종료</button>
+        <button class="resttheok">확인</button>
+      </div>
+    </div>
+    <div id="stopModal">
+      <div class="stopmodal">
+        <h2>정말로 중단하시겠습니까?</h2>
+        <p>타이머가 종료되며 결과가 합산됩니다.</p>
+        <br />
+        <button class="stopend">취소</button>
+        <button class="stopok">확인</button>
+      </div>
+    </div>
+    <div id="doneModal">
+      <div class="donemodal">
+        <h2>수고하셨습니다!</h2>
+        <div id="timer" class="timer">00 : 25 : 00</div>
+        <section class="todayTomato">
+          획득한 토마토
+          <p>+<span>0</span></p>
+        </section>
+        <section class="todayresult">오늘의 성과</section>
+        <section class="improvement">추가 개선이 필요한 업무</section>
+        <section class="RemainingWork">남은 업무</section>
+        <br />
+        <button class="done" onclick="gomyPage()">완료</button>
+      </div>
+    </div>
 
-// 뽀모도로 타이머
+    <script>
+      // 오른쪽 왼쪽
+      function toggleRight() {
+        const rightIcon = document.getElementById("rightIcon");
+        const leftIcon = document.getElementById("leftIcon");
+        const timerTomato = document.querySelector(".timerTomato");
+        const outerTimerContainer = document.querySelector(
+          ".outer-timer-container"
+        );
 
-// 플레이 버튼 누르면 일시정지 버튼으로 바뀌는거.
-function togglePlayPause() {
-    const playIcon = document.getElementById("playIcon");
-    const pauseIcon = document.getElementById("pauseIcon");
-    
-    // 현재 아이콘에 따라 아이콘을 전환
-    if (playIcon.style.display === "none") {
-        playIcon.style.display = "block";
-        pauseIcon.style.display = "none";
-    } else {
-        playIcon.style.display = "none";
-        pauseIcon.style.display = "block";
-    }
-}
-function toggleTimer() {
-  const timerElement = document.getElementById('timer');
-  if (timerElement) {
-    timerElement.classList.toggle('show');
-  }
-}
-
-
-// 타이머 버튼 실행
-let timerInterval;
-let timeRemaining = 25 * 60; // 25분 (초 단위)
-const timerDisplay = document.getElementById("timer");
-
-// 타이머 시작
-function startTimer() {
-    timerInterval = setInterval(() => {
-        if (timeRemaining > 0) {
-            timeRemaining--;
-            updateDisplay();
+        if (timerTomato.classList.contains("hide")) {
+          timeRemaining = 0;
+          updateDisplay();
         } else {
-            clearInterval(timerInterval);
-            alert("타이머가 완료되었습니다!");
+          timeRemaining = 1 * 60;
+          updateDisplay();
         }
-    }, 1000);
-}
+        if (rightIcon.style.display === "none") {
+          rightIcon.style.display = "block";
+          leftIcon.style.display = "none";
+          timerTomato.classList.remove("hide");
+          outerTimerContainer.classList.remove("active");
+          timeRemaining = 1 * 60;
+          updateDisplay();
+        } else {
+          rightIcon.style.display = "none";
+          leftIcon.style.display = "block";
+          timerTomato.classList.add("hide");
+          outerTimerContainer.classList.add("active");
+          timeRemaining = 0;
+          updateDisplay();
+        }
+      }
 
-// 타이머 업데이트
-function updateDisplay() {
-    const hours = String(Math.floor(timeRemaining / 3600)).padStart(2, '0');
-    const minutes = String(Math.floor((timeRemaining % 3600) / 60)).padStart(2, '0');
-    const seconds = String(timeRemaining % 60).padStart(2, '0');
-    timerDisplay.textContent = `${hours} : ${minutes} : ${seconds}`;
-}
+      // 타이머 버튼 실행
+      let timerInterval;
+      let timeRemaining;
+      const timerDisplay = document.getElementById("timer");
 
-// 타이머 일시정지
-function pauseTimer() {
-    clearInterval(timerInterval);
-}
+      // 타이머 업데이트
+      function updateDisplay() {
+        const hours = String(Math.floor(timeRemaining / 3600)).padStart(2, "0");
+        const minutes = String(
+          Math.floor((timeRemaining % 3600) / 60)
+        ).padStart(2, "0");
+        const seconds = String(timeRemaining % 60).padStart(2, "0");
+        timerDisplay.textContent = `${hours} : ${minutes} : ${seconds}`;
+      }
+      let intervalId; // 타이머를 저장할 변수
+      let isTimerRunning = false; // 타이머가 실행 중인지 확인하는 플래그
+      // 타이머 시작
+      function startTimer() {
+        // 타이머가 실행 중이면 다시 시작하지 않음
+        if (isTimerRunning) return;
 
-// 타이머 중지
-function stopTimer() {
-    if (confirm("정말로 타이머를 중단하시겠습니까?")) {
-        clearInterval(timerInterval);
-        timeRemaining = 25 * 60; // 시간을 초기화
+        isTimerRunning = true; // 타이머 실행 중으로 설정
+
+        timerInterval = setInterval(() => {
+          // 타이머가 0초 이상일 때 (25분 타이머로 가정)
+          if (
+            timeRemaining > 0 &&
+            !document.querySelector(".timerTomato").classList.contains("hide")
+          ) {
+            timeRemaining--;
+          }
+          // 타이머가 0초에 도달한 경우 (타이머 종료 후 알람 띄우기)
+          else if (
+            timeRemaining <= 0 &&
+            !document.querySelector(".timerTomato").classList.contains("hide")
+          ) {
+            showRestModal();
+            clearInterval(timerInterval); // 타이머 정지
+            isTimerRunning = false; // 타이머 실행 중 플래그 초기화
+          }
+          // 얘는 그냥 타이머때 시간 증가 하는거
+          else {
+            timeRemaining++;
+          }
+          updateDisplay();
+        }, 1000);
+      }
+      // 25분 타이머 종료 후 알람창을 띄우는 함수
+      function showRestModal() {
+        const restModal = document.getElementById("restModal");
+        restModal.style.display = "flex";
+
+        const restOkButton = document.querySelector(".restok");
+        restOkButton.onclick = function () {
+          restModal.style.display = "none";
+          startRestTimer(); // 5분 휴식 타이머 시작
+        };
+
+        const restEndButton = document.querySelector(".restend");
+        restEndButton.onclick = function () {
+          restModal.style.display = "none";
+          stopTimer(); // 타이머 중지
+        };
+      }
+
+      // 5분 휴식 타이머 시작
+      function startRestTimer() {
+        timeRemaining = 5 * 60;
         updateDisplay();
-    }
-}
-
-// 타이머 초기화
-function resetTimer() {
-    clearInterval(timerInterval);
-    timeRemaining = 25 * 60; // 시간을 초기화
-    updateDisplay();
-}
-
-// 버튼 클릭 시 타이머 시작/일시정지
-function togglePlayPause() {
-    const playIcon = document.getElementById("playIcon");
-    const pauseIcon = document.getElementById("pauseIcon");
-
-    if (playIcon.style.display === "none") {
-        playIcon.style.display = "block";
-        pauseIcon.style.display = "none";
-        pauseTimer();
-    } else {
-        playIcon.style.display = "none";
-        pauseIcon.style.display = "block";
+        startRestPeriod();
         startTimer();
-    }
-}
+      }
 
-// 그냥 타이머
-const timer = document.getElementById("main-timer");
+      function startRestPeriod() {
+        document.body.style.backgroundColor = "#654f76";
+        document.querySelector(".background").style.backgroundColor = "#473c52";
+        document.querySelector(".timer").style.color = "#fff";
+
+        const icons = document.querySelectorAll(".buttonbox svg");
+        icons.forEach((icon) => {
+          icon.style.fill = "#fff";
+        });
+
+        const rightIcon = document.querySelector("#rightBtn svg");
+        if (rightIcon) {
+          rightIcon.style.fill = "#fff";
+        }
+        const spotlight = document.querySelector(".spotlight");
+        if (spotlight) {
+          spotlight.style.display = "block";
+        }
+
+        // 5분 후, 원래 상태로 되돌리기
+        setTimeout(function () {
+          document.body.style.backgroundColor = "#fef8f1";
+          document.querySelector(".background").style.backgroundColor =
+            "#f2eae0";
+          document.querySelector(".timer").style.color = "#473234";
+          icons.forEach((icon) => {
+            icon.style.fill = "#473234";
+          });
+          if (rightIcon) {
+            rightIcon.style.fill = "#473234";
+          }
+          if (spotlight) {
+            spotlight.style.display = "none";
+          }
+        }, 5 * 60 * 1000);
+      }
+
+      // 타이머 일시정지
+      function pauseTimer() {
+        clearInterval(timerInterval);
+      }
+
+      // 타이머 중지
+      function stopTimer() {
+        clearInterval(intervalId); // 타이머를 정지
+        isTimerRunning = false;
+        const stopModal = document.getElementById("stopModal");
+        stopModal.style.display = "flex";
+        const stopOkButton = document.querySelector(".stopok");
+        stopOkButton.onclick = function () {
+          clearInterval(timerInterval);
+          if (
+            !document.querySelector(".timerTomato").classList.contains("hide")
+          ) {
+            timeRemaining = 1 * 60;
+          } else {
+            timeRemaining = 0;
+          }
+          updateDisplay();
+          stopModal.style.display = "none";
+          const doneModal = document.getElementById("doneModal");
+          doneModal.style.display = "flex";
+        };
+
+        const stopEndButton = document.querySelector(".stopend");
+        stopEndButton.onclick = function () {
+          stopModal.style.display = "none";
+          isTimerRunning = false;
+        };
+      }
+      document.querySelector(".restok").addEventListener("click", function () {
+        // 5분 타이머를 시작할 때 중복 실행되지 않도록
+        if (!isTimerRunning) {
+          startTimer(); // 5분 타이머 시작
+        }
+      });
+      // 타이머 초기화
+      function resetTimer() {
+        clearInterval(timerInterval);
+
+        if (
+          !document.querySelector(".timerTomato").classList.contains("hide")
+        ) {
+          timeRemaining = 1 * 60;
+        } else {
+          timeRemaining = 0;
+        }
+        updateDisplay();
+      }
+
+      // 플레이 버튼 누르면 일시정지 버튼으로 바뀌는거.
+      // 버튼 클릭 시 타이머 시작/일시정지
+      function togglePlayPause() {
+        const playIcon = document.getElementById("playIcon");
+        const pauseIcon = document.getElementById("pauseIcon");
+
+        if (playIcon.style.display === "none") {
+          playIcon.style.display = "block";
+          pauseIcon.style.display = "none";
+          pauseTimer();
+        } else {
+          playIcon.style.display = "none";
+          pauseIcon.style.display = "block";
+          startTimer();
+        }
+      }
+      // 초기화
+      timeRemaining = 1 * 60;
+      updateDisplay(); // 초기 화면 설정
+
+      // 그냥 타이머
+      const timer = document.getElementById("main-timer");
       const lines = timer.querySelector("#tick-marks");
       const fins = timer.querySelector("#time-fins");
-      const control = document.querySelector(".control-container #play-pause-control");
+      const control = document.querySelector(
+        ".control-container #play-pause-control"
+      );
 
       const endTime = 60;
       let intervalID = null;
@@ -304,6 +507,11 @@ const timer = document.getElementById("main-timer");
       }
 
       play();
-  </script>
+
+      // 완료 버튼 누르면 마이페이지로 가게.
+      function gomyPage() {
+        window.location.href = "./myPage";
+      }
+    </script>
   </body>
 </html>

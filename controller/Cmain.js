@@ -5,11 +5,11 @@ const Timer = require("../models/index").Timer;
 const Feed = require("../models/index").Feed;
 const { Op } = require("sequelize");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
-const uuid = require('uuid').v4;
-const path = require('path');
-const fs = require('fs');
+const uuid = require("uuid").v4;
+const path = require("path");
+const fs = require("fs");
 
-require('dotenv').config();
+require("dotenv").config();
 
 // 비밀번호 암호화
 const bcrypt = require("bcrypt");
@@ -52,7 +52,7 @@ const uploadDetail = multer({
       done(null, uniqueName);
     },
   }),
-  limits : { fileSize: 5 * 1024 * 1024 }, //5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, //5MB
   fileFilter(req, file, done) {
     // 확장자 검사
     // 정규표현식 업로드 허용된 파일 확장자 목록
@@ -60,16 +60,18 @@ const uploadDetail = multer({
     // 파일의 확장자를 추출하는 코드
     // toLowerCase() 확장자를 소문자로 변환하여 대소문자 구분없이 검사 가능
     // JPG나 jpg
-    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const extname = allowedTypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
     // MIME 타입이 image/jpeg image/png 검사함
     // 조건이 맞으면 true 아니면 false
     const mimetype = allowedTypes.test(file.mimetype);
     if (extname && mimetype) {
       return done(null, true);
     } else {
-      return done(new Error('허용되지 않는 확장자 입니다.'));
+      return done(new Error("허용되지 않는 확장자 입니다."));
     }
-  }
+  },
 });
 exports.get_modal = (req, res) => {
   res.send("example");
@@ -83,9 +85,9 @@ const uploadToS3 = async (filePath, bucketName, keyName) => {
 
     // s3에 업로드할 객체 설정
     const uploadParms = {
-      Bucket : bucketName,
-      Key : keyName,
-      Body : fileStream
+      Bucket: bucketName,
+      Key: keyName,
+      Body: fileStream,
     };
 
     // s3에 파일 업로드
@@ -96,7 +98,7 @@ const uploadToS3 = async (filePath, bucketName, keyName) => {
     console.error("Error uploading file to S3", err);
     throw err; // 에러 처리
   }
-}
+};
 
 exports.get_Index = async (req, res) => {
   // 세션 권한 없으면 login으로 가야함!!!
@@ -133,8 +135,7 @@ exports.get_Login = (req, res) => {
 };
 
 exports.post_Login = async (req, res) => {
-  const { id,emailAddr, password } = req.body;
-  console.log("post_login",req.body);
+  const { emailAddr, password } = req.body;
 
   // 입력 값 검증
   if (!emailAddr || !password) {
@@ -146,17 +147,20 @@ exports.post_Login = async (req, res) => {
     const user = await User.findOne({ where: { emailAddr } });
     // 사용자가 존재하지 않거나 비밀번호가 틀린 경우
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res
+        .status(400)
+        .json({ message: "이메일 또는 비밀번호를 확인 해 주세요." });
     }
 
     // 로그인 성공
     req.session.userId = user.id; // 사용자 id값 저장
     req.session.nickname = user.nickname; // 로그인 성공 시 세션 설정
-    console.log("세션에 저장된 userId:", req.session.userId);
-    res.redirect("/");
+    return res.status(200).json({ success: true, message: "Login successful" });
   } catch (error) {
     console.error("Error logging in", error);
-    res.status(500).json({ message: "Error logging in" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Error logging in" });
   }
 };
 
@@ -216,6 +220,7 @@ exports.post_Register = async (req, res) => {
       password: hashedPassword,
       nickname,
       phoneNumber,
+      g,
     });
 
     return res.json({
@@ -240,21 +245,29 @@ exports.post_FindEmail = async (req, res) => {
   const { username, phoneNumber } = req.body;
 
   try {
-    // 이름과 전화번호로 사용자 검색
     const user = await User.findOne({
-      where: {
-        username,
-        phoneNumber,
-      },
+      where: { username, phoneNumber },
     });
 
-    if (user) {
-      // 사용자가 있으면  반환
-      res.status(200).json({ emailAddr: user.emailAddr });
-    } else {
-      // 사용자가 없으면 404 상태코드 응답
-      res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
+    if (!user) {
+      // 이름이 틀린 경우
+      const userByName = await User.findOne({ where: { username: username } });
+      if (!userByName) {
+        return res.status(404).json({ error: "username" });
+      }
+
+      // 전화번호가 틀린 경우
+      const userByPhoneNumber = await User.findOne({ where: { phoneNumber } });
+      if (!userByPhoneNumber) {
+        return res.status(404).json({ error: "phoneNumber" });
+      }
+
+      // 이름과 전화번호가 모드 틀린 경우
+      return res.status(404).json({ error: "mismatch" });
     }
+
+    // 이름과 전화번호 모두 일치하면 이메일 반환
+    return res.status(200).json({ emailAddr: user.emailAddr });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "서버 오류가 발생했습니다." });
@@ -316,61 +329,64 @@ exports.get_Feed = (req, res) => {
 };
 
 // 피드 업로드
-exports.post_feedUpload = (req,res) => {
-    // multer 를 사용하여 파일 업로드
-    // 문제해결
-    // form 데이터를 가져왔을때 이미지와 본문 내용을 가져오면
-    // 이미지 업로드를 먼저처리한뒤 body 값을 가져와야한다.
-    // req bdoy 값을 먼저 가져오면 해당값이 비어있어 값을 가져오지 못하게 됨
-    uploadDetail.single('file')(req,res, async(err) => {
-      if (err) {
-        return res.status(400).json({ error : "file upload failed",details : err.message});
-      }
+exports.post_feedUpload = (req, res) => {
+  // multer 를 사용하여 파일 업로드
+  // 문제해결
+  // form 데이터를 가져왔을때 이미지와 본문 내용을 가져오면
+  // 이미지 업로드를 먼저처리한뒤 body 값을 가져와야한다.
+  // req bdoy 값을 먼저 가져오면 해당값이 비어있어 값을 가져오지 못하게 됨
+  uploadDetail.single("file")(req, res, async (err) => {
+    if (err) {
+      return res
+        .status(400)
+        .json({ error: "file upload failed", details: err.message });
+    }
 
-      if(!req.file) {
-        return res.status(400).json({ error : "No file uploaded" });
-      }
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
 
-      const { content } = req.body;
-      // 세션에서 userId 값을 불러오기
-      const { userId } = req.session;
+    const { content } = req.body;
+    // 세션에서 userId 값을 불러오기
+    const { userId } = req.session;
 
-      console.log(content);
-      
+    console.log(content);
+
+    try {
+      const filename = req.file.filename;
+      const filePath = req.file.path;
+      const bucketName = "feedimageup";
+      const keyName = `images/${filename}`;
+
+      // S3에 파일 업로드
+      const fileUrl = await uploadToS3(filePath, bucketName, keyName);
+
+      // db에 게시글 정보와 함꼐 파일 url 및 사용자의 id 저장
+      const feedData = {
+        content: content,
+        file_url: fileUrl, // 컬럼명 수정
+        user_id: userId, // user_id로 수정
+      };
+
+      // DB에 피드 데이터 저장
+      const feed = await Feed.create(feedData);
 
       try {
-        const filename = req.file.filename;
-        const filePath = req.file.path;
-        const bucketName = "feedimageup"
-        const keyName = `images/${filename}`;
-
-        // S3에 파일 업로드
-        const fileUrl = await uploadToS3(filePath,bucketName,keyName);
-
-        // db에 게시글 정보와 함꼐 파일 url 및 사용자의 id 저장
-        const feedData = {
-          content : content,
-          file_url: fileUrl,  // 컬럼명 수정
-          user_id: userId  // user_id로 수정
-        };
-
-        // DB에 피드 데이터 저장
-        const feed = await Feed.create(feedData);
-
-        try {
-          // 업로드 후 임시파일 삭제
-          fs.unlinkSync(filePath);
-        } catch (unlinkSync) {
-          console.err("failed to delete file", unlinkErr);
-        }
-        
-        //성공 응답
-        res.status(200).json({message : "feed uploaded success", fileUrl});
-      } catch (err) {
-        console.log("error during feed upload", err);
-        res.status(500).json({ error : "failed to upload feed", details : err.message});
+        // 업로드 후 임시파일 삭제
+        fs.unlinkSync(filePath);
+      } catch (unlinkSync) {
+        console.err("failed to delete file", unlinkErr);
       }
-    });
+
+      //성공 응답
+      res.status(200).json({ message: "feed uploaded success", fileUrl });
+    } catch (err) {
+      console.log("error during feed upload", err);
+      res
+        .status(500)
+        .json({ error: "failed to upload feed", details: err.message });
+    }
+  });
 };
 
 // 피드 목록 가져오기 [ 페이징 ]
@@ -415,34 +431,10 @@ exports.get_Calender = async (req, res) => {
     today.getMonth(),
     1
   ).getDay();
-  const user_id = req.session.nickname;
 
-  // 오늘 0시부터 24시까지의 범위와 아이디로 일정을 탐색
-  const startOfDay = new Date();
-  startOfDay.setHours(0, 0, 0, 0);
-  const endOfDay = new Date();
-  endOfDay.setHours(23, 59, 59, 999);
-
-  const todos = await Task.findAll({
-    where: {
-      user_id: user_id,
-      due_date: {
-        [Op.gte]: startOfDay, // 시작일 이후
-        [Op.lte]: endOfDay, // 종료일 이전
-      },
-    },
-  });
-
-  const titles = [];
-  const description = [];
-  const state = [];
-  const todoid = [];
-  todos.map((todo) => {
-    titles.push(todo.title);
-    description.push(todo.description);
-    state.push(todo.state);
-    todoid.push(todo.id);
-  });
+  const { titles, description, state, todoid } = await get_today_todoList(
+    req.session.nickname
+  );
 
   res.render("calender", {
     year: year,
@@ -450,6 +442,18 @@ exports.get_Calender = async (req, res) => {
     lastDay: lastDay,
     firstDayOfMonth: firstDayOfMonth,
     dayNames: dayNames,
+    titles: titles,
+    description: description,
+    state: state,
+    todoid: todoid,
+  });
+};
+exports.get_Timer = async (req, res) => {
+  const { titles, description, state, todoid } = await get_today_todoList(
+    req.session.nickname
+  );
+
+  res.render("timer", {
     titles: titles,
     description: description,
     state: state,
@@ -585,18 +589,66 @@ exports.post_addtodo = async (req, res) => {
   }
 };
 
-exports.get_Timer = (req, res) => {
-  const todoItems = [
-    { title: "Task 1", description: "Description for task 1" },
-    { title: "Task 2", description: "Description for task 2" },
-    // 추가할 항목들
-  ];
 
-  res.render("timer", { todoItems });
-};
+exports.get_MyPage = async (req, res) => {
+  const user_id = req.session.nickname;
+  // 완료한 업무 검색
+  const done_data = await Task.findAll({
+    where: {
+      user_id: user_id,
+      state: "done",
+    },
+  });
+  const done_titles = [];
+  const done_descriptions = [];
+  done_data.forEach((item) => {
+    done_titles.push(item.dataValues.title);
+    done_descriptions.push(item.dataValues.description);
+  });
 
-exports.get_MyPage = (req, res) => {
-  res.render("myPage");
+
+  // 미흡한 업무 검색
+  const ongoing_data = await Task.findAll({
+    where: {
+      user_id: user_id,
+      state: "ongoing",
+    },
+  });
+  const ongoing_titles = [];
+  const ongoing_descriptions = [];
+  ongoing_data.forEach((item) => {
+    ongoing_titles.push(item.dataValues.title);
+    ongoing_descriptions.push(item.dataValues.description);
+  });
+  //미완료 업무 검색
+  const pending_data = await Task.findAll({
+    where: {
+      user_id: user_id,
+      state: "pending",
+    },
+  });
+  const pending_titles = [];
+  const pending_descriptions = [];
+  pending_data.forEach((item) => {
+    pending_titles.push(item.dataValues.title);
+    pending_descriptions.push(item.dataValues.description);
+  });
+  // 모든 업무의 개수
+  const allListNum =
+    done_titles.length + ongoing_titles.length + pending_titles.length;
+
+  // 업무 성공률
+  const successPercentage = Math.round((done_titles.length / allListNum) * 100);
+  res.render("myPage", {
+    done_titles: done_titles,
+    done_descriptions: done_descriptions,
+    ongoing_titles: ongoing_titles,
+    ongoing_descriptions: ongoing_descriptions,
+    pending_titles: pending_titles,
+    pending_descriptions: pending_descriptions,
+    allListNum: allListNum,
+    successPercentage: successPercentage,
+  });
 };
 
 exports.get_modal = (req, res) => {
@@ -604,10 +656,49 @@ exports.get_modal = (req, res) => {
 };
 
 exports.getComponent = (req, res) => {
-  const { title, description, dataId } = req.query;
+  const { title, description, dataId, state } = req.query;
   res.render("./shared/rotateTodoItem", {
     titles: title,
     description: description,
     todoid: dataId,
+    state: state,
   });
 };
+// 타이머, 캘린더에서 표시할 오늘 일정 불러오는 함수(접어두고 사용)
+async function get_today_todoList(nickname) {
+  const user_id = nickname;
+
+  // 오늘 0시부터 24시까지의 범위와 아이디로 일정을 탐색
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const todos = await Task.findAll({
+    where: {
+      user_id: user_id,
+      due_date: {
+        [Op.gte]: startOfDay, // 시작일 이후
+        [Op.lte]: endOfDay, // 종료일 이전
+      },
+    },
+  });
+
+  const titles = [];
+  const description = [];
+  const state = [];
+  const todoid = [];
+
+  todos.map((todo) => {
+    titles.push(todo.title);
+    description.push(todo.description);
+    state.push(todo.state);
+    todoid.push(todo.id);
+  });
+  return {
+    titles,
+    description,
+    state,
+    todoid,
+  };
+}

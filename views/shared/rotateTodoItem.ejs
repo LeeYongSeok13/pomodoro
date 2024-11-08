@@ -1,7 +1,7 @@
 <% for( let i = 0; i < titles.length; i++ ) { %>
 <div class="todoItem" data-id="<%= todoid[i] %>">
   <div>
-    <button type="button" class="imgButton state pending">
+    <button type="button" class="imgButton state <%= state[i] %>">
       <span class="text-hidden">상태 표시 버튼</span>
     </button>
     <div>
