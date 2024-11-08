@@ -16,14 +16,6 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/static/js/navbar.js"></script>
     <script src="/static/js/timer.js"></script>
-    <!-- <script src="/static/js/calender.js"></script> -->
-    <!-- nav css에 이미  폰트다운받는 코드가 있음 -->
-    <!-- 글씨체 --> 
-    <!-- <link
-      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
-      rel="stylesheet"
-    /> -->
-    
   </head>
   <body>
     <header>
@@ -52,15 +44,13 @@
       </svg>
 
       <!-- 토마토 이미지 -->
-      <!-- <div class="timerTomato">
-      </div> -->
-        <img
-          width="158"
-          src="/static/img/timerTomato.png"
-          alt="토마토 이미지"
-          class="timerTomato"
-        />
-      
+      <img
+        width="158"
+        src="/static/img/timerTomato.png"
+        alt="토마토 이미지"
+        class="timerTomato"
+      />
+
       <!-- 그냥 타이머 -->
       <div class="outer-timer-container">
         <div id="main-timer" class="timer-body">
@@ -128,7 +118,7 @@
               d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z"
             />
           </svg>
-        </button class="stopWatch-btn">
+        </button>
         <button class="stopWatch-btn" id="stopBtn" onclick="stopTimer()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -142,7 +132,7 @@
               d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.5 5A1.5 1.5 0 0 0 5 6.5v3A1.5 1.5 0 0 0 6.5 11h3A1.5 1.5 0 0 0 11 9.5v-3A1.5 1.5 0 0 0 9.5 5z"
             />
           </svg>
-        </button class="stopWatch-btn">
+        </button>
         <button class="stopWatch-btn" id="resetBtn" onclick="resetTimer()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -160,11 +150,12 @@
               d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466"
             />
           </svg>
-        </button class="stopWatch-btn">
+        </button>
       </div>
     </div>
 
-    <%- include("./shared/list-Wrap"), {titles: titles, description: description, todoid: todoid, state: state} %>
+    <%- include("./shared/list-Wrap"), {titles: titles, description:
+    description, todoid: todoid, state: state} %>
 
     <!-- 이건 5분 휴식으로 변할때, 뒤에 스포트 라이트 -->
     <div class="spotlight"></div>
@@ -208,7 +199,7 @@
         <section class="improvement">추가 개선이 필요한 업무</section>
         <section class="RemainingWork">남은 업무</section>
         <br />
-        <button class="done" onclick="gomyPage()">완료</button>
+        <button class="donedone" onclick="gomyPage()">완료</button>
       </div>
     </div>
 
@@ -321,7 +312,7 @@
 
       function startRestPeriod() {
         document.body.style.backgroundColor = "#654f76";
-        document.querySelector(".background").style.backgroundColor = "#473c52";
+        document.querySelector("header").style.backgroundColor = "#473c52";
         document.querySelector(".timer").style.color = "#fff";
 
         const icons = document.querySelectorAll(".buttonbox svg");

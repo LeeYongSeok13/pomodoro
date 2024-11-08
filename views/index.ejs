@@ -25,44 +25,14 @@
         ><img width="158" src="/static/img/logo.png" alt="로고 이미지"
       /></a>
     </header>
-    <div class="feed-container">
-      <div class="feed-item">
-        <div class="content">
-          <p class="user-info">
-            <span class="profile-img"></span>
-            <strong>User123</strong>
-          </p>
-          <img src="https://via.placeholder.com/600x400" alt="post" />
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique
-            reiciendis odit, itaque aut labore consectetur nesciunt vel quidem
-            nulla nam nobis mollitia amet molestias dolore, quisquam blanditiis
-            natus. Rerum, asperiores.
-          </p>
-          <div class="get-tomato-sum">
-            획득한 토마토<img
-              class="tomato"
-              src="/static/img/tomato.png"
-              alt="획득 토마토"
-            />
-          </div>
-          <div class="icon-container">
-            <img src="../static/svg/suit-heart.svg" alt="하트 아이콘" />
-            <img
-              src="../static/svg/chat.svg"
-              alt="채팅 아이콘"
-              onclick="toggleCommentBox()"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <%- include("./shared/feedItem") %>
     <!-- 댓글 입력창 -->
     <div class="comment-box" id="commentBox">
       <div id="commentsContainer" class="comments-container"></div>
       <div class="input-container">
-        <span class="profile-img"></span>
+        <span class="profile-img">
+          <img src="/static/img/profile.png" alt="프로필 이미지" width="30px" />
+        </span>
         <input type="text" id="commentInput" placeholder="댓글을 입력하세요." />
         <button onclick="submitComment()" class="send-button">
           <svg
@@ -113,7 +83,9 @@
 
         // 유저 ID와 댓글 내용을 함께 표시
         commentElement.innerHTML = `
-          <div class="profile-img"></div>
+          <div class="profile-img">
+            <img src="/static/img/profile.png" alt="프로필 이미지" width="30px"/>
+          </div>
           <div class="comment-content">
             <strong>${userID}</strong>
             <p>${commentText}</p>
