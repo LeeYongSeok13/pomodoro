@@ -29,6 +29,7 @@ document
     }
 
     try {
+      console.log(formData);
       // 서버에 데이터 전송
       const response = await fetch("/login/register", {
         method: "POST",

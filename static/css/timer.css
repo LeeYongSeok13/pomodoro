@@ -13,9 +13,7 @@ body {
   z-index: 10;
 }
 
-
-
-header::after {
+header {
   content: "";
   background-color: #f2eae0;
   position: absolute;
@@ -353,7 +351,7 @@ header::after {
   font-weight: 700;
   font-size: 15px;
 }
-/* .done {
+.donedone {
   background-color: #da2337;
   border-width: 0;
   border-radius: 30px;
@@ -364,9 +362,9 @@ header::after {
   height: 40px;
   margin-top: 5%;
 }
-.done:hover {
+.donedone:hover {
   color: #f9f9f9;
-} */
+}
 
 /* 캘린더에서 추가한거 */
 .buttonbox {

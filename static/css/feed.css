@@ -179,9 +179,11 @@ body {
 }
 
 #imageUpload {
-  padding: 10px;
-  font-size: 16px;
-  cursor: pointer;
+  display: none;
+}
+.custom-file-upload {
+  font-size: 13px;
+  color: #a9a9a9;
 }
 
 .file-name {
