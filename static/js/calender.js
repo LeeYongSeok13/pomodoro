@@ -24,9 +24,10 @@ window.addEventListener("load", async () => {
   dayItem[date].classList.add("today");
   let currentMonth = +monthSpan.innerHTML.split("월").join("");
   let currentYear = +yearSpan.innerHTML.split("년").join("");
+  let count = 4;
   // 첫 로딩시 현재 날짜로 이동
   for (let i = date; i >= 0; i--) {
-    if (i % 4 === 0) {
+    if (i % count === 0) {
       currentIndex = i;
       break;
     }
@@ -38,15 +39,15 @@ window.addEventListener("load", async () => {
   statusChange();
 
   plusDays.addEventListener("click", () => {
-    if (currentIndex >= lastDay - 4) return;
+    if (currentIndex >= lastDay - count) return;
     if (currentIndex >= 24 && currentMonth === 2) return;
-    currentIndex += 4;
+    currentIndex += count;
     dayList.style.transform = `translateX(-${currentIndex * 20}vw)`;
   });
 
   minusDays.addEventListener("click", () => {
     if (currentIndex <= 0) return;
-    currentIndex -= 4;
+    currentIndex -= count;
     dayList.style.transform = `translateX(-${currentIndex * 20}vw)`;
   });
 
@@ -83,7 +84,7 @@ window.addEventListener("load", async () => {
 
   minusmonth.addEventListener("click", async () => {
     if (currentIndex >= 28 && currentMonth === 3) {
-      currentIndex = 24;
+      currentIndex = currentIndex - count;
       dayList.style.transform = `translateX(-${currentIndex * 20}vw)`;
     }
     if (currentMonth <= 1) {

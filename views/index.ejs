@@ -27,73 +27,85 @@
       /></a>
     </header>
 
-    
-    <div class = "feed-container">
-      <% feeds.forEach(feed => { %>
-      <div class="feed-item">
-        <div class="content">
-          <p class="user-info">
-            <span class="profile-img"></span>
-            <strong><%= feed.user.nickname %></strong>
-          </p>
-          <img src="<%= feed.file_url %>" alt="post" />
-          <p>
-          <%= feed.content %>
-          </p>
-          <div class="get-tomato-sum">
-            획득한 토마토<img
-              class="tomato"
-              src="/static/img/tomato.png"
-              alt="획득 토마토"
-            />
-          </div>
-          <div class="icon-container">
-            <img src="../static/svg/suit-heart.svg" alt="하트 아이콘" />
-            <img
-              src="../static/svg/chat.svg"
-              alt="채팅 아이콘"
-              onclick="toggleCommentBox()"
-            />
+    <main>
+      <div class="feed-container">
+        <% feeds.forEach(feed => { %>
+        <div class="feed-item">
+          <div class="content">
+            <div class="user-info">
+              <div class="profile-img">
+                <img
+                  src="/static/img/profile.png"
+                  alt="프로필 이미지"
+                  width="30px"
+                />
+              </div>
+              <strong><%= feed.user.nickname %></strong>
+            </div>
+            <img src="<%= feed.file_url %>" alt="post" />
+            <p><%= feed.content %></p>
+            <div class="get-tomato-sum">
+              획득한 토마토<img
+                class="tomato"
+                src="/static/img/tomato.png"
+                alt="획득 토마토"
+              />
+            </div>
+            <div class="icon-container">
+              <img src="../static/svg/suit-heart.svg" alt="하트 아이콘" />
+              <img
+                src="../static/svg/chat.svg"
+                alt="채팅 아이콘"
+                onclick="toggleCommentBox()"
+              />
+            </div>
           </div>
         </div>
+        <% }); %>
       </div>
-      <% }); %>
-    </div>
 
-    <!-- 댓글 입력창 -->
-    <div class="comment-box" id="commentBox">
-      <div id="commentsContainer" class="comments-container"></div>
-      <div class="input-container">
-        <span class="profile-img">
-          <img src="/static/img/profile.png" alt="프로필 이미지" width="30px" />
-        </span>
-        <input type="text" id="commentInput" placeholder="댓글을 입력하세요." />
-        <button onclick="submitComment()" class="send-button">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-send"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"
+      <!-- 댓글 입력창 -->
+      <div class="comment-box" id="commentBox">
+        <div id="commentsContainer" class="comments-container"></div>
+        <div class="input-container">
+          <span class="profile-img">
+            <img
+              src="/static/img/profile.png"
+              alt="프로필 이미지"
+              width="30px"
             />
-          </svg>
-        </button>
+          </span>
+          <input
+            type="text"
+            id="commentInput"
+            placeholder="댓글을 입력하세요."
+          />
+          <button onclick="submitComment()" class="send-button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-send"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
-    </div>
 
-    <!-- 피드 올리는 아이콘 -->
-    <div class="plus-icon">
-      <img
-        src="../static/svg/plus-circle-fill.svg"
-        alt="피드 올리는 아이콘"
-        onclick="goToFeed()"
-      />
-    </div>
-
+      <!-- 피드 올리는 아이콘 -->
+      <div class="plus-icon">
+        <img
+          src="../static/svg/plus-circle-fill.svg"
+          alt="피드 올리는 아이콘"
+          onclick="goToFeed()"
+        />
+      </div>
+    </main>
     <script>
       function toggleCommentBox() {
         const commentBox = document.getElementById("commentBox");

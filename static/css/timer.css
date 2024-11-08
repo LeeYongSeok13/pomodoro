@@ -588,3 +588,10 @@ textarea {
   border: none;
   outline: none;
 }
+
+/* 태블릿 스타일 */
+@media screen and (min-width: 768px) {
+  header {
+    padding-left: 185px;
+  }
+}
