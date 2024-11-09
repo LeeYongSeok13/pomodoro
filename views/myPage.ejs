@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/static/css/navbar.css" />
     <link rel="stylesheet" href="/static/css/myPage.css" />
     <link rel="stylesheet" href="/static/css/alert.css" />
+    <link rel="stylesheet" href="/static/css/button.css" />
     <script src="/static/js/navbar.js"></script>
     <script src="/static/js/mypage.js"></script>
   </head>
@@ -21,9 +22,18 @@
     </header>
     <main>
       <section class="profile-section">
-        <img src="/static/img/profile.png" alt="프로필 이미지" width="150px" />
-        <h2 class="user-id">user_id</h2>
-        <h3 class="user-name">홍길동</h3>
+        <div>
+          <img
+            src="/static/img/profile.png"
+            alt="프로필 이미지"
+            width="150px"
+          />
+          <button class="imgButton changeButton" id="changeButton">
+            <span class="text-hidden">프로필 수정 버튼</span>
+          </button>
+        </div>
+        <h2 class="user-id"><%= userNickname %></h2>
+        <h3 class="user-name"><%= userName %></h3>
       </section>
 
       <section class="feed-info-section">

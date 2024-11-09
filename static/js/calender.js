@@ -24,7 +24,7 @@ window.addEventListener("load", async () => {
   dayItem[date].classList.add("today");
   let currentMonth = +monthSpan.innerHTML.split("월").join("");
   let currentYear = +yearSpan.innerHTML.split("년").join("");
-  let count = 4;
+  let count = 6;
   // 첫 로딩시 현재 날짜로 이동
   for (let i = date; i >= 0; i--) {
     if (i % count === 0) {

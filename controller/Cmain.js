@@ -35,9 +35,9 @@ const upload = multer({ dest: "uploads/" });
 
 // s3 설정
 const s3 = new S3Client({
-  region : process.env.AWS_REGION,
-  accessKeyId : process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey : process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
 
 // multer 세부 설정
@@ -111,19 +111,21 @@ exports.get_Index = async (req, res) => {
 
       // 첫 페이지 피드 데이터 가져오기
       const feeds = await Feed.findAll({
-        attributes : ['id', 'content','file_url','user_id'],
-        include : [{
-          model : require('../models/index').User,
-          attributes : ['nickname'],
-        }],
-        order : [['created_at', 'DESC']],
-        limit : limit,
-        offset : offset
+        attributes: ["id", "content", "file_url", "user_id"],
+        include: [
+          {
+            model: require("../models/index").User,
+            attributes: ["nickname"],
+          },
+        ],
+        order: [["created_at", "DESC"]],
+        limit: limit,
+        offset: offset,
       });
       res.render("index", { feeds });
     } catch (error) {
-      console.error('Error fetching initial feeds : ', error);
-      res.status(500).send('Error loading initial page');
+      console.error("Error fetching initial feeds : ", error);
+      res.status(500).send("Error loading initial page");
     }
   } else {
     // 데이터 구현시 index 대신 login 넣기!!!
@@ -471,28 +473,30 @@ exports.post_feedUpload = (req, res) => {
 exports.get_Feeds = async (req, res) => {
   try {
     // 요청받은 페이지 정보
-    const page = parseInt(req.query.page)
+    const page = parseInt(req.query.page);
     const limit = 3; // 한페이지에 보여줄 피드 개수
     const offset = (page - 1) * limit;
 
     // 피드 데이터 조회
     const feeds = await Feed.findAll({
-      attributes : ['id','content','file_url','user_id'],
-      include : [{
-        model : require('../models/index').User,
-        attributes : ['nickname'], // 유저 닉네임
-      }],
-      order : [['created_at','DESC']], // 최신 피드 순으로 정렬
-      limit : limit, // 한 페이지에 3개 피드
-      offset : offset // 페이지에 맞는 offset 적용
+      attributes: ["id", "content", "file_url", "user_id"],
+      include: [
+        {
+          model: require("../models/index").User,
+          attributes: ["nickname"], // 유저 닉네임
+        },
+      ],
+      order: [["created_at", "DESC"]], // 최신 피드 순으로 정렬
+      limit: limit, // 한 페이지에 3개 피드
+      offset: offset, // 페이지에 맞는 offset 적용
     });
-     // JSON 데이터 반환
-     res.json(feeds);
+    // JSON 데이터 반환
+    res.json(feeds);
   } catch (error) {
-    console.error('Error fetching feeds :', error);
-    res.status(500).json({message : 'Error fetching feeds'});
+    console.error("Error fetching feeds :", error);
+    res.status(500).json({ message: "Error fetching feeds" });
   }
-}
+};
 
 exports.get_Calender = async (req, res) => {
   const today = new Date();
@@ -664,11 +668,11 @@ exports.post_addtodo = async (req, res) => {
 };
 
 exports.get_MyPage = async (req, res) => {
-  const user_id = req.session.nickname;
+  const nickname = req.session.nickname;
   // 완료한 업무 검색
   const done_data = await Task.findAll({
     where: {
-      user_id: user_id,
+      user_id: nickname,
       state: "done",
     },
   });
@@ -682,7 +686,7 @@ exports.get_MyPage = async (req, res) => {
   // 미흡한 업무 검색
   const ongoing_data = await Task.findAll({
     where: {
-      user_id: user_id,
+      user_id: nickname,
       state: "ongoing",
     },
   });
@@ -695,7 +699,7 @@ exports.get_MyPage = async (req, res) => {
   //미완료 업무 검색
   const pending_data = await Task.findAll({
     where: {
-      user_id: user_id,
+      user_id: nickname,
       state: "pending",
     },
   });
@@ -711,6 +715,18 @@ exports.get_MyPage = async (req, res) => {
 
   // 업무 성공률
   const successPercentage = Math.round((done_titles.length / allListNum) * 100);
+
+  // 사용자 정보
+
+  const userId = req.session.userId;
+  const userData = await User.findOne({
+    where: {
+      id: userId,
+      nickname: nickname,
+    },
+  });
+  console.log(userData.username);
+  console.log(userData.nickname);
   res.render("myPage", {
     done_titles: done_titles,
     done_descriptions: done_descriptions,
@@ -720,6 +736,8 @@ exports.get_MyPage = async (req, res) => {
     pending_descriptions: pending_descriptions,
     allListNum: allListNum,
     successPercentage: successPercentage,
+    userNickname: userData.nickname,
+    userName: userData.username,
   });
 };
 

@@ -1,7 +1,9 @@
-.profile-section > img {
-  display: block;
+.profile-section > div {
   margin: 0 auto;
+  position: relative;
+  width: 150px;
 }
+
 .profile-section > h2 {
   text-align: center;
   font-size: 25px;
@@ -14,6 +16,18 @@
   font-weight: 500;
   line-height: 1.5;
 }
+#changeButton {
+  background-color: #ffffff;
+  border-radius: 50%;
+  box-shadow: 1px 1px 8px #00000033;
+}
+.changeButton {
+  background-image: url("/static/svg/pencil-square.svg");
+  background-size: 25px;
+  position: absolute;
+  top: 115px;
+  right: 0px;
+}
 .feed-info-section {
   padding: 30px;
 }
@@ -23,7 +37,7 @@
   background-color: #ffffff;
 }
 .feed-info {
-  padding: 0 55px 0 20px;
+  padding: 0 25px;
   margin-bottom: 20px;
   display: flex;
   width: 100%;
@@ -32,9 +46,12 @@
   line-height: 60px;
   font-weight: 400;
   font-size: 15px;
-  background-image: url("/static/svg/arrow-right.svg");
+}
+.feed-info > span:nth-child(2) {
+  background-image: url(/static/svg/arrow-right.svg);
   background-repeat: no-repeat;
   background-position: 90% center;
+  width: 100px;
 }
 .feed-label {
   align-self: flex-start;
