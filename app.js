@@ -22,6 +22,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const path = require("path");
 app.use(express.static(path.join(__dirname, "public")));
+
+// res.local로 모든 템플릿에서 session값 받기
+app.use((req, res, next) => {
+  res.locals.username = req.session.username;
+  res.locals.nickname = req.session.nickname;
+  next();
+});
 const indexRouter = require("./routes/index");
 app.use("/", indexRouter);
 
