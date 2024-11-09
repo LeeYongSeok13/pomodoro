@@ -94,9 +94,19 @@ body {
 
 .icon-container {
   display: flex;
-  justify-content: left;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 10px;
+  width: 100%;
 }
+.left-icons {
+  display: flex;
+}
+.right-icons {
+  display: flex;
+}
+
+
 
 .icon-container img {
   width: 25px;
@@ -104,6 +114,8 @@ body {
   margin-right: 20px;
   cursor: pointer;
 }
+
+
 
 /* 댓글 */
 .comments-container {

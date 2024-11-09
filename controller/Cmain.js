@@ -104,7 +104,10 @@ const uploadToS3 = async (filePath, bucketName, keyName) => {
 exports.get_Index = async (req, res) => {
   // 세션 권한 없으면 login으로 가야함!!!
   // 처음 페이지 랜딩 시 피드 데이터 호출하기
-  if (req.session.nickname) {
+
+  const userNickName = req.session.nickname;
+
+  if (userNickName) {
     try {
       const limit = 3;
       const offset = 0; // 첫 페이지에 대한 오프셋
@@ -120,7 +123,7 @@ exports.get_Index = async (req, res) => {
         limit : limit,
         offset : offset
       });
-      res.render("index", { feeds });
+      res.render("index", { feeds, userNickName });
     } catch (error) {
       console.error('Error fetching initial feeds : ', error);
       res.status(500).send('Error loading initial page');
@@ -469,6 +472,9 @@ exports.post_feedUpload = (req, res) => {
 
 // 피드 목록 가져오기 [ 페이징 ]
 exports.get_Feeds = async (req, res) => {
+
+  const feedNickname = req.session.nickname
+
   try {
     // 요청받은 페이지 정보
     const page = parseInt(req.query.page)
@@ -487,7 +493,7 @@ exports.get_Feeds = async (req, res) => {
       offset : offset // 페이지에 맞는 offset 적용
     });
      // JSON 데이터 반환
-     res.json(feeds);
+     res.json({feeds,feedNickname});
   } catch (error) {
     console.error('Error fetching feeds :', error);
     res.status(500).json({message : 'Error fetching feeds'});
