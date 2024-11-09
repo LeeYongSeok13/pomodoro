@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/static/css/reset.css" />
     <link rel="stylesheet" href="/static/css/navbar.css" />
     <link rel="stylesheet" href="/static/css/index.css" />
+    <link rel="stylesheet" href="/static/css/todoItem.css">
+    <link rel="stylesheet" href="/static//css/button.css">
     <script src="/static/js/navbar.js"></script>
     <script src="/static/js/index.js"></script>
     <script src="/static/js/FeedInfo.js"></script>
@@ -52,12 +54,20 @@
               />
             </div>
             <div class="icon-container">
-              <img src="../static/svg/suit-heart.svg" alt="하트 아이콘" />
-              <img
-                src="../static/svg/chat.svg"
-                alt="채팅 아이콘"
-                onclick="toggleCommentBox()"
-              />
+              <div class="left-icons">
+                <img src="../static/svg/suit-heart.svg" alt="하트 아이콘" />
+                <img
+                  src="../static/svg/chat.svg"
+                  alt="채팅 아이콘"
+                  onclick="toggleCommentBox()"
+                />
+              </div>
+              <div class="right-icons">
+                <% if (userNickName === feed.user.nickname) { %>
+                <button type = "button" class = "imgButton modify" onclick="feedEdit()"></button>
+                <button type = "button" class = "imgButton delete" onclick="feedDelete()"></button>
+                <% } %>
+              </div>
             </div>
           </div>
         </div>
