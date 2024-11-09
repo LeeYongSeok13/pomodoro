@@ -35,9 +35,9 @@ const upload = multer({ dest: "uploads/" });
 
 // s3 설정
 const s3 = new S3Client({
-  region : process.env.AWS_REGION,
-  accessKeyId : process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey : process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
 
 // multer 세부 설정
@@ -114,19 +114,21 @@ exports.get_Index = async (req, res) => {
 
       // 첫 페이지 피드 데이터 가져오기
       const feeds = await Feed.findAll({
-        attributes : ['id', 'content','file_url','user_id'],
-        include : [{
-          model : require('../models/index').User,
-          attributes : ['nickname'],
-        }],
-        order : [['created_at', 'DESC']],
-        limit : limit,
-        offset : offset
+        attributes: ["id", "content", "file_url", "user_id"],
+        include: [
+          {
+            model: require("../models/index").User,
+            attributes: ["nickname"],
+          },
+        ],
+        order: [["created_at", "DESC"]],
+        limit: limit,
+        offset: offset,
       });
       res.render("index", { feeds, userNickName });
     } catch (error) {
-      console.error('Error fetching initial feeds : ', error);
-      res.status(500).send('Error loading initial page');
+      console.error("Error fetching initial feeds : ", error);
+      res.status(500).send("Error loading initial page");
     }
   } else {
     // 데이터 구현시 index 대신 login 넣기!!!
@@ -158,7 +160,9 @@ exports.post_Login = async (req, res) => {
 
     // 로그인 성공
     req.session.userId = user.id; // 사용자 id값 저장
-    req.session.nickname = user.nickname; // 로그인 성공 시 세션 설정
+    req.session.username = user.username; // 사용자 이름값 저장
+    req.session.nickname = user.nickname; // 사용자 닉네임값 저장
+    // 로그인 성공 시 세션 설정
     return res.status(200).json({ success: true, message: "Login successful" });
   } catch (error) {
     console.error("Error logging in", error);
@@ -477,28 +481,31 @@ exports.get_Feeds = async (req, res) => {
 
   try {
     // 요청받은 페이지 정보
-    const page = parseInt(req.query.page)
+    const page = parseInt(req.query.page);
     const limit = 3; // 한페이지에 보여줄 피드 개수
     const offset = (page - 1) * limit;
 
     // 피드 데이터 조회
     const feeds = await Feed.findAll({
-      attributes : ['id','content','file_url','user_id'],
-      include : [{
-        model : require('../models/index').User,
-        attributes : ['nickname'], // 유저 닉네임
-      }],
-      order : [['created_at','DESC']], // 최신 피드 순으로 정렬
-      limit : limit, // 한 페이지에 3개 피드
-      offset : offset // 페이지에 맞는 offset 적용
+      attributes: ["id", "content", "file_url", "user_id"],
+      include: [
+        {
+          model: require("../models/index").User,
+          attributes: ["nickname"], // 유저 닉네임
+        },
+      ],
+      order: [["created_at", "DESC"]], // 최신 피드 순으로 정렬
+      limit: limit, // 한 페이지에 3개 피드
+      offset: offset, // 페이지에 맞는 offset 적용
     });
+
      // JSON 데이터 반환
      res.json({feeds,feedNickname});
   } catch (error) {
-    console.error('Error fetching feeds :', error);
-    res.status(500).json({message : 'Error fetching feeds'});
+    console.error("Error fetching feeds :", error);
+    res.status(500).json({ message: "Error fetching feeds" });
   }
-}
+};
 
 exports.get_Calender = async (req, res) => {
   const today = new Date();
@@ -729,9 +736,40 @@ exports.get_MyPage = async (req, res) => {
   });
 };
 
-exports.get_modal = (req, res) => {
-  res.send("example");
-};
+(exports.post_ProfileImage = upload.single("profile_image")),
+  async (req, res) => {
+    try {
+      const imageURL = "/uploads" + req.file.filename; // 업로드 된 이미지 경로
+
+      // 세션에서 사용자 ID 가져오기
+      const userId = req.session.userId;
+      if (!userId) {
+        return res.status(401).json({ message: "로그인 해 주세요" });
+      }
+
+      // 사용자 정보 가져오기
+      const user = await User.findByPk(userId);
+      if (!user) {
+        return res.status(401).json({ message: "사용자를 찾을 수 없습니다." });
+      }
+
+      // 프로필 이미지 URL 업데이트
+      user.profile_image = imageURL;
+      await user.save(); // 변경 사항 저장
+
+      return res.status(200).json({
+        success: true,
+        message: "프로필 이미지가 업데이트 되었습니다.",
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        success: false,
+        meeeage: "프로필 이미지 업데이트에 실패",
+        error: error.message,
+      });
+    }
+  };
 
 exports.getComponent = (req, res) => {
   const { title, description, dataId, state } = req.query;
