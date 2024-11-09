@@ -179,8 +179,6 @@
       })
       .catch((error) => {
           // 모든 에러 상황을 여기서 처리
-          console.log("catch 에서 잡는 에러입니다.");
-          console.error("Error", error);
           Swal.fire({
               icon: 'error',
               text: error.message // 기타 에러 메시지 표시

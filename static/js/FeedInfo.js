@@ -16,7 +16,8 @@ window.onload = function() {
           const sessionNickname = data.feedNickname;
           data.feeds.forEach(feed => {
             const feedElement = document.createElement('div');
-            feedElement.classList.add('feed-item');
+            feedElement.classList.add('feed-item'); // 'feed-item' 클래스 추가
+            feedElement.setAttribute('data-feed-id', feed.id); // 'data-feed-id' 속성 추가 및 값 설정
 
             // 로그인한 사용자의 피드게시글만 수정 삭제 보이게 처리
             const buttonHtml = feed.user.nickname === sessionNickname ?`
@@ -66,7 +67,7 @@ window.onload = function() {
         isLoading = false; // 로딩 종료
       })
       .catch(error => {
-        console.error('Error loading feeds:', error);
+     
         isLoading = false; // 에러가 나면 로딩 종료
       });
   }
