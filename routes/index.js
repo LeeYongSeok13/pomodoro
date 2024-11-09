@@ -4,7 +4,7 @@ const controller = require("../controller/Cmain");
 
 router.get("/", controller.get_Index);
 
-router.get('/get-feeds', controller.get_Feeds);
+router.get("/get-feeds", controller.get_Feeds);
 
 router.get("/login", controller.get_Login);
 
@@ -21,8 +21,6 @@ router.post("/login/find/email", controller.post_FindEmail);
 router.post("/login/find/password", controller.post_ResetPassword);
 
 router.post("/login/find/update", controller.update_Password);
-
-router.get("/login/modal", controller.get_modal);
 
 // router.post("/register", controller.post_Register);
 
@@ -51,7 +49,8 @@ router.get("/timer", controller.get_Timer);
 
 router.get("/myPage", controller.get_MyPage);
 
-router.post("/login", controller.post_Login);
+// 프로필 이미지 업데이트 router 주석처리
+// router.post("/myPage/profileImage", controller.post_ProfileImage);
 
 router.get("/loading", (req, res) => {
   res.render("loading");
