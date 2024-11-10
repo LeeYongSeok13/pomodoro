@@ -10,7 +10,6 @@ window.onload = function() {
       .then(response => response.json())
       .then(data => {
         const feedContainer = document.querySelector('.feed-container'); 
-        console.log(data);
         // 피드 데이터가 존재하면 화면에 추가
         if (data && data.feeds.length > 0) {
           const sessionNickname = data.feedNickname;
@@ -22,7 +21,7 @@ window.onload = function() {
             // 로그인한 사용자의 피드게시글만 수정 삭제 보이게 처리
             const buttonHtml = feed.user.nickname === sessionNickname ?`
                  <button type="button" class="imgButton modify" onclick="feedEdit()"></button>
-                 <button type="button" class="imgButton delete" onclick="feedDelete()"></button>
+                 <button type="button" class="imgButton delete" onclick="feedDelete(${feed.id})"></button>
                  ` : '';
 
             // 피드 생성 html

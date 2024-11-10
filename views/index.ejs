@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/static/css/index.css" />
     <link rel="stylesheet" href="/static/css/todoItem.css">
     <link rel="stylesheet" href="/static//css/button.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/static/js/navbar.js"></script>
     <script src="/static/js/index.js"></script>
     <script src="/static/js/FeedInfo.js"></script>
@@ -65,7 +66,7 @@
               <div class="right-icons">
                 <% if (userNickName === feed.user.nickname) { %>
                 <button type = "button" class = "imgButton modify" onclick="feedEdit()"></button>
-                <button type = "button" class = "imgButton delete" onclick="feedDelete()"></button>
+                <button type="button" class="imgButton delete" onclick="feedDelete('<%= feed.id %>')"></button>
                 <% } %>
               </div>
             </div>
@@ -207,8 +208,47 @@
         window.location.href = "./feed";
       }
 
-
-
+      function feedDelete(feedId) {
+        Swal.fire({
+          icon: 'warning',
+          text: '정말 삭제하시겠습니까?',
+          showCancelButton: true,
+          confirmButtonText: '확인',
+          cancelButtonText: '취소'
+        }).then((result) => {
+          // '확인' 버튼을 눌렀을 경우 삭제 함수 실행
+          if (result.isConfirmed) {
+            fetch(`/feeds/delete/${feedId}`, {
+              method: 'DELETE'
+            })
+            .then(response => {
+              if (response.ok) {
+                Swal.fire({
+                  icon: 'success',
+                  text: '피드가 삭제되었습니다.',
+                  confirmButtonText: '확인'
+                }).then(() => {
+                  // 삭제 후 페이지를 새로고침하거나 해당 피드 아이템만 삭제
+                  document.querySelector(`.feed-item[data-feed-id="${feedId}"]`).remove();
+                });
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  text: '삭제하는 중 오류가 발생했습니다.',
+                  confirmButtonText: '확인'
+                });
+              }
+            })
+            .catch(error => {
+              Swal.fire({
+                icon: 'error',
+                text: '서버와의 통신 중 오류가 발생했습니다.',
+                confirmButtonText: '확인'
+              });
+            });
+          }
+        });
+      }
     </script>
   </body>
 </html>
