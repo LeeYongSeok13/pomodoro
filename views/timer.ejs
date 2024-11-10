@@ -319,23 +319,23 @@
         // '종료' 버튼 클릭 시
         document.querySelector(".resttheend").onclick = () => {
           restendModal.style.display = "none";
-          resetTimerTo25(); // 타이머 초기화
+          resetTimerTo25();
         };
 
         // '확인' 버튼 클릭 시 타이머 재시작
         document.querySelector(".resttheok").onclick = () => {
           restendModal.style.display = "none";
-          timeRemaining = 25 * 60; // 25분으로 설정
+          timeRemaining = 25 * 60;
           updateDisplay();
-          startTimer(); // 25분 타이머 재시작
+          startTimer();
         };
       }
       // 타이머 25분 초기화
       function resetTimerTo25() {
         clearInterval(timerInterval);
-        timeRemaining = 25 * 60; // 25분으로 초기화
+        timeRemaining = 25 * 60;
         updateDisplay();
-        isTimerRunning = false; // 타이머 멈춤 상태로 설정
+        isTimerRunning = false;
       }
 
       // 5분 휴식 중 스타일 변경
