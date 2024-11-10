@@ -219,7 +219,7 @@
           leftIcon.style.display = "none";
           timerTomato.classList.remove("hide");
           outerTimerContainer.classList.remove("active");
-          timeRemaining = 1 * 60;
+          timeRemaining = 25 * 60;
         } else {
           rightIcon.style.display = "none";
           leftIcon.style.display = "block";
@@ -290,10 +290,52 @@
 
       // 5분 휴식 타이머 시작
       function startRestTimer() {
+        clearInterval(timerInterval); // 기존 타이머 중지
         timeRemaining = 5 * 60;
         updateDisplay();
         startRestPeriod();
-        if (!isTimerRunning) startTimer();
+        isTimerRunning = true;
+
+        timerInterval = setInterval(() => {
+          if (timeRemaining > 0) {
+            timeRemaining--;
+            updateDisplay();
+          } else {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            showRestEndModal(); // 5분 휴식 종료 후 알람 표시
+          }
+        }, 1000);
+      }
+
+      // 5분 휴식 종료 후 알람
+      function showRestEndModal() {
+        const restModal = document.getElementById("restModal");
+        if (restModal.style.display === "flex")
+          restModal.style.display = "none"; // 다른 알람이 뜨지 않도록 설정
+        const restendModal = document.getElementById("restendModal");
+        restendModal.style.display = "flex";
+
+        // '종료' 버튼 클릭 시
+        document.querySelector(".resttheend").onclick = () => {
+          restendModal.style.display = "none";
+          resetTimerTo25(); // 타이머 초기화
+        };
+
+        // '확인' 버튼 클릭 시 타이머 재시작
+        document.querySelector(".resttheok").onclick = () => {
+          restendModal.style.display = "none";
+          timeRemaining = 25 * 60; // 25분으로 설정
+          updateDisplay();
+          startTimer(); // 25분 타이머 재시작
+        };
+      }
+      // 타이머 25분 초기화
+      function resetTimerTo25() {
+        clearInterval(timerInterval);
+        timeRemaining = 25 * 60; // 25분으로 초기화
+        updateDisplay();
+        isTimerRunning = false; // 타이머 멈춤 상태로 설정
       }
 
       // 5분 휴식 중 스타일 변경
@@ -364,7 +406,7 @@
         if (
           !document.querySelector(".timerTomato").classList.contains("hide")
         ) {
-          timeRemaining = 1 * 60;
+          timeRemaining = 25 * 60;
         } else {
           timeRemaining = 0;
         }
@@ -388,7 +430,7 @@
       }
 
       // 초기 설정
-      timeRemaining = 1 * 60;
+      timeRemaining = 25 * 60;
       updateDisplay();
 
       // 그냥 타이머
