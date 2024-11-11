@@ -211,6 +211,8 @@
         const outerTimerContainer = document.querySelector(
           ".outer-timer-container"
         );
+        const playIcon = document.getElementById("playIcon");
+        const pauseIcon = document.getElementById("pauseIcon");
 
         const isHidden = timerTomato.classList.contains("hide");
 
@@ -227,6 +229,11 @@
           outerTimerContainer.classList.add("active");
           timeRemaining = 0;
         }
+        playIcon.style.display = "block";
+        pauseIcon.style.display = "none";
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+
         updateDisplay();
       }
 
