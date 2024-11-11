@@ -31,6 +31,80 @@ body {
   align-items: center;
 }
 
+/* 피드 내용 수정 css */
+
+.file-upload-container {
+  display: flex;
+  align-items: center;
+  gap : 10px;
+  margin-bottom: 7px;
+}
+
+.label-file {
+  display: inline-block;
+  padding : 8px 15px;
+  background-color: #da2337;
+  color : #fff;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+} 
+
+.label-file:hover {
+  background-color: #0056b3;
+}
+
+.span-file {
+  font-size: 14px;
+  color: #666;
+}
+
+.edit-textarea {
+  width: 100%;
+  height: 180px;
+  padding : 10px;
+  border : 1px solid #ddd;
+  border-radius: 4px;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  gap : 10px;
+}
+.btn {
+  padding : 8px 16px;
+  font-size: 14px;
+  border : none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition : background-color 0.3s;
+}
+
+.save-btn {
+  background-color: #4CAF50;
+  color:#fff;
+}
+.save-btn:hover {
+  background-color: #45a049;
+}
+
+.cancel-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #d32f2f;
+}
+
+
+
 .feed-item img {
   width: 100%;
   height: auto;
