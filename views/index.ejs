@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="/static/css/reset.css" />
     <link rel="stylesheet" href="/static/css/navbar.css" />
     <link rel="stylesheet" href="/static/css/index.css" />
-    <link rel="stylesheet" href="/static/css/todoItem.css">
-    <link rel="stylesheet" href="/static//css/button.css">
+    <link rel="stylesheet" href="/static/css/todoItem.css" />
+    <link rel="stylesheet" href="/static//css/button.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/static/js/navbar.js"></script>
     <script src="/static/js/index.js"></script>
@@ -60,13 +60,22 @@
                 <img
                   src="../static/svg/chat.svg"
                   alt="채팅 아이콘"
-                  onclick="toggleCommentBox()"
+                  onclick="toggleCommentBox('<%= feed.id %>')"
                 />
+                <!-- 피드 ID를 넘겨줌 -->
               </div>
               <div class="right-icons">
                 <% if (userNickName === feed.user.nickname) { %>
-                <button type = "button" class = "imgButton modify" onclick="feedEdit()"></button>
-                <button type="button" class="imgButton delete" onclick="feedDelete('<%= feed.id %>')"></button>
+                <button
+                  type="button"
+                  class="imgButton modify"
+                  onclick="feedEdit()"
+                ></button>
+                <button
+                  type="button"
+                  class="imgButton delete"
+                  onclick="feedDelete('<%= feed.id %>')"
+                ></button>
                 <% } %>
               </div>
             </div>
@@ -86,6 +95,7 @@
               width="30px"
             />
           </span>
+          <strong class="comment-nickname"><%= nickname %></strong>
           <input
             type="text"
             id="commentInput"
@@ -132,31 +142,6 @@
         }
       }
 
-      // 댓글을 화면에 추가하는 함수
-      function addCommentToDOM(userID, commentText) {
-        const commentsContainer = document.getElementById("commentsContainer");
-        const commentElement = document.createElement("div");
-        commentElement.classList.add("comment");
-
-        // 유저 ID와 댓글 내용을 함께 표시
-        commentElement.innerHTML = `
-          <div class="profile-img">
-            <img src="/static/img/profile.png" alt="프로필 이미지" width="30px"/>
-          </div>
-          <div class="comment-content">
-            <strong>${userID}</strong>
-            <p>${commentText}</p>
-            <div class="comment-actions">
-              <button onclick="editComment(this)">수정</button>
-              <button onclick="deleteComment(this)">삭제</button>
-            </div>
-          </div>
-        `;
-
-        commentsContainer.appendChild(commentElement);
-        commentsContainer.scrollTop = commentsContainer.scrollHeight;
-      }
-
       let currentEditComment = null;
       // 댓글 전송 함수
       function submitComment() {
@@ -171,6 +156,31 @@
           addCommentToDOM(userID, commentText);
         }
         commentInput.value = "";
+      }
+
+      // 댓글을 화면에 추가하는 함수
+      function addCommentToDOM(userID, commentText) {
+        const commentsContainer = document.getElementById("commentsContainer");
+        const commentElement = document.createElement("div");
+        commentElement.classList.add("comment");
+
+        // 유저 ID와 댓글 내용을 함께 표시
+        commentElement.innerHTML = `
+          <div class="profile-img">
+            <img src="/static/img/profile.png" alt="프로필 이미지" width="30px"/>
+          </div>
+          <div class="comment-content">
+            <strong><%= nickname %></strong>
+            <p>${commentText}</p>
+            <div class="comment-actions">
+              <button onclick="editComment(this)">수정</button>
+              <button onclick="deleteComment(this)">삭제</button>
+            </div>
+          </div>
+        `;
+
+        commentsContainer.appendChild(commentElement);
+        commentsContainer.scrollTop = commentsContainer.scrollHeight;
       }
 
       // 댓글 수정 함수
@@ -210,42 +220,44 @@
 
       function feedDelete(feedId) {
         Swal.fire({
-          icon: 'warning',
-          text: '정말 삭제하시겠습니까?',
+          icon: "warning",
+          text: "정말 삭제하시겠습니까?",
           showCancelButton: true,
-          confirmButtonText: '확인',
-          cancelButtonText: '취소'
+          confirmButtonText: "확인",
+          cancelButtonText: "취소",
         }).then((result) => {
           // '확인' 버튼을 눌렀을 경우 삭제 함수 실행
           if (result.isConfirmed) {
             fetch(`/feeds/delete/${feedId}`, {
-              method: 'DELETE'
+              method: "DELETE",
             })
-            .then(response => {
-              if (response.ok) {
+              .then((response) => {
+                if (response.ok) {
+                  Swal.fire({
+                    icon: "success",
+                    text: "피드가 삭제되었습니다.",
+                    confirmButtonText: "확인",
+                  }).then(() => {
+                    // 삭제 후 페이지를 새로고침하거나 해당 피드 아이템만 삭제
+                    document
+                      .querySelector(`.feed-item[data-feed-id="${feedId}"]`)
+                      .remove();
+                  });
+                } else {
+                  Swal.fire({
+                    icon: "error",
+                    text: "삭제하는 중 오류가 발생했습니다.",
+                    confirmButtonText: "확인",
+                  });
+                }
+              })
+              .catch((error) => {
                 Swal.fire({
-                  icon: 'success',
-                  text: '피드가 삭제되었습니다.',
-                  confirmButtonText: '확인'
-                }).then(() => {
-                  // 삭제 후 페이지를 새로고침하거나 해당 피드 아이템만 삭제
-                  document.querySelector(`.feed-item[data-feed-id="${feedId}"]`).remove();
+                  icon: "error",
+                  text: "서버와의 통신 중 오류가 발생했습니다.",
+                  confirmButtonText: "확인",
                 });
-              } else {
-                Swal.fire({
-                  icon: 'error',
-                  text: '삭제하는 중 오류가 발생했습니다.',
-                  confirmButtonText: '확인'
-                });
-              }
-            })
-            .catch(error => {
-              Swal.fire({
-                icon: 'error',
-                text: '서버와의 통신 중 오류가 발생했습니다.',
-                confirmButtonText: '확인'
               });
-            });
           }
         });
       }

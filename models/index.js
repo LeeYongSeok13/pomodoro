@@ -15,9 +15,10 @@ db.Sequelize = Sequelize;
 db.User = require("./User")(sequelize, Sequelize.DataTypes);
 db.Task = require("./Task")(sequelize, Sequelize.DataTypes);
 db.Feed = require("./Feed")(sequelize, Sequelize.DataTypes);
+db.Comment = require("./Comment")(sequelize, Sequelize.DataTypes);
 
 // 모델 간의 관계 설정
-Object.keys(db).forEach(modelName => {
+Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
