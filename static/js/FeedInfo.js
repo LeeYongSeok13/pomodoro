@@ -20,7 +20,7 @@ window.onload = function() {
 
             // 로그인한 사용자의 피드게시글만 수정 삭제 보이게 처리
             const buttonHtml = feed.user.nickname === sessionNickname ?`
-                 <button type="button" class="imgButton modify" onclick="feedEdit()"></button>
+                 <button type="button" class="imgButton modify" onclick="feedEdit(${feed.id})"></button>
                  <button type="button" class="imgButton delete" onclick="feedDelete(${feed.id})"></button>
                  ` : '';
 
@@ -37,8 +37,36 @@ window.onload = function() {
               </div>
               <strong>${feed.user.nickname}</strong>
             </div>
-                <img src="${feed.file_url}" alt="post" />
+
+
+                
+            <div id="feed-img-${feed.id}">
+              <img src="${feed.file_url}" alt="post" />
+            </div>
+
+            <div id="feed-content-${feed.id}" style="padding : 10px;">
                 <p>${feed.content}</p>
+            </div>
+
+            <div class="edit-container" id = "edit-container-${feed.id}" style = "display: none;">
+              <div class="file-upload-container">
+                <input type="file" id="img-input-${feed.id}" onchange="updateImage(${feed.id})">
+                <label class="label-file" for="img-input-${feed.id}">파일선택</label>
+                <span class="span-file">선택된 파일이 없습니다.</span>
+              </div>
+              
+               <img src="${feed.file_url}" id ="edit-img-${feed.id}" class = "edit-img" alt="이미지 수정">
+               <div class="edit-container" style="margin-top: 7px;">
+                <textarea id="edit-content-${feed.id}" class="edit-textarea" placeholder="수정할 내용을 입력하세요">${feed.content}</textarea>
+                 <div class="button-container">
+                  <button type="button" onclick="saveChanges(${feed.id})" class="btn save-btn">저장</button>
+                  <button type="button" onclick="cancelEdit(${feed.id})" class="btn cancel-btn">취소</button>     
+                 </div>
+              </div>
+               
+            </div>
+
+
                 <div class="get-tomato-sum">
                   획득한 토마토<img class="tomato" src="/static/img/tomato.png" alt="획득 토마토" />
                 </div>
