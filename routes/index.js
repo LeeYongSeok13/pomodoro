@@ -8,6 +8,8 @@ router.get("/get-feeds", controller.get_Feeds);
 
 router.delete("/feeds/delete/:id", controller.del_FeedDelete);
 
+router.post('/feeds/update', controller.post_FeedUpdate);
+
 router.get("/login", controller.get_Login);
 
 router.post("/login", controller.post_Login);

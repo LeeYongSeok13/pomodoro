@@ -7,8 +7,14 @@
     <link rel="stylesheet" href="/static/css/reset.css" />
     <link rel="stylesheet" href="/static/css/navbar.css" />
     <link rel="stylesheet" href="/static/css/index.css" />
-    <link rel="stylesheet" href="/static/css/todoItem.css" />
-    <link rel="stylesheet" href="/static//css/button.css" />
+    <link rel="stylesheet" href="/static/css/todoItem.css">
+    <link rel="stylesheet" href="/static//css/button.css">
+    <!-- toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/static/js/navbar.js"></script>
     <script src="/static/js/index.js"></script>
@@ -60,11 +66,16 @@
             <div class="edit-container" id = "edit-container-<%= feed.id %>" style = "display: none;">
               <!-- 이미지 수정 -->
               <div class="file-upload-container">
-                <input type="file" id="img-input-<%= feed.id %>" onchange="updateImage('<%= feed.id %>')">
+                <input type="file" id="img-input-<%= feed.id %>" onchange="updateImage('<%= feed.id %>','<%= feed.file_url%>')">
                 <label class="label-file" for="img-input-<%= feed.id %>">파일선택</label>
-                <span class="span-file">선택된 파일이 없습니다.</span>
+                <div class="file-info-container">
+                  <span class="span-file">선택된 파일이 없습니다.</span>
+                  <div class="error-message" style="color: red; display: none; font-size: 13px; margin-top: 5px;">
+                    [ERROR!] 확장자는 jpeg, jpg, png, bmp만 가능합니다.
+                  </div>
+                </div>
               </div>
-              
+            
                <img src="<%= feed.file_url %>" id ="edit-img-<%= feed.id %>" class = "edit-img" alt="이미지 수정">
               <!-- 내용 수정 -->
                <div class="edit-container" style="margin-top: 7px;">
@@ -291,15 +302,10 @@
       function feedEdit(feedId) {
 
         document.getElementById(`img-input-${feedId}`).style.display = 'none';
-
-        console.log(feedId);
+        
         const editContainer = document.getElementById(`edit-container-${feedId}`);
         const feedContent = document.getElementById(`feed-content-${feedId}`);
         const feedImage = document.getElementById(`feed-img-${feedId}`);
-
-        console.log(editContainer);
-        console.log(feedContent);
-        console.log(feedImage);
 
         // 수정 칸 토글 (보이기 / 숨기기)
         if (editContainer.style.display === "none") {
@@ -312,7 +318,114 @@
           feedImage.style.display = "block";     // 기존 이미지 보이기
         }
       
-  }
+      
+    }
+
+    // 사용자가 수정버튼을 누르고 그다음 파일선택을 눌렀을때 실행되는 함수
+    function updateImage(feedId,fileUrl) {
+
+      // 기존 이미지 경로
+      const baseFileUrl = fileUrl;
+      // input file 
+      const input = document.getElementById(`img-input-${feedId}`);
+      // 사용자가 이미지를 변경하면 이미지 src값을 변경
+      const imgPreview = document.getElementById(`edit-img-${feedId}`);
+      // 사용자가 어떤 파일을 선택했는지
+      const fileInfoContainer = input.nextElementSibling.nextElementSibling;
+      
+      const spanFileName = fileInfoContainer.querySelector('.span-file');  // 선택된 파일 이름을 표시하는 span
+      const errorMessage = fileInfoContainer.querySelector('.error-message');  // 에러 메시지
+  
+      // 사용자가 하나의 파일을 선택했을때만 실행한다.
+      if(input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        const file = input.files[0];
+        const filename = file.name;
+        const fileExtension = filename.split('.').pop().toLowerCase(); // 파일 확장자 추출
+      
+        // 허용 확장자
+        const allowedExtensions = ['jpeg','jpg','png','bmp'];
+        
+        if(allowedExtensions.includes(fileExtension)) {
+          // 파일 이름 표시
+          spanFileName.textContent = filename;
+          // 에러 메시지 숨기기
+          errorMessage.style.display = 'none';
+
+          // 이미지 미리보기 업데이트
+          reader.onload = function(e) {
+          imgPreview.src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+      } else {
+        // 확장자가 맞지 않으면 경고 메시지 표시
+        spanFileName.textContent = "파일을 다시 선택하세요!.";
+        errorMessage.style.display = 'block';  // 경고 메시지 표시
+      }
+        
+      } else {
+        // 파일이 선택되지 않은 경우
+        spanFileName.textContent = "선택된 파일이 없습니다.";
+        errorMessage.style.display = 'none';
+      }  
+    }
+
+    // 수정된 내용 저장하기
+    function saveChanges(feedId) {
+      const newContent = document.getElementById(`edit-content-${feedId}`).value;
+      const newImageFile = document.getElementById(`img-input-${feedId}`).files[0];
+
+      if (!newContent || !newImageFile) {
+      Swal.fire({
+        icon: 'error',
+        title: '입력 오류',
+        text: '수정할 내용 또는 이미지를 선택해주세요!',
+        confirmButtonText: '확인'
+      });
+      return; // 폼 제출을 중단
+    }
+
+    // 폼데이터 생성
+    const formData = new FormData();
+    formData.append('content', newContent);
+    formData.append('id', feedId); // feedId 값 추가
+
+    if(newImageFile) {
+      formData.append('image', newImageFile);
+    }
+
+    fetch('/feeds/update', {
+      method : 'POST',
+      body : formData
+    })
+    .then (response => response.json())
+    .then (data => {
+      console.log('피드 수정 완료');
+    })
+    .catch (error => {
+      console.log('피드 업로드 실패', error);
+    });
+ }
+
+    // 사용자가 수정을 누르고 취소버튼을 클릭했을 때
+    function cancelEdit(feedId) {
+        // 수정 컨테이너, 피드 내용, 이미지 요소 찾기
+        const editContainer = document.getElementById(`edit-container-${feedId}`);
+        const feedContent = document.getElementById(`feed-content-${feedId}`);
+        const feedImage = document.getElementById(`feed-img-${feedId}`);
+
+        // 수정 영역 숨기고 원래 내용과 이미지 보이기
+        feedContent.style.display = 'block';  // 원래 내용 보이기
+        feedImage.style.display = 'block';    // 원래 이미지 보이기
+        editContainer.style.display = 'none'; // 수정 영역 숨기기
+
+        // 알림 창을 오른쪽 상단에 띄운다.
+        toastr.info('피드 수정을 취소했습니다.', {
+        positionClass: 'toast-top-right',  // 오른쪽 상단에 띄우기
+        timeOut: 2000  // 3초 후 자동으로 사라짐
+    });
+    }
     </script>
   </body>
 </html>
