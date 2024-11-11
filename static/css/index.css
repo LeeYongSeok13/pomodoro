@@ -184,16 +184,12 @@ body {
   display: flex;
 }
 
-
-
 .icon-container img {
   width: 25px;
   height: auto;
   margin-right: 20px;
   cursor: pointer;
 }
-
-
 
 /* 댓글 */
 .comments-container {
@@ -232,6 +228,14 @@ body {
   border-radius: 50%;
   margin-right: 10px;
 }
+
+/* 댓글 작성자 닉네임 */
+.comment-nickname {
+  font-size: 15px;
+  font-weight: 500;
+  margin-right: 10px;
+}
+
 /* 댓글 내용 */
 .comment-content {
   display: flex;

@@ -6,7 +6,7 @@ router.get("/", controller.get_Index);
 
 router.get("/get-feeds", controller.get_Feeds);
 
-router.delete('/feeds/delete/:id', controller.del_FeedDelete);
+router.delete("/feeds/delete/:id", controller.del_FeedDelete);
 
 router.post('/feeds/update', controller.post_FeedUpdate);
 
@@ -31,6 +31,8 @@ router.post("/login/find/update", controller.update_Password);
 router.get("/feed", controller.get_Feed);
 
 router.post("/feed/upload", controller.post_feedUpload);
+
+router.post("feed/comment", controller.post_Comment);
 
 router.get("/calender", controller.get_Calender);
 
