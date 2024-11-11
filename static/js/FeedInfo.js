@@ -50,11 +50,17 @@ window.onload = function() {
 
             <div class="edit-container" id = "edit-container-${feed.id}" style = "display: none;">
               <div class="file-upload-container">
-                <input type="file" id="img-input-${feed.id}" onchange="updateImage(${feed.id})">
+                <input type="file" id="img-input-${feed.id}" onchange="updateImage(${feed.id},'${feed.file_url}')">
                 <label class="label-file" for="img-input-${feed.id}">파일선택</label>
-                <span class="span-file">선택된 파일이 없습니다.</span>
+              <div class="file-info-container">
+                  <span class="span-file">선택된 파일이 없습니다.</span>
+                  <div class="error-message" style="color: red; display: none; font-size: 13px; margin-top: 5px;">
+                    [ERROR!] 확장자는 jpeg, jpg, png, bmp만 가능합니다.
+                  </div>
               </div>
-              
+             </div>
+    
+      
                <img src="${feed.file_url}" id ="edit-img-${feed.id}" class = "edit-img" alt="이미지 수정">
                <div class="edit-container" style="margin-top: 7px;">
                 <textarea id="edit-content-${feed.id}" class="edit-textarea" placeholder="수정할 내용을 입력하세요">${feed.content}</textarea>
@@ -106,4 +112,35 @@ window.onload = function() {
       loadMoreFeeds(); // 추가 데이터
     }
   });
+
+
+  function updateImage(feedId,fileUrl) {
+
+    // 기존 이미지
+    const baseFileUrl = fileUrl;
+    // input file 
+    const input = document.getElementById(`img-input-${feedId}`);
+    // 사용자가 이미지를 변경하면 이미지 src값을 변경
+    const imgPreview = document.getElementById(`edit-img-${feedId}`);
+    // 사용자가 어떤 파일을 선택했는지
+    const spanFileName = input.nextElementSibling.nextElementSibling;
+
+    // 사용자가 하나의 파일을 선택했을때만 실행한다.
+    if(input.files && input.files[0]) {
+      const reader = new FileReader();
+      
+      // 파일 이름 표시
+      spanFileName.textContent = input.files[0].name;
+      // 이미지 미리보기 업데이트
+      reader.onload = function(e) {
+        imgPreview.src = e.target.result;
+      };
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      spanFileName.textContent = '선택된 파일이 없습니다.';
+      imgPreview.src = `${baseFileUrl}`; // 초기 이미지로 재설정
+    }
+
+  }
+
 }

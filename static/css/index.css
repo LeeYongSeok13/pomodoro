@@ -102,6 +102,10 @@ body {
 .cancel-btn:hover {
   background-color: #d32f2f;
 }
+.file-info-container {
+  display: flex;
+  flex-direction: column;
+}
 
 
 

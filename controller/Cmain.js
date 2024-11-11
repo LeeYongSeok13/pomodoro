@@ -102,6 +102,23 @@ const uploadToS3 = async (filePath, bucketName, keyName) => {
   }
 };
 
+// 이미지가 수정되면 기존 s3에 있는 이미지 삭제
+async function deleteImageFromS3(bucketName,ImageUrl) {
+  const imageKey = ImageUrl.split('/').pop(); // url에서 키만 추출
+
+  const params = {
+    Bucket : bucketName,
+    key : imageKey
+  };
+  try {
+    await s3.deleteObject (params).promise();
+    console.log('이미지 삭제 완료');
+  } catch (error) {
+    console.error('이미지 삭제 실패', error);
+    throw new Error('이미지 삭제에 실패하였습니다.');
+  }
+}
+
 exports.get_Index = async (req, res) => {
   // 세션 권한 없으면 login으로 가야함!!!
   // 처음 페이지 랜딩 시 피드 데이터 호출하기
@@ -507,6 +524,46 @@ exports.get_Feeds = async (req, res) => {
     res.status(500).json({ message: "Error fetching feeds" });
   }
 };
+
+// 피드 수정
+exports.post_FeedUpdate = async (req,res) => {
+
+  try {
+    const bucketName = "feedimageup";
+    // 클라이언트에서 가져온 값을 각각 해당 변수에 저장
+    const { feedId, content, newImage } = req.body;
+    // 클라이언트에서 가져온 피드 ID 값이 DB에 존재하는지 찾는다.
+    const feed = await Feed.findOne( {where : { id : feedId } });
+
+    if(!feed) {
+      return res.status(404).json( { error : '피드를 찾을 수 없습니다.' });
+    }
+    // 내용 업데이트 
+    feed.content = content;
+
+    // 이미지가 있다면 이미지 업데이트
+    if (newImage) {
+      // s3에 새 이미지 업로드 하고 URL 값 받아오기
+      const newImageUrl = await uploadToS3(newImage);
+
+    // 이전 이미지가 있다면 s3에서 삭제
+    if (feed.file_url) {
+      await deleteImageFromS3(bucketName,feed.image); // 기존 이미지 삭제
+    }
+    // 새로운 이미지 URL 피드의 이미지로 필드 업데이트
+    feed.file_url = newImageUrl;
+    }
+
+    // 피드 저장
+    await feed.save();
+
+    res.json( {message : '피드 수정이 완료되었습니다. '});
+  } catch (error) {
+    console.log('피드 수정 실패', error);
+    res.status(500).json( {error : '서버 오류 발생 '});
+  }
+};
+
 // 피드 삭제
 exports.del_FeedDelete = async (req, res) => {
 
