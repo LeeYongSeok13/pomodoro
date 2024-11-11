@@ -477,8 +477,7 @@ exports.post_feedUpload = (req, res) => {
 
 // 피드 목록 가져오기 [ 페이징 ]
 exports.get_Feeds = async (req, res) => {
-
-  const feedNickname = req.session.nickname
+  const feedNickname = req.session.nickname;
 
   try {
     // 요청받은 페이지 정보
@@ -500,8 +499,8 @@ exports.get_Feeds = async (req, res) => {
       offset: offset, // 페이지에 맞는 offset 적용
     });
 
-     // JSON 데이터 반환
-     res.json({feeds,feedNickname});
+    // JSON 데이터 반환
+    res.json({ feeds, feedNickname });
   } catch (error) {
     console.error("Error fetching feeds :", error);
     res.status(500).json({ message: "Error fetching feeds" });
@@ -509,32 +508,64 @@ exports.get_Feeds = async (req, res) => {
 };
 // 피드 삭제
 exports.del_FeedDelete = async (req, res) => {
-
   try {
     const feedId = req.params.id;
     // 피드 ID 값이 없을때
-    if(!feedId) {
-      return res.status(400).json({ error : '피드 ID 값이 없습니다.'});
+    if (!feedId) {
+      return res.status(400).json({ error: "피드 ID 값이 없습니다." });
     }
 
     // db에서 피드 삭제
     const deleteFeed = await Feed.destroy({
-      where : { id : feedId }
-    })
+      where: { id: feedId },
+    });
 
     // 삭제될 행이 없을 경우 - 존재하지 않는 피드
     if (!deleteFeed) {
-      return res.status(404).json({ error : '삭제할 피드가 존재하지 않음'});
+      return res.status(404).json({ error: "삭제할 피드가 존재하지 않음" });
     }
 
     // 성공 메시지 응답
-    return res.status(200).json({ message : '피드가 성공적으로 삭제되었습니다.' });
+    return res
+      .status(200)
+      .json({ message: "피드가 성공적으로 삭제되었습니다." });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ error : '피드를 삭제하는 중 오류가 발생하였습니다.' });
+    return res
+      .status(500)
+      .json({ error: "피드를 삭제하는 중 오류가 발생하였습니다." });
   }
-}
+};
 
+// 댓글 작성
+exports.post_Comment = async (req, res) => {
+  const { commentText, feedId } = req.body;
+  const userId = req.session.userId;
+
+  // 입력값 유효성 검사
+  if (!user_id || !feed_id || !comment) {
+    return res.status(400).json({ error: "잘못된 입력 데이터입니다." });
+  }
+
+  try {
+    const newComment = await Comment.create({
+      userId: userId,
+      commentText: commentText,
+      feedId: feedId,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "댓글이 작성되었습니다.",
+      comment: newComment,
+    });
+  } catch (err) {
+    console.error("댓글 저장 중 오류 발생:", err);
+    res
+      .status(500)
+      .json({ success: false, message: "댓글 저장에 실패했습니다." });
+  }
+};
 
 exports.get_Calender = async (req, res) => {
   const today = new Date();

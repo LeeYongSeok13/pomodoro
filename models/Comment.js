@@ -1,11 +1,11 @@
 /**
- * feed 모델을 정의하는 함수
+ * comment 모델을 정의하는 함수
  * @param {import("sequelize").Sequelize} Sequelize
  * @param {import("sequelize").DataTypes} DataTypes
  */
 
-const feed = (Sequelize, DataTypes) => {
-  return Sequelize.define(
+const comment = (Sequelize, DataTypes) => {
+  const Comment = Sequelize.define(
     "comment",
     {
       id: {
@@ -17,10 +17,18 @@ const feed = (Sequelize, DataTypes) => {
       feed_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: "feeds",
+          key: "id",
+        },
       },
       user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
       },
       comment: {
         type: DataTypes.TEXT,
@@ -36,4 +44,13 @@ const feed = (Sequelize, DataTypes) => {
       createdAt: "created_at",
     }
   );
+
+  Comment.associate = (models) => {
+    Comment.belongsTo(models.User, { foreignKey: "user_id" }); // User 모델과 N:1 관계
+    Comment.belongsTo(models.Feed, { foreignKey: "feed_id" }); // Feed 모델과 N:1 관계
+  };
+
+  return Comment;
 };
+
+module.exports = comment;

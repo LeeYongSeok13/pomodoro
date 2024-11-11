@@ -4,6 +4,8 @@
  * @param {import("sequelize").DataTypes} DataTypes
  */
 
+const { DataTypes } = require("sequelize");
+
 const user = (Sequelize, DataTypes) => {
   const User = Sequelize.define(
     "user",
@@ -67,10 +69,8 @@ const user = (Sequelize, DataTypes) => {
 
   // 모델 간 관계 정의
   User.associate = (models) => {
-    User.hasMany(models.Feed, {
-      foreignKey: "user_id",
-      sourceKey: "id",
-    });
+    User.hasMany(models.Feed, { foreignKey: "user_id" }); // Feed 모델과의 1:N 관계
+    User.hasMany(models.Comment, { foreignKey: "user_id" }); // Comment 모델과의 1:N 관계
   };
 
   return User;
