@@ -348,7 +348,7 @@ header {
   text-align: center;
   width: 120px;
   height: 40px;
-  margin-top: 5%;
+  margin-top: -3%;
 }
 .donedone:hover {
   color: #f9f9f9;
@@ -507,6 +507,9 @@ header {
     left: 39%;
     width: 50%;
     top: -24%;
+  }
+  .donedone {
+    margin-top: 5%;
   }
   /* 5분 쉬는 모달 */
   .restmodal {
@@ -691,5 +694,8 @@ header {
   }
   .restendmodal {
     left: 60%;
+  }
+  .donedone {
+    margin-top: 10%;
   }
 }

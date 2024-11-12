@@ -221,7 +221,7 @@
           leftIcon.style.display = "none";
           timerTomato.classList.remove("hide");
           outerTimerContainer.classList.remove("active");
-          timeRemaining = 1 * 60;
+          timeRemaining = 25 * 60;
         } else {
           rightIcon.style.display = "none";
           leftIcon.style.display = "block";
@@ -332,7 +332,7 @@
         // '확인' 버튼 클릭 시 타이머 재시작
         document.querySelector(".resttheok").onclick = () => {
           restendModal.style.display = "none";
-          timeRemaining = 1 * 60;
+          timeRemaining = 25 * 60;
           updateDisplay();
           startTimer();
         };
@@ -340,7 +340,7 @@
       // 타이머 25분 초기화
       function resetTimerTo25() {
         clearInterval(timerInterval);
-        timeRemaining = 1 * 60;
+        timeRemaining = 25 * 60;
         updateDisplay();
         isTimerRunning = false;
       }
@@ -413,7 +413,7 @@
         if (
           !document.querySelector(".timerTomato").classList.contains("hide")
         ) {
-          timeRemaining = 1 * 60;
+          timeRemaining = 25 * 60;
         } else {
           timeRemaining = 0;
         }
@@ -437,89 +437,94 @@
       }
 
       // 초기 설정
-      timeRemaining = 1 * 60;
+      timeRemaining = 25 * 60;
       updateDisplay();
 
       // 그냥 타이머
-      const timer = document.getElementById("main-timer");
-      const lines = timer.querySelector("#tick-marks");
-      const fins = timer.querySelector("#time-fins");
-      const control = document.querySelector(
-        ".control-container #play-pause-control"
-      );
+      document.addEventListener("DOMContentLoaded", () => {
+        const timer = document.getElementById("main-timer");
+        const lines = timer.querySelector("#tick-marks");
+        const fins = timer.querySelector("#time-fins");
+        const control = document.querySelector(
+          ".control-container #play-pause-control"
+        );
 
-      const endTime = 60;
-      let intervalID = null;
-      let progressTimeSec = 0;
-      let isPlay = true;
+        const endTime = 60;
+        let intervalID = null;
+        let progressTimeSec = 0;
+        let isPlay = true;
 
-      function paintTickMarks() {
-        for (let i = 0; i < 30; i++) {
-          if (i % 5 === 0) {
-            const tick = document.createElement("div");
-            tick.classList.add("tick", "thick-tick");
-            tick.style.transform = `rotate(${i * 6}deg)`;
-            lines.append(tick);
+        function paintTickMarks() {
+          for (let i = 0; i < 30; i++) {
+            if (i % 5 === 0) {
+              const tick = document.createElement("div");
+              tick.classList.add("tick", "thick-tick");
+              tick.style.transform = `rotate(${i * 6}deg)`;
+              lines.append(tick);
+            }
           }
         }
-      }
 
-      function paintRemainingTime() {
-        for (let min = 0; min < endTime; min++) {
-          for (let sec = 0; sec < 60; sec++) {
-            const remainFin = document.createElement("div");
-            remainFin.classList.add("fin");
-            const deg = min * 6 + sec * 0.1;
-            remainFin.style.transform = `rotate(${-deg}deg)`;
-            fins.append(remainFin);
+        function paintRemainingTime() {
+          for (let min = 0; min < endTime; min++) {
+            for (let sec = 0; sec < 60; sec++) {
+              const remainFin = document.createElement("div");
+              remainFin.classList.add("fin");
+              const deg = min * 6 + sec * 0.1;
+              remainFin.style.transform = `rotate(${-deg}deg)`;
+              fins.append(remainFin);
+            }
           }
         }
-      }
 
-      function tickSecond() {
-        progressTimeSec++;
-        if (progressTimeSec >= endTime * 60) pause();
-        const lastFin = fins.lastChild;
-        if (lastFin) {
-          lastFin.remove();
+        function tickSecond() {
+          progressTimeSec++;
+          if (progressTimeSec >= endTime * 60) pause();
+          const lastFin = fins.lastChild;
+          if (lastFin) {
+            lastFin.remove();
+          }
         }
-      }
 
-      function play() {
-        intervalID = setInterval(tickSecond, 1000);
-        isPlay = true;
-        control.innerHTML = `<i class="fas fa-pause"></i>`;
-      }
-
-      function pause() {
-        clearInterval(intervalID);
-        isPlay = false;
-        control.innerHTML = `<i class="fas fa-play"></i>`;
-      }
-
-      function toggleControl() {
-        if (isPlay) {
-          pause();
-        } else {
-          play();
+        function play() {
+          intervalID = setInterval(tickSecond, 1000);
+          isPlay = true;
+          if (control) {
+            control.innerHTML = `<i class="fas fa-pause"></i>`;
+          }
         }
-      }
 
-      if (lines) {
-        paintTickMarks();
-      }
+        function pause() {
+          clearInterval(intervalID);
+          isPlay = false;
+          if (control) {
+            control.innerHTML = `<i class="fas fa-play"></i>`;
+          }
+        }
 
-      if (fins) {
-        paintRemainingTime();
-      }
+        function toggleControl() {
+          if (isPlay) {
+            pause();
+          } else {
+            play();
+          }
+        }
 
-      if (control) {
-        control.addEventListener("click", toggleControl);
-      }
+        if (lines) {
+          paintTickMarks();
+        }
 
-      play();
+        if (fins) {
+          paintRemainingTime();
+        }
 
-      // 완료 버튼 누르면 마이페이지로 가게.
+        if (control) {
+          control.addEventListener("click", toggleControl);
+        }
+
+        play();
+      });
+      // 완료 버튼 누르면 마이페이지로 이동
       function gomyPage() {
         window.location.href = "./myPage";
       }
