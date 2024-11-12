@@ -119,9 +119,6 @@ async function deleteImageFromS3(bucketName,ImageUrl) {
 }
 
 exports.get_Index = async (req, res) => {
-  // 세션 권한 없으면 login으로 가야함!!!
-  // 처음 페이지 랜딩 시 피드 데이터 호출하기
-
   const userNickName = req.session.nickname;
 
   if (userNickName) {
@@ -148,8 +145,8 @@ exports.get_Index = async (req, res) => {
       res.status(500).send("Error loading initial page");
     }
   } else {
-    // 데이터 구현시 index 대신 login 넣기!!!
-    res.redirect("/login");
+    res.render("loading");
+    // setTimeout(() => res.redirect("/login"), 2000);
   }
 };
 
@@ -647,6 +644,7 @@ exports.get_Calender = async (req, res) => {
   const { titles, description, state, todoid } = await get_today_todoList(
     req.session.nickname
   );
+  console.log(firstDayOfMonth);
 
   res.render("calender", {
     year: year,
@@ -802,11 +800,11 @@ exports.post_addtodo = async (req, res) => {
 };
 
 exports.get_MyPage = async (req, res) => {
-  const user_id = req.session.nickname;
+  const nickname = req.session.nickname;
   // 완료한 업무 검색
   const done_data = await Task.findAll({
     where: {
-      user_id: user_id,
+      user_id: nickname,
       state: "done",
     },
   });
@@ -820,7 +818,7 @@ exports.get_MyPage = async (req, res) => {
   // 미흡한 업무 검색
   const ongoing_data = await Task.findAll({
     where: {
-      user_id: user_id,
+      user_id: nickname,
       state: "ongoing",
     },
   });
@@ -833,7 +831,7 @@ exports.get_MyPage = async (req, res) => {
   //미완료 업무 검색
   const pending_data = await Task.findAll({
     where: {
-      user_id: user_id,
+      user_id: nickname,
       state: "pending",
     },
   });
@@ -849,6 +847,18 @@ exports.get_MyPage = async (req, res) => {
 
   // 업무 성공률
   const successPercentage = Math.round((done_titles.length / allListNum) * 100);
+
+  // 사용자 정보
+
+  const userId = req.session.userId;
+  const userData = await User.findOne({
+    where: {
+      id: userId,
+      nickname: nickname,
+    },
+  });
+  console.log(userData.username);
+  console.log(userData.nickname);
   res.render("myPage", {
     done_titles: done_titles,
     done_descriptions: done_descriptions,
@@ -858,6 +868,8 @@ exports.get_MyPage = async (req, res) => {
     pending_descriptions: pending_descriptions,
     allListNum: allListNum,
     successPercentage: successPercentage,
+    nickname: userData.nickname,
+    username: userData.username,
   });
 };
 
