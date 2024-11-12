@@ -452,7 +452,7 @@ exports.post_feedUpload = (req, res) => {
     try {
       const filename = req.file.filename;
       const filePath = req.file.path;
-      const bucketName = "feedimageup";
+      const bucketName = "feeduploadimg";
       const keyName = `images/${filename}`;
 
       // S3에 파일 업로드
@@ -536,14 +536,14 @@ exports.post_FeedUpdate = async (req, res) => {
     if (newImage) {
       // 기존 이미지 URL을 사용하여 S3에서 삭제
       if (feed.file_url) {
-        const bucketName = "feedimageup";
+        const bucketName = "feeduploadimg";
         await deleteImageFromS3(bucketName,feed.file_url); // 기존 이미지를 S3에서 삭제
       }
 
       // 새 이미지 파일 로컬 저장소에서 S3로 업로드
       const filePath = path.join(__dirname, '../uploads/', newImage.filename);
       const filename = req.file.filename;
-      const bucketName = "feedimageup";
+      const bucketName = "feeduploadimg";
       const keyName = `images/${filename}`;
       newImageUrl = await uploadToS3(filePath,bucketName,keyName); // 새 이미지 S3에 업로드 후 URL 반환
 

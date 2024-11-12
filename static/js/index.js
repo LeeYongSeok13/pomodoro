@@ -28,5 +28,10 @@
       document.body.style.overflow = ''; 
     }
   }
-  
+
+  function toggleLike(feedId) {
+    var heartIcon = document.getElementById(`likeIcon-${feedId}`); // 피드 ID에 해당하는 하트 아이콘 찾기
+    // 'liked' 클래스를 토글하여 색상 변경
+    heartIcon.classList.toggle('liked');
+  }
 
