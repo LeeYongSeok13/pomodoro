@@ -4,7 +4,11 @@ const Task = require("../models/index").Task;
 const Timer = require("../models/index").Timer;
 const Feed = require("../models/index").Feed;
 const { Op } = require("sequelize");
-const { S3Client, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
 const uuid = require("uuid").v4;
 const path = require("path");
 const fs = require("fs");
@@ -102,19 +106,19 @@ const uploadToS3 = async (filePath, bucketName, keyName) => {
 };
 
 // 이미지가 수정되면 기존 s3에 있는 이미지 삭제
-async function deleteImageFromS3(bucketName,ImageUrl) {
-  const imageKey = ImageUrl.split('.amazonaws.com/')[1];
+async function deleteImageFromS3(bucketName, ImageUrl) {
+  const imageKey = ImageUrl.split(".amazonaws.com/")[1];
 
   const params = {
-    Bucket : bucketName,
-    Key : imageKey
+    Bucket: bucketName,
+    Key: imageKey,
   };
   try {
     const command = new DeleteObjectCommand(params);
     await s3.send(command);
   } catch (error) {
-    console.error('이미지 삭제 실패', error);
-    throw new Error('이미지 삭제에 실패하였습니다.');
+    console.error("이미지 삭제 실패", error);
+    throw new Error("이미지 삭제에 실패하였습니다.");
   }
 }
 
@@ -527,7 +531,7 @@ exports.post_FeedUpdate = async (req, res) => {
     // 피드 찾기
     const feed = await Feed.findOne({ where: { id: feedId } });
     if (!feed) {
-      return res.status(404).json({ error: '피드를 찾을 수 없습니다.' });
+      return res.status(404).json({ error: "피드를 찾을 수 없습니다." });
     }
 
     let newImageUrl = feed.file_url; // 기존 이미지 URL
@@ -537,25 +541,25 @@ exports.post_FeedUpdate = async (req, res) => {
       // 기존 이미지 URL을 사용하여 S3에서 삭제
       if (feed.file_url) {
         const bucketName = "feedimageup";
-        await deleteImageFromS3(bucketName,feed.file_url); // 기존 이미지를 S3에서 삭제
+        await deleteImageFromS3(bucketName, feed.file_url); // 기존 이미지를 S3에서 삭제
       }
 
       // 새 이미지 파일 로컬 저장소에서 S3로 업로드
-      const filePath = path.join(__dirname, '../uploads/', newImage.filename);
+      const filePath = path.join(__dirname, "../uploads/", newImage.filename);
       const filename = req.file.filename;
       const bucketName = "feedimageup";
       const keyName = `images/${filename}`;
-      newImageUrl = await uploadToS3(filePath,bucketName,keyName); // 새 이미지 S3에 업로드 후 URL 반환
+      newImageUrl = await uploadToS3(filePath, bucketName, keyName); // 새 이미지 S3에 업로드 후 URL 반환
 
       // 로컬 파일 삭제 (S3 업로드 후 삭제)
       fs.unlink(filePath, (err) => {
-        if (err) console.log('로컬파일 삭제 오류', err);
+        if (err) console.log("로컬파일 삭제 오류", err);
       });
     }
 
     // 피드 내용 업데이트
-    feed.content = content;  // 본문 내용 수정
-    feed.file_url = newImageUrl;  // 새 이미지 URL로 수정
+    feed.content = content; // 본문 내용 수정
+    feed.file_url = newImageUrl; // 새 이미지 URL로 수정
 
     // 피드 저장
     await feed.save();
@@ -563,8 +567,8 @@ exports.post_FeedUpdate = async (req, res) => {
     // 응답
     res.status(200).json({ content, newImageUrl });
   } catch (error) {
-    console.log('피드 수정 실패', error);
-    res.status(500).json({ error: '서버 오류 발생' });
+    console.log("피드 수정 실패", error);
+    res.status(500).json({ error: "서버 오류 발생" });
   }
 };
 
@@ -644,7 +648,6 @@ exports.get_Calender = async (req, res) => {
   const { titles, description, state, todoid } = await get_today_todoList(
     req.session.nickname
   );
-  console.log(firstDayOfMonth);
 
   res.render("calender", {
     year: year,
@@ -857,8 +860,6 @@ exports.get_MyPage = async (req, res) => {
       nickname: nickname,
     },
   });
-  console.log(userData.username);
-  console.log(userData.nickname);
   res.render("myPage", {
     done_titles: done_titles,
     done_descriptions: done_descriptions,
@@ -873,40 +874,43 @@ exports.get_MyPage = async (req, res) => {
   });
 };
 
-(exports.post_ProfileImage = upload.single("profile_image")),
-  async (req, res) => {
-    try {
-      const imageURL = "/uploads" + req.file.filename; // 업로드 된 이미지 경로
+exports.post_ProfileImage = async (req, res) => {
+  try {
+    const bucketName = "pomodor-profile-image";
+    const keyName = req.file.filename;
+    // S3에 파일 업로드
+    const fileUrl = await uploadToS3(req.file.path, bucketName, keyName);
 
-      // 세션에서 사용자 ID 가져오기
-      const userId = req.session.userId;
-      if (!userId) {
-        return res.status(401).json({ message: "로그인 해 주세요" });
-      }
-
-      // 사용자 정보 가져오기
-      const user = await User.findByPk(userId);
-      if (!user) {
-        return res.status(401).json({ message: "사용자를 찾을 수 없습니다." });
-      }
-
-      // 프로필 이미지 URL 업데이트
-      user.profile_image = imageURL;
-      await user.save(); // 변경 사항 저장
-
-      return res.status(200).json({
-        success: true,
-        message: "프로필 이미지가 업데이트 되었습니다.",
-      });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        success: false,
-        meeeage: "프로필 이미지 업데이트에 실패",
-        error: error.message,
-      });
+    // 세션에서 사용자 ID 가져오기
+    const userId = req.session.userId;
+    if (!userId) {
+      return res.status(401).json({ message: "로그인 해 주세요" });
     }
-  };
+
+    // 사용자 정보 가져오기
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(401).json({ message: "사용자를 찾을 수 없습니다." });
+    }
+
+    // 프로필 이미지 URL 업데이트
+    user.profile_image = fileUrl;
+    await user.save(); // 변경 사항 저장
+
+    return res.status(200).json({
+      fileUrl: fileUrl,
+      success: true,
+      message: "프로필 이미지가 업데이트 되었습니다.",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "프로필 이미지 업데이트에 실패",
+      error: error.message,
+    });
+  }
+};
 
 exports.getComponent = (req, res) => {
   const { title, description, dataId, state } = req.query;
