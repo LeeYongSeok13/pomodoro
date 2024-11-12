@@ -5,6 +5,10 @@ html {
   height: 100%;
 }
 
+button {
+  cursor: pointer;
+}
+
 body {
   font-family: "Noto Sans KR", serif;
   font-weight: 500;
