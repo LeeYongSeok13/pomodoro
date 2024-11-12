@@ -19,6 +19,11 @@
   height: 44px;
   transition-duration: 200ms;
 }
+
+.imgButton:hover {
+  cursor: pointer;
+}
+
 .button {
   font-size: 14px;
   font-weight: bold;

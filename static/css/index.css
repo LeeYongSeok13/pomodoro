@@ -9,6 +9,10 @@ body {
   padding-bottom: 55px;
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 .feed-container {
   margin: 0 auto;
   width: 80%;
@@ -170,6 +174,24 @@ body {
   margin-left: auto;
 }
 
+.like-info {
+  font-size: 0.7em; /* 작은 글씨 크기 */
+  color: #AB47BC; /* 진한 회색 */
+  cursor: pointer; /* 클릭 가능한 포인터 */
+  transition: color 0.3s, transform 0.3s; /* 색상과 크기 전환 효과 */
+  margin-top: 7px;
+  padding: 7px;
+}
+
+.like-info:hover {
+  color: #000; /* 더 진한 회색으로 변경 */
+  transform: scale(1.05); /* 살짝 확대 효과 */
+}
+
+.like-info span {
+  font-weight: 500; /* 약간 두껍게 */
+}
+
 .icon-container {
   display: flex;
   align-items: center;
@@ -189,6 +211,97 @@ body {
   height: auto;
   margin-right: 20px;
   cursor: pointer;
+}
+
+/* 모달창 디자인 */
+.like-modal {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed; /* 화면에 고정 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* 배경 어둡게 */
+}
+
+.like-modal-content {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 50%;
+  margin: 7% auto;
+  margin-left: 30%;
+  position: relative; /* 절대 위치로 X 버튼을 위치시키기 위한 기준 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+/* X 버튼을 like-modal-content 영역에 오른쪽 끝에 배치 */
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #555;
+}
+
+/* 타이틀 */
+.like-modal-content h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* 사용자 항목 */
+.user {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.3s ease;
+}
+
+/* 사용자 항목에 마우스 올렸을 때 배경 색상 */
+.user:hover {
+  background-color: #f8f8f8;
+}
+
+/* 프로필 이미지 스타일 */
+.user-profile-img {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin-right: 15px;
+  object-fit: cover;
+  background-color: #f0f0f0;
+}
+
+/* 닉네임 스타일 */
+.user-nickname {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  margin-left: 10px;
+  display: inline-block;
+  max-width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* 모달창의 스크롤 처리 */
+.like-modal-content {
+  max-height: 60vh;
+  overflow-y: auto;
 }
 
 /* 댓글 */
@@ -321,4 +434,56 @@ body {
   .plus-icon img {
     bottom: 20px;
   }
+}
+
+
+/* 790px ~ 580px 화면 범위에 적용 */
+@media (max-width: 767px) and (min-width: 580px) {
+  .like-modal-content {
+    width: 80%; /* 화면 크기가 줄어들면 너비를 60%로 설정 */
+    margin: 9% auto;
+    margin-left: 25%;
+  }
+}
+
+/* 580px ~ 290px 화면 범위에 적용 */
+@media (max-width: 580px) and (min-width: 290px) {
+  .like-modal-content {
+    width: 80%; /* 화면 크기가 더 작아지면 너비를 80%로 설정 */
+    margin: 15% auto;
+    margin-left: 20%;
+    max-height: 50vh;
+  }
+
+  /* 타이틀 */
+.like-modal-content h2 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+}
+
+/* 290px 이하 화면 범위에 대한 추가 스타일 (선택사항) */
+@media (max-width: 290px) {
+  .like-modal-content {
+    width: 90%; /* 화면이 290px보다 작아지면 너비를 90%로 설정 */
+  }
+  .like-modal-content {
+    width: 80%; /* 화면 크기가 더 작아지면 너비를 80%로 설정 */
+    margin: 19% auto;
+    margin-left: 18%;
+    max-height: 50vh;
+  }
+
+  /* 타이틀 */
+.like-modal-content h2 {
+  font-size: 8px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
 }
