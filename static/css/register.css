@@ -10,7 +10,6 @@ body {
   font-weight: 500;
   background-color: #fff8f0;
   background-color: #fff8f0;
-  height: 100%;
 }
 
 div {
@@ -28,7 +27,7 @@ h1 {
 .logoSz {
   width: 156px;
   height: 164px;
-  margin-top: 15%;
+  margin-top: 5%;
   margin-left: 50%;
   transform: translateX(-50%);
 }
@@ -37,7 +36,7 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 15%;
+  margin-top: 3%;
 }
 
 input {
@@ -45,7 +44,6 @@ input {
   border-width: 0;
   width: 283px;
   height: 40px;
-  /* margin-top: 5%; */
   border-radius: 30px;
   box-sizing: border-box;
   padding-left: 25px;

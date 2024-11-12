@@ -83,7 +83,7 @@
         비밀번호 재설정
       </button>
     </div>
-    <div class="isUser" style="margin-top: 7%">
+    <div class="isUser">
       <p style="font-size: 11px">이미 계정이 있으신가요?</p>
       <a class="lostEp" href="/login">로그인</a>
     </div>
@@ -126,10 +126,12 @@
           placeholder="비밀번호 확인"
           required
         />
-        <button class="modalBt" type="button" onclick="updatePassword()">
-          비밀번호 변경
-        </button>
-        <button class="modalOffBt" onclick="closeResetModal()">닫기</button>
+        <div class="resetPasswordContentBtn">
+          <button class="modalBt" type="button" onclick="updatePassword()">
+            비밀번호 변경
+          </button>
+          <button class="modalOffBt" onclick="closeResetModal()">닫기</button>
+        </div>
       </div>
     </div>
 
