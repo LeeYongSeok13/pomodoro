@@ -188,7 +188,10 @@ textarea,
   transition-duration: 250ms;
   position: relative;
 }
-.daychar {
+.dayList > .daychar {
+  display: none;
+}
+.dayList > .emptyBlock {
   display: none;
 }
 /* 태블릿 스타일 */
@@ -225,15 +228,28 @@ textarea,
   .dayList > li > .day {
     display: none;
   }
+  .dayList > li {
+    background-color: transparent;
+    /* border-bottom: 2px solid #4b3134; */
+    color: #4b3134;
+  }
+  .dayList > .today {
+    color: #ffffff;
+    border-radius: 35%;
+    transform: translateY(-10px) scale(1.1);
+  }
   .today > .date {
     font-size: 25px;
   }
   .date {
     font-size: 20px;
   }
-  .daychar {
+  .dayList > .daychar {
     display: block;
     text-align: center;
     font-size: 25px;
+  }
+  .dayList > .emptyBlock {
+    display: block;
   }
 }

@@ -32,11 +32,21 @@ window.addEventListener("load", async () => {
       dayList.style.transform = "";
     }
   });
-  if (window.innerWidth >= 768) {
-    dayItem[date + 7 + firstDayOfMonth].classList.add("today");
-  } else {
-    dayItem[date].classList.add("today");
-  }
+  dayItem[date + 7 + firstDayOfMonth].classList.add("today");
+  const div = document.createElement("div");
+  Object.assign(div.style, {
+    width: "7px",
+    height: "7px",
+    borderRadius: "50%",
+    margin: "0 auto",
+    backgroundColor: "black",
+  });
+  dayItem[date + 7 + firstDayOfMonth].appendChild(div);
+  // if (window.innerWidth >= 768) {
+  //   dayItem[date + 7 + firstDayOfMonth].classList.add("today");
+  // } else {
+  //   dayItem[date].classList.add("today");
+  // }
   let currentMonth = +monthSpan.innerHTML.split("월").join("");
   let currentYear = +yearSpan.innerHTML.split("년").join("");
   let count = 4;
@@ -160,6 +170,11 @@ window.addEventListener("load", async () => {
     const dayItem = document.querySelectorAll(`.dayList > li`);
     let today;
     dayItem.forEach((item) => {
+      if (
+        item.classList.contains("daychar") ||
+        item.classList.contains("emptyBlock")
+      )
+        return;
       item.addEventListener("click", async (event) => {
         // 하나가 클릭되면 일단 모든 li의 today를 지움
         dayItem.forEach((day) => {
