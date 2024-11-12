@@ -27,10 +27,21 @@
             src="/static/img/profile.png"
             alt="프로필 이미지"
             width="150px"
+            id="profileImage"
           />
-          <button class="imgButton changeButton" id="changeButton">
+          <label
+            for="profileChange"
+            class="imgButton changeButton"
+            id="changeButton"
+          >
             <span class="text-hidden">프로필 수정 버튼</span>
-          </button>
+          </label>
+          <input
+            type="file"
+            id="profileChange"
+            name="profile_image"
+            accept="image/*"
+          />
         </div>
         <h2 class="user-id"><%= username %></h2>
         <h3 class="user-name"><%= nickname %></h3>
