@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controller/Cmain");
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' }); // 업로드할 위치를 지정합니다.
 
 router.get("/", controller.get_Index);
 
@@ -8,7 +10,7 @@ router.get("/get-feeds", controller.get_Feeds);
 
 router.delete("/feeds/delete/:id", controller.del_FeedDelete);
 
-router.post('/feeds/update', controller.post_FeedUpdate);
+router.post('/feeds/update', upload.single('image'), controller.post_FeedUpdate);
 
 router.get("/login", controller.get_Login);
 

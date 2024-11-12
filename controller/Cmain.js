@@ -4,7 +4,7 @@ const Task = require("../models/index").Task;
 const Timer = require("../models/index").Timer;
 const Feed = require("../models/index").Feed;
 const { Op } = require("sequelize");
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { S3Client, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const uuid = require("uuid").v4;
 const path = require("path");
 const fs = require("fs");
@@ -94,7 +94,6 @@ const uploadToS3 = async (filePath, bucketName, keyName) => {
 
     // s3에 파일 업로드
     const data = await s3.send(new PutObjectCommand(uploadParms));
-    console.log("Success, file uploaded to S3", data);
     return `https://${bucketName}.s3.amazonaws.com/${keyName}`;
   } catch (err) {
     console.error("Error uploading file to S3", err);
@@ -104,15 +103,15 @@ const uploadToS3 = async (filePath, bucketName, keyName) => {
 
 // 이미지가 수정되면 기존 s3에 있는 이미지 삭제
 async function deleteImageFromS3(bucketName,ImageUrl) {
-  const imageKey = ImageUrl.split('/').pop(); // url에서 키만 추출
+  const imageKey = ImageUrl.split('.amazonaws.com/')[1];
 
   const params = {
     Bucket : bucketName,
-    key : imageKey
+    Key : imageKey
   };
   try {
-    await s3.deleteObject (params).promise();
-    console.log('이미지 삭제 완료');
+    const command = new DeleteObjectCommand(params);
+    await s3.send(command);
   } catch (error) {
     console.error('이미지 삭제 실패', error);
     throw new Error('이미지 삭제에 실패하였습니다.');
@@ -453,8 +452,6 @@ exports.post_feedUpload = (req, res) => {
     // 세션에서 userId 값을 불러오기
     const { userId } = req.session;
 
-    console.log(content);
-
     try {
       const filename = req.file.filename;
       const filePath = req.file.path;
@@ -525,41 +522,52 @@ exports.get_Feeds = async (req, res) => {
 };
 
 // 피드 수정
-exports.post_FeedUpdate = async (req,res) => {
-
+exports.post_FeedUpdate = async (req, res) => {
   try {
-    const bucketName = "feedimageup";
-    // 클라이언트에서 가져온 값을 각각 해당 변수에 저장
-    const { feedId, content, newImage } = req.body;
-    // 클라이언트에서 가져온 피드 ID 값이 DB에 존재하는지 찾는다.
-    const feed = await Feed.findOne( {where : { id : feedId } });
+    const { feedId, content } = req.body; // 수정할 피드 ID와 내용
+    const newImage = req.file; // 새로 업로드된 이미지
 
-    if(!feed) {
-      return res.status(404).json( { error : '피드를 찾을 수 없습니다.' });
+    // 피드 찾기
+    const feed = await Feed.findOne({ where: { id: feedId } });
+    if (!feed) {
+      return res.status(404).json({ error: '피드를 찾을 수 없습니다.' });
     }
-    // 내용 업데이트 
-    feed.content = content;
 
-    // 이미지가 있다면 이미지 업데이트
+    let newImageUrl = feed.file_url; // 기존 이미지 URL
+
+    // 새 이미지가 있을 경우, 기존 이미지 삭제 후 S3에 새 이미지 업로드
     if (newImage) {
-      // s3에 새 이미지 업로드 하고 URL 값 받아오기
-      const newImageUrl = await uploadToS3(newImage);
+      // 기존 이미지 URL을 사용하여 S3에서 삭제
+      if (feed.file_url) {
+        const bucketName = "feedimageup";
+        await deleteImageFromS3(bucketName,feed.file_url); // 기존 이미지를 S3에서 삭제
+      }
 
-    // 이전 이미지가 있다면 s3에서 삭제
-    if (feed.file_url) {
-      await deleteImageFromS3(bucketName,feed.image); // 기존 이미지 삭제
+      // 새 이미지 파일 로컬 저장소에서 S3로 업로드
+      const filePath = path.join(__dirname, '../uploads/', newImage.filename);
+      const filename = req.file.filename;
+      const bucketName = "feedimageup";
+      const keyName = `images/${filename}`;
+      newImageUrl = await uploadToS3(filePath,bucketName,keyName); // 새 이미지 S3에 업로드 후 URL 반환
+
+      // 로컬 파일 삭제 (S3 업로드 후 삭제)
+      fs.unlink(filePath, (err) => {
+        if (err) console.log('로컬파일 삭제 오류', err);
+      });
     }
-    // 새로운 이미지 URL 피드의 이미지로 필드 업데이트
-    feed.file_url = newImageUrl;
-    }
+
+    // 피드 내용 업데이트
+    feed.content = content;  // 본문 내용 수정
+    feed.file_url = newImageUrl;  // 새 이미지 URL로 수정
 
     // 피드 저장
     await feed.save();
 
-    res.json( {message : '피드 수정이 완료되었습니다. '});
+    // 응답
+    res.status(200).json({ content, newImageUrl });
   } catch (error) {
     console.log('피드 수정 실패', error);
-    res.status(500).json( {error : '서버 오류 발생 '});
+    res.status(500).json({ error: '서버 오류 발생' });
   }
 };
 

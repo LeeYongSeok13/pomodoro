@@ -371,42 +371,91 @@
       }  
     }
 
-    // 수정된 내용 저장하기
-    function saveChanges(feedId) {
+// 저장 버튼 클릭 시
+function saveChanges(feedId) {
+  Swal.fire({
+    title: "저장하시겠습니까?",
+    text: "변경된 내용을 저장하려면 확인을 클릭해주세요.",
+    icon: "question",
+    showCancelButton: true, 
+    confirmButtonText: "확인",
+    cancelButtonText: "취소",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // 확인을 눌렀을 때 서버로 업데이트 요청 보내기
       const newContent = document.getElementById(`edit-content-${feedId}`).value;
       const newImageFile = document.getElementById(`img-input-${feedId}`).files[0];
 
       if (!newContent || !newImageFile) {
+        Swal.fire({
+          icon: 'error',
+          title: '입력 오류',
+          text: '수정할 내용 또는 이미지를 선택해주세요!',
+          confirmButtonText: '확인'
+        });
+        return; // 폼 제출을 중단
+      }
+
+      const formData = new FormData();
+      formData.append('content', newContent);
+      formData.append('feedId', feedId);
+
+      if (newImageFile) {
+        formData.append('image', newImageFile);
+      }
+
+      // 서버로 요청 보내기
+      fetch('/feeds/update', {
+        method: 'POST',
+        body: formData
+      })
+        .then((response) => response.json())
+        .then((data) => { 
+          
+            // 새 이미지 URL 적용 (타임스탬프 추가)
+            const newImageElement = document.getElementById(`feed-img-${feedId}`).querySelector('img');
+            const newContentParagraph = document.getElementById(`feed-content-${feedId}`).querySelector('p');
+            // 업데이트 전 초기화하기
+            newImageElement.src = null;
+            newContentParagraph.textContent = null;
+
+            // 수정 칸 숨기기
+            const editContainer = document.getElementById(`edit-container-${feedId}`);
+            editContainer.style.display = "none";  // 수정 칸 숨기기
+            document.getElementById(`feed-content-${feedId}`).style.display = "block";  // 기존 내용 보이기
+            document.getElementById(`feed-img-${feedId}`).style.display = "block";     // 이미지 보이기
+                          
+          Swal.fire({
+            icon: 'success',
+            title: '변경 완료',
+            text: '피드가 성공적으로 업데이트되었습니다.',
+            confirmButtonText: '확인'
+          });
+          // 새 이미지와 내용 적용
+          newImageElement.src = `${data.newImageUrl}?timestamp=${new Date().getTime()}`;
+          newContentParagraph.textContent = data.content;
+        })
+        .catch((error) => {
+          console.log('피드 업데이트 실패', error);
+          Swal.fire({
+            icon: 'error',
+            title: '오류 발생',
+            text: '서버와 연결하는데 문제가 발생했습니다.',
+            confirmButtonText: '확인'
+          });
+        });
+    } else {
+      // 취소 버튼을 눌렀을 때
       Swal.fire({
-        icon: 'error',
-        title: '입력 오류',
-        text: '수정할 내용 또는 이미지를 선택해주세요!',
+        icon: 'info',
+        title: '취소되었습니다',
+        text: '피드 수정이 취소되었습니다.',
         confirmButtonText: '확인'
       });
-      return; // 폼 제출을 중단
     }
+  });
+}
 
-    // 폼데이터 생성
-    const formData = new FormData();
-    formData.append('content', newContent);
-    formData.append('id', feedId); // feedId 값 추가
-
-    if(newImageFile) {
-      formData.append('image', newImageFile);
-    }
-
-    fetch('/feeds/update', {
-      method : 'POST',
-      body : formData
-    })
-    .then (response => response.json())
-    .then (data => {
-      console.log('피드 수정 완료');
-    })
-    .catch (error => {
-      console.log('피드 업로드 실패', error);
-    });
- }
 
     // 사용자가 수정을 누르고 취소버튼을 클릭했을 때
     function cancelEdit(feedId) {
