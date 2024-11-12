@@ -102,9 +102,6 @@ const uploadToS3 = async (filePath, bucketName, keyName) => {
 };
 
 exports.get_Index = async (req, res) => {
-  // 세션 권한 없으면 login으로 가야함!!!
-  // 처음 페이지 랜딩 시 피드 데이터 호출하기
-
   const userNickName = req.session.nickname;
 
   if (userNickName) {
@@ -131,8 +128,8 @@ exports.get_Index = async (req, res) => {
       res.status(500).send("Error loading initial page");
     }
   } else {
-    // 데이터 구현시 index 대신 login 넣기!!!
-    res.redirect("/login");
+    res.render("loading");
+    // setTimeout(() => res.redirect("/login"), 2000);
   }
 };
 
@@ -521,6 +518,7 @@ exports.get_Calender = async (req, res) => {
   const { titles, description, state, todoid } = await get_today_todoList(
     req.session.nickname
   );
+  console.log(firstDayOfMonth);
 
   res.render("calender", {
     year: year,
@@ -744,8 +742,8 @@ exports.get_MyPage = async (req, res) => {
     pending_descriptions: pending_descriptions,
     allListNum: allListNum,
     successPercentage: successPercentage,
-    userNickname: userData.nickname,
-    userName: userData.username,
+    nickname: userData.nickname,
+    username: userData.username,
   });
 };
 

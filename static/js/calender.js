@@ -5,6 +5,12 @@ window.addEventListener("load", async () => {
   const date = today.getDate() - 1;
   const lastDay = new Date(year, month, 0).getDate();
   let currentIndex = 0;
+  const firstDayOfMonth = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    1
+  ).getDay();
+  const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
 
   const plusDays = document.querySelector(".plusDays");
   const minusDays = document.querySelector(".minusDays");
@@ -20,11 +26,20 @@ window.addEventListener("load", async () => {
   const addListButton = document.querySelector(".addListButton");
   const todoform = document.forms["todoform"];
   const todoContainer = document.querySelector(".todo-container");
-
-  dayItem[date].classList.add("today");
+  console.log(dayItem, date);
+  window.addEventListener("resize", () => {
+    if (dayList.style.transform) {
+      dayList.style.transform = "";
+    }
+  });
+  if (window.innerWidth >= 768) {
+    dayItem[date + 7 + firstDayOfMonth].classList.add("today");
+  } else {
+    dayItem[date].classList.add("today");
+  }
   let currentMonth = +monthSpan.innerHTML.split("월").join("");
   let currentYear = +yearSpan.innerHTML.split("년").join("");
-  let count = 6;
+  let count = 4;
   // 첫 로딩시 현재 날짜로 이동
   for (let i = date; i >= 0; i--) {
     if (i % count === 0) {
@@ -32,7 +47,6 @@ window.addEventListener("load", async () => {
       break;
     }
   }
-  dayList.style.transform = `translateX(-${currentIndex * 20}vw)`;
   todayClick();
   deletebuttonActive();
   modifyButtonActive();
@@ -66,6 +80,18 @@ window.addEventListener("load", async () => {
     });
 
     dayList.innerHTML = "";
+
+    for (let i = 0; i < 7; i++) {
+      const li = document.createElement("li");
+      li.innerHTML = dayNames[i];
+      li.classList.add("daychar");
+      dayList.appendChild(li);
+    }
+
+    for (let i = 0; i < data.firstDayOfMonth; i++) {
+      const li = document.createElement("li");
+      dayList.appendChild(li); // 각 날짜 추가
+    }
 
     for (let day = 1; day <= data.lastDay; day++) {
       const li = document.createElement("li");
@@ -103,6 +129,17 @@ window.addEventListener("load", async () => {
 
     dayList.innerHTML = "";
 
+    for (let i = 0; i < 7; i++) {
+      const li = document.createElement("li");
+      li.innerHTML = dayNames[i];
+      li.classList.add("daychar");
+      dayList.appendChild(li);
+    }
+
+    for (let i = 0; i < data.firstDayOfMonth; i++) {
+      const li = document.createElement("li");
+      dayList.appendChild(li); // 각 날짜 추가
+    }
     for (let day = 1; day <= data.lastDay; day++) {
       const li = document.createElement("li");
       const spanDay = document.createElement("span");

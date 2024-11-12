@@ -22,7 +22,16 @@
     </header>
     <main>
       <section class="profile-section">
-        <img src="/static/img/profile.png" alt="프로필 이미지" width="150px" />
+        <div>
+          <img
+            src="/static/img/profile.png"
+            alt="프로필 이미지"
+            width="150px"
+          />
+          <button class="imgButton changeButton" id="changeButton">
+            <span class="text-hidden">프로필 수정 버튼</span>
+          </button>
+        </div>
         <h2 class="user-id"><%= username %></h2>
         <h3 class="user-name"><%= nickname %></h3>
       </section>
