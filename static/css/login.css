@@ -10,33 +10,21 @@ body {
   font-weight: 500;
   background-color: #fff8f0;
   background-color: #fff8f0;
-  height: 100%;
-}
-h1 {
-  text-align: center;
-  margin-top: 20%;
 }
 
 .logoSz {
   width: 156px;
   height: 164px;
-  margin-top: 15%;
+  margin-top: 5%;
   margin-left: 50%;
-
   transform: translateX(-50%);
-}
-
-.button1 {
-  width: 70px;
-  height: 50px;
-  background-color: #9c9c9c;
 }
 
 .loginForm {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 15%;
+  margin-top: 3%;
 }
 
 input {
@@ -49,6 +37,7 @@ input {
   padding-left: 25px;
   margin-bottom: 20px;
 }
+
 input::placeholder {
   opacity: 0.7;
   font-weight: 400;
@@ -56,12 +45,6 @@ input::placeholder {
   padding-left: 30px;
   background-position: center left 3px;
   background-repeat: no-repeat;
-}
-.inD {
-  width: 283px;
-  height: 55px;
-  display: flex;
-  flex-direction: column;
 }
 
 .emailAddr::placeholder {
@@ -101,23 +84,10 @@ input::placeholder {
 }
 
 .newUser {
-  position: absolute;
-  bottom: 5%;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
-  justify-content: center;
-  align-items: center;
-  white-space: nowrap;
+  width: 150px;
+  margin: 0 auto;
 }
-
-/* .isUser {
-  margin-top: 5%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  white-space: nowrap;
-} */
 
 .error-text {
   color: red;
@@ -154,4 +124,19 @@ input::placeholder {
   text-align: center;
   max-width: 400px;
   margin: auto;
+}
+
+.modal-message {
+  margin-bottom: 15px;
+}
+
+.close-btn {
+  background-color: #da2337;
+  border-width: 0;
+  width: 131px;
+  height: 40px;
+  border-radius: 30px;
+  font-weight: 900;
+  color: #fff;
+  text-align: center;
 }
