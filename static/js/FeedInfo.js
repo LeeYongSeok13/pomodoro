@@ -76,6 +76,11 @@ window.onload = function() {
                 <div class="get-tomato-sum">
                   획득한 토마토<img class="tomato" src="/static/img/tomato.png" alt="획득 토마토" />
                 </div>
+
+            <div class="like-info" onclick="openLikeModal(${feed.id})">
+              <span id="like-text-<%= feed.id %>">[닉네임] 외 여러명이 해당 게시물에 공감하고 있어요</span>
+            </div>   
+
             <div class="icon-container">
               <div class="left-icons">
                 <img src="../static/svg/suit-heart.svg" alt="하트 아이콘" />
@@ -85,6 +90,64 @@ window.onload = function() {
                   onclick="toggleCommentBox()"
                 />
               </div>
+
+              <!-- 좋아요 모달 -->
+              <div id="likeModal-${feed.id}" class="like-modal" data-feed-id="${feed.id}">
+                <div class="like-modal-content">
+                  <span class="close" onclick="closeLikeModal(${feed.id})">&times;</span>
+                  <h2>이 피드를 좋아한 사람들의 목록</h2>
+                  <ul style="list-style: none; padding : 0; margin : 0;border-bottom : none" id="like-list-${feed.id}">
+                    <!-- 좋아요 목록이 여기에 표시됨 -->
+                    <li class="user">
+                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
+                      <span class="user-nickname">TEST</span>
+                    </li>
+                    <li class="user">
+                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
+                      <span class="user-nickname">TEST</span>
+                    </li>
+                    <li class="user">
+                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
+                      <span class="user-nickname">TEST</span>
+                    </li>
+                    <li class="user">
+                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
+                      <span class="user-nickname">TEST</span>
+                    </li>
+                    <li class="user">
+                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
+                      <span class="user-nickname">TEST</span>
+                    </li>
+                    <li class="user">
+                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
+                      <span class="user-nickname">TEST</span>
+                    </li>
+                    <li class="user">
+                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
+                      <span class="user-nickname">TEST</span>
+                    </li>
+                    <li class="user">
+                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
+                      <span class="user-nickname">TEST</span>
+                    </li>
+                    <li class="user">
+                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
+                      <span class="user-nickname">TEST</span>
+                    </li>
+                    <li class="user">
+                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
+                      <span class="user-nickname">TEST</span>
+                    </li>
+                    <li class="user">
+                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
+                      <span class="user-nickname">TEST</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+
+
               <div class="right-icons">
                 ${buttonHtml} 
               </div>
