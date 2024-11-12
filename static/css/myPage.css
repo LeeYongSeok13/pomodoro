@@ -136,8 +136,14 @@ figcaption {
   padding: 20px;
   box-sizing: border-box;
 }
+#profileImage {
+  border-radius: 50%;
+}
 #myChart {
   margin-top: 20px;
+}
+#profileChange {
+  display: none;
 }
 /* 태블릿 스타일 */
 @media screen and (min-width: 768px) {

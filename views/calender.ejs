@@ -51,8 +51,8 @@
               <li class="daychar">금</li>
               <li class="daychar">토</li>
               <% for( let index = 0; index < firstDayOfMonth; index++ ) { %>
-              <%-include("./shared/dayItem", {day: " " , date: ` `}) %> <% } %>
-              <% for( let index = 1; index <= lastDay; index++ ) { %>
+              <li class="emptyBlock"></li>
+              <% } %> <% for( let index = 1; index <= lastDay; index++ ) { %>
               <%-include("./shared/dayItem", {day: dayNames[(firstDayOfMonth +
               index - 1) % 7] , date: `${index}`}) %> <% } %>
             </ul>
