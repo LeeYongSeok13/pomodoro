@@ -470,7 +470,11 @@ header {
 }
 
 /* 태블릿 스타일 (길이는1024px기준)*/
-@media screen and (min-width: 768px) and (max-height: 1024px) {
+@media screen and (min-width: 768px) {
+  body {
+    height: 1024px;
+    overflow-y: scroll;
+  }
   header {
     padding-left: 185px;
   }
@@ -485,6 +489,7 @@ header {
   }
   .timercontainer {
     left: 64%;
+    top: 12%;
   }
   .list-Wrap {
     left: 13.5%;
@@ -562,6 +567,10 @@ header {
 
 /* 노트북 스타일 (길이는 576px) */
 @media screen and (min-width: 1024px) {
+  body {
+    height: 576px;
+    overflow-y: scroll;
+  }
   header {
     padding-left: 185px;
   }
@@ -645,6 +654,10 @@ header {
 }
 /* 1440 스타일 (길이는 810px)*/
 @media screen and (min-width: 1440px) {
+  body {
+    height: 810px;
+    overflow-y: scroll;
+  }
   header {
     padding-left: 185px;
   }
