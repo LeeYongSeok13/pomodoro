@@ -207,6 +207,7 @@ let currentEditComment = null;
 function submitComment() {
   const commentInput = document.getElementById("commentInput");
   const commentText = commentInput.value;
+  console.log(commentText);
   const userID = "User123"; // 여기 데이터베이스 가져와서 유저 아이디 가져와야해요!!!
 
   if (currentEditComment) {
@@ -220,6 +221,9 @@ function submitComment() {
 
 // 댓글을 화면에 추가하는 함수
 function addCommentToDOM(userID, commentText) {
+  
+  const profileImg = '../img/profile.png'
+
   const commentsContainer = document.getElementById("commentsContainer");
   const commentElement = document.createElement("div");
   commentElement.classList.add("comment");
@@ -227,10 +231,10 @@ function addCommentToDOM(userID, commentText) {
   // 유저 ID와 댓글 내용을 함께 표시
   commentElement.innerHTML = `
     <div class="profile-img">
-      <img src="<%= profileImg %>" alt="프로필 이미지" width="30px"/>
+      <img src="${profileImg}" alt="프로필 이미지" width="30px"/>
     </div>
     <div class="comment-content">
-      <strong><%= nickname %></strong>
+      <strong>${userID}</strong>
       <p>${commentText}</p>
       <div class="comment-actions">
         <button onclick="editComment(this)">수정</button>
@@ -505,3 +509,6 @@ function cancelEdit(feedId) {
     timeOut: 2000, // 3초 후 자동으로 사라짐
   });
 }
+
+// 댓글 값 가져오기
+
