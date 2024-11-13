@@ -541,7 +541,7 @@ exports.post_FeedUpdate = async (req, res) => {
       // 기존 이미지 URL을 사용하여 S3에서 삭제
       if (feed.file_url) {
         const bucketName = "feeduploadimg";
-        await deleteImageFromS3(bucketName,feed.file_url); // 기존 이미지를 S3에서 삭제
+        await deleteImageFromS3(bucketName, feed.file_url); // 기존 이미지를 S3에서 삭제
       }
 
       // 새 이미지 파일 로컬 저장소에서 S3로 업로드
