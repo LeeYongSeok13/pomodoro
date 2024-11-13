@@ -125,6 +125,7 @@ async function deleteImageFromS3(bucketName, ImageUrl) {
 
 exports.get_Index = async (req, res) => {
   const userNickName = req.session.nickname;
+  const userId = req.session.userId;
 
   if (userNickName) {
     try {
@@ -144,14 +145,29 @@ exports.get_Index = async (req, res) => {
         limit: limit,
         offset: offset,
       });
-      res.render("index", { feeds, userNickName });
+      // 사용자 정보
+      const userData = await User.findOne({
+        where: {
+          id: userId,
+        },
+      });
+      let profileImg;
+      if (userData.profile_image) {
+        profileImg = userData.profile_image;
+      } else {
+        profileImg = "/static/img/profile.png";
+      }
+      res.render("index", {
+        feeds,
+        userNickName,
+        profileImg: profileImg,
+      });
     } catch (error) {
       console.error("Error fetching initial feeds : ", error);
       res.status(500).send("Error loading initial page");
     }
   } else {
     res.render("loading");
-    // setTimeout(() => res.redirect("/login"), 2000);
   }
 };
 
@@ -776,6 +792,7 @@ exports.post_Comment = async (req, res) => {
 };
 
 exports.get_Calender = async (req, res) => {
+  const userId = req.session.userId;
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth() + 1;
@@ -790,6 +807,18 @@ exports.get_Calender = async (req, res) => {
   const { titles, description, state, todoid } = await get_today_todoList(
     req.session.userId
   );
+  // 사용자 정보
+  const userData = await User.findOne({
+    where: {
+      id: userId,
+    },
+  });
+  let profileImg;
+  if (userData.profile_image) {
+    profileImg = userData.profile_image;
+  } else {
+    profileImg = "/static/img/profile.png";
+  }
 
   res.render("calender", {
     year: year,
@@ -801,24 +830,39 @@ exports.get_Calender = async (req, res) => {
     description: description,
     state: state,
     todoid: todoid,
+    profileImg: profileImg,
   });
 };
 exports.get_Timer = async (req, res) => {
+  const userId = req.session.userId;
   const { titles, description, state, todoid } = await get_today_todoList(
     req.session.userId
   );
+  // 사용자 정보
+  const userData = await User.findOne({
+    where: {
+      id: userId,
+    },
+  });
+  let profileImg;
+  if (userData.profile_image) {
+    profileImg = userData.profile_image;
+  } else {
+    profileImg = "/static/img/profile.png";
+  }
 
   res.render("timer", {
     titles: titles,
     description: description,
     state: state,
     todoid: todoid,
+    profileImg: profileImg,
   });
 };
 
 exports.get_changeDate = async (req, res) => {
   const { year, month, day } = req.query;
-  const user_id = req.session.nickname;
+  const user_id = req.session.userId;
   console.log(year, month, day, user_id);
 
   // 클릭 연 월 일 필요
@@ -885,7 +929,7 @@ exports.get_Calender_currentData = (req, res) => {
 };
 exports.delete_todo = async (req, res) => {
   try {
-    const user_id = req.session.nickname;
+    const user_id = req.session.userId;
     const { dataId } = req.body;
     await Task.destroy({
       where: {
@@ -945,38 +989,44 @@ exports.post_addtodo = async (req, res) => {
 };
 
 exports.get_MyPage = async (req, res) => {
-  const nickname = req.session.nickname;
+  const userId = req.session.userId;
   // 완료한 업무 검색
   const done_data = await Task.findAll({
     where: {
-      user_id: nickname,
+      user_id: userId,
       state: "done",
     },
   });
   const done_titles = [];
   const done_descriptions = [];
+  const done_due_date = [];
   done_data.forEach((item) => {
     done_titles.push(item.dataValues.title);
     done_descriptions.push(item.dataValues.description);
+    const date = createDate(item.dataValues.due_date);
+    done_due_date.push(date);
   });
 
   // 미흡한 업무 검색
   const ongoing_data = await Task.findAll({
     where: {
-      user_id: nickname,
+      user_id: userId,
       state: "ongoing",
     },
   });
   const ongoing_titles = [];
   const ongoing_descriptions = [];
+  const ongoing_due_date = [];
   ongoing_data.forEach((item) => {
     ongoing_titles.push(item.dataValues.title);
     ongoing_descriptions.push(item.dataValues.description);
+    const date = createDate(item.dataValues.due_date);
+    ongoing_due_date.push(date);
   });
   //미완료 업무 검색
   const pending_data = await Task.findAll({
     where: {
-      user_id: nickname,
+      user_id: userId,
       state: "pending",
     },
   });
@@ -986,22 +1036,54 @@ exports.get_MyPage = async (req, res) => {
     pending_titles.push(item.dataValues.title);
     pending_descriptions.push(item.dataValues.description);
   });
+
   // 모든 업무의 개수
   const allListNum =
     done_titles.length + ongoing_titles.length + pending_titles.length;
 
   // 업무 성공률
-  const successPercentage = Math.round((done_titles.length / allListNum) * 100);
-
+  let successPercentage = Math.round((done_titles.length / allListNum) * 100);
+  if (isNaN(successPercentage)) {
+    successPercentage = 0;
+  }
   // 사용자 정보
-
-  const userId = req.session.userId;
   const userData = await User.findOne({
     where: {
       id: userId,
-      nickname: nickname,
     },
   });
+  let profileImg;
+  if (userData.profile_image) {
+    profileImg = userData.profile_image;
+  } else {
+    profileImg = "/static/img/profile.png";
+  }
+  function createDate(date) {
+    // 날짜 객체 생성
+    const dates = new Date(date);
+
+    // 연도 추출
+    const year = dates.getFullYear();
+
+    // 월 추출 (0부터 시작하므로 1을 더해줌)
+    const month = dates.getMonth() + 1;
+
+    // 요일 추출
+    const weekdays = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const weekday = weekdays[dates.getDay()];
+
+    // 출력
+    return `${year}년 ${month}월 ${weekday}`;
+  }
+  console.log(done_titles);
   res.render("myPage", {
     done_titles: done_titles,
     done_descriptions: done_descriptions,
@@ -1009,10 +1091,13 @@ exports.get_MyPage = async (req, res) => {
     ongoing_descriptions: ongoing_descriptions,
     pending_titles: pending_titles,
     pending_descriptions: pending_descriptions,
+    done_due_date: done_due_date,
+    ongoing_due_date: ongoing_due_date,
     allListNum: allListNum,
     successPercentage: successPercentage,
     nickname: userData.nickname,
     username: userData.username,
+    profileImg: profileImg,
   });
 };
 

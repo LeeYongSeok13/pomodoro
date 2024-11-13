@@ -23,12 +23,14 @@
     <main>
       <section class="profile-section">
         <div>
-          <img
-            src="/static/img/profile.png"
-            alt="프로필 이미지"
-            width="150px"
-            id="profileImage"
-          />
+          <div class="containProfile">
+            <img
+              src="<%= profileImg %>"
+              alt="프로필 이미지"
+              height="150px"
+              id="profileImage"
+            />
+          </div>
           <label
             for="profileChange"
             class="imgButton changeButton"
@@ -86,6 +88,34 @@
         </figcaption>
       </section>
     </main>
+    <div class="modal">
+      <button class="imgButton closeButton">
+        <span class="text-hidden">닫기 버튼</span>
+      </button>
+      <h2>타이틀</h2>
+      <ul class="doneModal Modaldetail">
+        <% for( let i = 0; i < done_titles.length; i++ ) { %>
+        <li>
+          <h3><%= done_titles[i] %></h3>
+          <div>
+            <p><%= done_descriptions[i] %></p>
+            <p><%= done_due_date[i] %></p>
+          </div>
+        </li>
+        <% } %>
+      </ul>
+      <ul class="ongoingModal Modaldetail">
+        <% for( let i = 0; i < ongoing_titles.length; i++ ) { %>
+        <li>
+          <h3><%= ongoing_titles[i] %></h3>
+          <div>
+            <p><%= ongoing_descriptions[i] %></p>
+            <p><%= ongoing_due_date[i] %></p>
+          </div>
+        </li>
+        <% } %>
+      </ul>
+    </div>
 
     <script>
       const ctx = document.getElementById("myChart");

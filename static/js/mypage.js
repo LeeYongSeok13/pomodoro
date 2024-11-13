@@ -27,4 +27,29 @@ window.addEventListener("load", () => {
       console.error("이미지 업로드 실패:", error);
     }
   });
+
+  const closeButton = document.querySelector(".modal > .closeButton");
+  const modal = document.querySelector(".modal");
+  const done_button = document.querySelector(".done-button");
+  const ongoing_button = document.querySelector(".ongoing-button");
+  const title = document.querySelector(".modal > h2");
+  const ongoingModal = document.querySelector(".modal > .ongoingModal");
+  const doneModal = document.querySelector(".modal > .doneModal");
+  closeButton.addEventListener("click", () => {
+    modal.style.display = "";
+  });
+
+  done_button.addEventListener("click", (event) => {
+    title.innerHTML = "완료한 일정";
+    ongoingModal.style.display = "";
+    doneModal.style.display = "block";
+    modal.style.display = "block";
+  });
+
+  ongoing_button.addEventListener("click", (event) => {
+    title.innerHTML = "미흡했던 일정";
+    doneModal.style.display = "";
+    ongoingModal.style.display = "block";
+    modal.style.display = "block";
+  });
 });

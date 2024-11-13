@@ -103,6 +103,9 @@ body {
   right: 10px;
   width: 35px;
 }
+.custom-popup {
+  justify-items: center;
+}
 
 /* 피드 생성 아이콘 눌렀을 때 나오는 모달ㄹ창 */
 .modal {
