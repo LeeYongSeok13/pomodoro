@@ -14,7 +14,6 @@
     fetch(`/api/likes/${feedId}`)
       .then (response => response.json())
       .then (data => {
-        console.log(data);
         const likeList = document.getElementById(`likes-list-${feedId}`);
 
         likeList.innerHTML = ''; // 기존 목록 초기화 (새로운 값을 계속 보여주기 위해)
@@ -60,13 +59,11 @@
   }
   // 해당 피드에 대해서만 좋아요 수 최신화
   async function updateFeedLike(feedId) {
-    console.log('실행');
     try {
       const response = await fetch(`/get-feed-like?feedId=${feedId}`); 
       const { likeCnt } = await response.json(); // likeCount를 객체로 받을 경우
   
       const likeText = document.getElementById(`like-text-${feedId}`);
-      console.log(likeCnt);
       if (likeCnt > 0) {
         likeText.textContent = `${likeCnt}명이 해당 게시물에 공감하고 있어요`;
       } else {

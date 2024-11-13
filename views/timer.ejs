@@ -81,7 +81,7 @@
     </div>
 
     <div class="timercontainer">
-      <div id="timer" class="timer">00 : 00 : 00</div>
+      <div id="timer" class="timer"></div>
       <div class="buttonbox">
         <button class="stopWatch-btn" id="startBtn" onclick="togglePlayPause()">
           <svg
@@ -189,10 +189,10 @@
     <div id="doneModal">
       <div class="donemodal">
         <h2>수고하셨습니다!</h2>
-        <div id="timer" class="timer">00 : 25 : 00</div>
+        <div id="timer" class="timer"></div>
         <section class="todayTomato">
           획득한 토마토
-          <p>+<span>0</span></p>
+          <p>+<span id = "sumTomatoCount"></span></p>
         </section>
         <section class="todayresult">오늘의 성과</section>
         <section class="improvement">추가 개선이 필요한 업무</section>
@@ -203,6 +203,9 @@
     </div>
 
     <script>
+      let tomatoCnt = 0;
+      let timeElapsed = 0; // 경과 시간을 초 단위로 저장
+      let pomoTime = 0; // 포토타이머 시간을 초단위로 저장
       // 오른쪽 왼쪽 아이콘 토글
       function toggleRight() {
         const rightIcon = document.getElementById("rightIcon");
@@ -221,7 +224,10 @@
           leftIcon.style.display = "none";
           timerTomato.classList.remove("hide");
           outerTimerContainer.classList.remove("active");
-          timeRemaining = 25 * 60;
+          /*timeRemaining = 25 * 60;*/
+          timeRemaining = 5;
+          // 타이머 5초로 재설정 하고 테스트 진행
+
         } else {
           rightIcon.style.display = "none";
           leftIcon.style.display = "block";
@@ -253,13 +259,19 @@
         timerDisplay.textContent = `${hours} : ${minutes} : ${seconds}`;
       }
 
-      // 타이머 시작
+ 
+
+      // 타이머 시작 1
       function startTimer() {
+        pomoTime = 5; // 5초로 초기화
         if (isTimerRunning) return;
+        
 
         isTimerRunning = true;
-
         timerInterval = setInterval(() => {
+          
+          timeElapsed++;
+          pomoTime--;
           if (
             timeRemaining > 0 &&
             !document.querySelector(".timerTomato").classList.contains("hide")
@@ -276,7 +288,26 @@
             timeRemaining++;
           }
           updateDisplay();
+          // 5 에서 1일 될때만 토마토 적립
+
+          if (pomoTime == 0) {
+            onTimeEnd();
+          }
+
         }, 1000);
+      }
+
+      // 타이머가 끝나면 span 태그에 1씩 누적된 토마토값 랜더링
+      function onTimeEnd() {
+        tomatoCnt += 1;
+        const tomatoSpan = document.getElementById("tomatoCount");
+        tomatoSpan.textContent = tomatoCnt; // span 태그에 현재 토마토 획득 수 표시
+      }
+
+      // 타이머 종료 버튼 누르면 토마토 합산 값 출력
+      function endTime() {
+        const sumTomatoSpan = document.getElementById('sumTomatoCount');
+        sumTomatoSpan.textContent = tomatoCnt;
       }
 
       // 25분 타이머 종료 후 알람창
@@ -298,7 +329,7 @@
       // 5분 휴식 타이머 시작
       function startRestTimer() {
         clearInterval(timerInterval); // 기존 타이머 중지
-        timeRemaining = 5 * 60;
+        timeRemaining = 5;
         updateDisplay();
         startRestPeriod();
         isTimerRunning = true;
@@ -332,7 +363,8 @@
         // '확인' 버튼 클릭 시 타이머 재시작
         document.querySelector(".resttheok").onclick = () => {
           restendModal.style.display = "none";
-          timeRemaining = 25 * 60;
+          /*timeRemaining = 25 * 60;*/
+          timeRemaining = 5;
           updateDisplay();
           startTimer();
         };
@@ -340,7 +372,7 @@
       // 타이머 25분 초기화
       function resetTimerTo25() {
         clearInterval(timerInterval);
-        timeRemaining = 25 * 60;
+        timeRemaining = 5;
         updateDisplay();
         isTimerRunning = false;
       }
@@ -377,7 +409,7 @@
             });
 
           if (spotlight) spotlight.style.display = "none";
-        }, 5 * 60 * 1000);
+        }, 5000);
       }
 
       // 타이머 일시정지
@@ -399,6 +431,10 @@
           // timeRemaining = timerTomato.classList.contains("hide") ? 0 : 1 * 60;
           // updateDisplay();
           document.getElementById("doneModal").style.display = "flex";
+          // 합산된 토마토 값을 html 로 랜더링
+          endTime();
+          // users 필드에 토마토 값 업데이트
+
         };
 
         document.querySelector(".stopend").onclick = () => {
@@ -413,7 +449,7 @@
         if (
           !document.querySelector(".timerTomato").classList.contains("hide")
         ) {
-          timeRemaining = 25 * 60;
+          timeRemaining = 5;
         } else {
           timeRemaining = 0;
         }
@@ -437,7 +473,7 @@
       }
 
       // 초기 설정
-      timeRemaining = 25 * 60;
+      timeRemaining = 5;
       updateDisplay();
 
       // 그냥 타이머
