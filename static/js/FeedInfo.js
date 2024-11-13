@@ -1,6 +1,7 @@
-window.onload = function() {
+window.onload = function () {
   let currentPage = 2; // 현재 페이지
   let isLoading = false; // 데이터 로딩 여부 체크
+
 
   async function loadMoreFeeds() {
     if (isLoading) return;  // 로딩 중일 때는 중복 요청을 방지
@@ -24,7 +25,7 @@ window.onload = function() {
             ? `<button type="button" class="imgButton modify" onclick="feedEdit(${feed.id})"></button>
                <button type="button" class="imgButton delete" onclick="feedDelete(${feed.id})"></button>`
             : '';
-
+          
             // 피드 생성 html
             feedElement.innerHTML = `
               <div class="content">
@@ -102,6 +103,7 @@ window.onload = function() {
           </div>
             `;
             feedContainer.appendChild(feedElement);
+
         }); // end foreach
 
         currentPage++ // 페이지 번호 증가
@@ -120,12 +122,16 @@ window.onload = function() {
   }
 
   // 스크롤 이벤트 핸들러
-  window.addEventListener('scroll', () => {
+  window.addEventListener("scroll", () => {
     // 페이지 끝에 도달하면 데이터 요청
-    if(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100) {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.documentElement.scrollHeight - 100
+    ) {
       loadMoreFeeds(); // 추가 데이터
     }
   });
+
 
     // 각 피드 좋아요 수 가져와서 업데이트
     async function updateLikeCounts (feedIds) {
@@ -154,7 +160,7 @@ window.onload = function() {
 
     // 기존 이미지
     const baseFileUrl = fileUrl;
-    // input file 
+    // input file
     const input = document.getElementById(`img-input-${feedId}`);
     // 사용자가 이미지를 변경하면 이미지 src값을 변경
     const imgPreview = document.getElementById(`edit-img-${feedId}`);
@@ -162,22 +168,22 @@ window.onload = function() {
     const spanFileName = input.nextElementSibling.nextElementSibling;
 
     // 사용자가 하나의 파일을 선택했을때만 실행한다.
-    if(input.files && input.files[0]) {
+    if (input.files && input.files[0]) {
       const reader = new FileReader();
-      
+
       // 파일 이름 표시
       spanFileName.textContent = input.files[0].name;
       // 이미지 미리보기 업데이트
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         imgPreview.src = e.target.result;
       };
       reader.readAsDataURL(input.files[0]);
     } else {
-      spanFileName.textContent = '선택된 파일이 없습니다.';
+      spanFileName.textContent = "선택된 파일이 없습니다.";
       imgPreview.src = `${baseFileUrl}`; // 초기 이미지로 재설정
     }
-
   }
+
 
 
   // 페이징 처리 시, 서버에서 받아온 좋아요 상태에 따라 하트 아이콘을 업데이트

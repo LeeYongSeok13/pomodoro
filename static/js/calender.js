@@ -298,28 +298,32 @@ window.addEventListener("load", async () => {
     const statusButton = document.querySelectorAll(".state");
     let status = "pending";
     statusButton.forEach((item) => {
-      item.addEventListener("click", async (event) => {
-        const dataId = event.target.parentElement.parentElement.dataset.id;
-        if (event.target.classList.contains("pending")) {
-          ClassStateChange(event.target, "pending", "done");
-          status = "done";
-        } else if (event.target.classList.contains("done")) {
-          ClassStateChange(event.target, "done", "ongoing");
-          status = "ongoing";
-        } else if (event.target.classList.contains("ongoing")) {
-          ClassStateChange(event.target, "ongoing", "pending");
-          status = "pending";
-        }
+      if (!item.hasListener) {
+        item.addEventListener("click", async (event) => {
+          console.log(event.target.classList);
+          const dataId = event.target.parentElement.parentElement.dataset.id;
+          if (event.target.classList.contains("pending")) {
+            ClassStateChange(event.target, "pending", "done");
+            status = "done";
+          } else if (event.target.classList.contains("done")) {
+            ClassStateChange(event.target, "done", "ongoing");
+            status = "ongoing";
+          } else if (event.target.classList.contains("ongoing")) {
+            ClassStateChange(event.target, "ongoing", "pending");
+            status = "pending";
+          }
 
-        const { data } = await axios({
-          method: "PATCH",
-          url: "/calender/status",
-          data: {
-            status: status,
-            id: dataId,
-          },
+          const { data } = await axios({
+            method: "PATCH",
+            url: "/calender/status",
+            data: {
+              status: status,
+              id: dataId,
+            },
+          });
         });
-      });
+        item.hasListener = true; // 이벤트 리스너 등록 표시
+      }
     });
   }
   function ClassStateChange(element, remove, add) {
