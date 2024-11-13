@@ -74,9 +74,22 @@ nav {
   #user-info {
     display: block;
   }
-  #user-info > img {
+  #user-info img {
     display: block;
     margin: 0 auto 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  #user-info > div {
+    border-radius: 50%;
+    overflow: hidden;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    position: relative;
+    box-shadow: 0px 0px 14px #8f8f8f69;
   }
   #user-info > h2 {
     font-size: 16px;

@@ -39,7 +39,7 @@
           class="close"
           onclick="closeModal()"
         />
-        <p class="left-align"><span class="profile-img"></span>user123</p>
+        
         <div
           class="upload-container"
           id="uploadContainer"
@@ -79,13 +79,6 @@
           placeholder="게시물 내용을 입력하세요."
           rows="4"
         ></textarea>
-        <div class="get-tomato-sum">
-          획득한 토마토<img
-            class="tomato"
-            src="/static/img/tomato.png"
-            alt="획득 토마토"
-          />
-        </div>
         <br />
         <button class="create-button" onclick="createPost()">생성</button>
       </div>
@@ -174,6 +167,9 @@
             icon: "error",
             title: "입력 필수 항목을 확인하세요",
             text: "이미지 또는 게시글 값을 입력해주세요!",
+            customClass: {
+              popup: 'custom-popup' 
+            }
           });
           return;
         }

@@ -10,8 +10,10 @@
     <link rel="stylesheet" href="/static/css/myPage.css" />
     <link rel="stylesheet" href="/static/css/alert.css" />
     <link rel="stylesheet" href="/static/css/button.css" />
+    <link rel="stylesheet" href="/static/css/index.css" />
     <script src="/static/js/navbar.js"></script>
     <script src="/static/js/mypage.js"></script>
+    <script src="/static/js/index.js"></script>
   </head>
   <body>
     <header>
@@ -23,12 +25,14 @@
     <main>
       <section class="profile-section">
         <div>
-          <img
-            src="/static/img/profile.png"
-            alt="프로필 이미지"
-            width="150px"
-            id="profileImage"
-          />
+          <div class="containProfile">
+            <img
+              src="<%= profileImg %>"
+              alt="프로필 이미지"
+              height="150px"
+              id="profileImage"
+            />
+          </div>
           <label
             for="profileChange"
             class="imgButton changeButton"
@@ -47,18 +51,13 @@
         <h3 class="user-name"><%= nickname %></h3>
       </section>
 
-      <section class="feed-info-section">
-        <button class="feed-info btn">
-          <span class="feed-label">올린피드</span>
-          <span><span class="feed-count">05</span> 개</span>
-        </button>
-
         <article class="button-grid">
           <button class="tomato-button btn">
             수집한 토마토 <span class="tomato-count count">10</span>
           </button>
           <button class="like-button btn">
-            좋아요 누른 피드 <span class="like-count count">10</span>
+            좋아요 누른 피드
+            <span class="like-count count"><%= likenum %></span>
           </button>
           <button class="done-button btn">
             완료한 일정
@@ -86,6 +85,66 @@
         </figcaption>
       </section>
     </main>
+    <div class="modal">
+      <button class="imgButton closeButton">
+        <span class="text-hidden">닫기 버튼</span>
+      </button>
+      <h2>타이틀</h2>
+      <ul class="doneModal Modaldetail">
+        <% for( let i = 0; i < done_titles.length; i++ ) { %>
+        <li>
+          <h3><%= done_titles[i] %></h3>
+          <div>
+            <p><%= done_descriptions[i] %></p>
+            <p><%= done_due_date[i] %></p>
+          </div>
+        </li>
+        <% } %>
+      </ul>
+
+      <ul class="ongoingModal Modaldetail">
+        <% for( let i = 0; i < ongoing_titles.length; i++ ) { %>
+        <li>
+          <h3><%= ongoing_titles[i] %></h3>
+          <div>
+            <p><%= ongoing_descriptions[i] %></p>
+            <p><%= ongoing_due_date[i] %></p>
+          </div>
+        </li>
+        <% } %>
+      </ul>
+
+      <div class="like_feed">
+        <%- include("./shared/feedItem"), {feeds: feeds, profileImg:profileImg}
+        %>
+      </div>
+    </div>
+
+    <!-- 댓글 입력창 -->
+    <div class="comment-box" id="commentBox">
+      <div id="commentsContainer" class="comments-container"></div>
+      <div class="input-container">
+        <span class="profile-img">
+          <img src="<%= profileImg %>" alt="프로필 이미지" width="30px" />
+        </span>
+        <strong class="comment-nickname"><%= nickname %></strong>
+        <input type="text" id="commentInput" placeholder="댓글을 입력하세요." />
+        <button onclick="submitComment()" class="send-button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-send"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
 
     <script>
       const ctx = document.getElementById("myChart");

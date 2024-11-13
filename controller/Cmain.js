@@ -123,6 +123,7 @@ async function deleteImageFromS3(bucketName, ImageUrl) {
 
 exports.get_Index = async (req, res) => {
   const userNickName = req.session.nickname;
+  const userId = req.session.userId;
 
   if (userNickName) {
     try {
@@ -142,14 +143,29 @@ exports.get_Index = async (req, res) => {
         limit: limit,
         offset: offset,
       });
-      res.render("index", { feeds, userNickName });
+      // 사용자 정보
+      const userData = await User.findOne({
+        where: {
+          id: userId,
+        },
+      });
+      let profileImg;
+      if (userData.profile_image) {
+        profileImg = userData.profile_image;
+      } else {
+        profileImg = "/static/img/profile.png";
+      }
+      res.render("index", {
+        feeds,
+        userNickName,
+        profileImg: profileImg,
+      });
     } catch (error) {
       console.error("Error fetching initial feeds : ", error);
       res.status(500).send("Error loading initial page");
     }
   } else {
     res.render("loading");
-    // setTimeout(() => res.redirect("/login"), 2000);
   }
 };
 
@@ -772,6 +788,7 @@ exports.post_Comment = async (req, res) => {
 };
 
 exports.get_Calender = async (req, res) => {
+  const userId = req.session.userId;
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth() + 1;
@@ -786,6 +803,18 @@ exports.get_Calender = async (req, res) => {
   const { titles, description, state, todoid } = await get_today_todoList(
     req.session.userId
   );
+  // 사용자 정보
+  const userData = await User.findOne({
+    where: {
+      id: userId,
+    },
+  });
+  let profileImg;
+  if (userData.profile_image) {
+    profileImg = userData.profile_image;
+  } else {
+    profileImg = "/static/img/profile.png";
+  }
 
   res.render("calender", {
     year: year,
@@ -797,25 +826,41 @@ exports.get_Calender = async (req, res) => {
     description: description,
     state: state,
     todoid: todoid,
+    profileImg: profileImg,
   });
 };
 exports.get_Timer = async (req, res) => {
+  const userId = req.session.userId;
   const { titles, description, state, todoid } = await get_today_todoList(
     req.session.userId
   );
+  // 사용자 정보
+  const userData = await User.findOne({
+    where: {
+      id: userId,
+    },
+  });
+  let profileImg;
+  if (userData.profile_image) {
+    profileImg = userData.profile_image;
+  } else {
+    profileImg = "/static/img/profile.png";
+  }
 
   res.render("timer", {
     titles: titles,
     description: description,
     state: state,
     todoid: todoid,
+    profileImg: profileImg,
   });
 };
 
 exports.get_changeDate = async (req, res) => {
   const { year, month, day } = req.query;
-  const user_id = req.session.nickname;
 
+  const user_id = req.session.userId;
+  console.log(year, month, day, user_id);
 
   // 클릭 연 월 일 필요
   const startOfDay = new Date(year, month, day);
@@ -881,7 +926,7 @@ exports.get_Calender_currentData = (req, res) => {
 };
 exports.delete_todo = async (req, res) => {
   try {
-    const user_id = req.session.nickname;
+    const user_id = req.session.userId;
     const { dataId } = req.body;
     await Task.destroy({
       where: {
@@ -941,38 +986,45 @@ exports.post_addtodo = async (req, res) => {
 };
 
 exports.get_MyPage = async (req, res) => {
-  const nickname = req.session.nickname;
+  const userId = req.session.userId;
+  const userNickName = req.session.nickname;
   // 완료한 업무 검색
   const done_data = await Task.findAll({
     where: {
-      user_id: nickname,
+      user_id: userId,
       state: "done",
     },
   });
   const done_titles = [];
   const done_descriptions = [];
+  const done_due_date = [];
   done_data.forEach((item) => {
     done_titles.push(item.dataValues.title);
     done_descriptions.push(item.dataValues.description);
+    const date = createDate(item.dataValues.due_date);
+    done_due_date.push(date);
   });
 
   // 미흡한 업무 검색
   const ongoing_data = await Task.findAll({
     where: {
-      user_id: nickname,
+      user_id: userId,
       state: "ongoing",
     },
   });
   const ongoing_titles = [];
   const ongoing_descriptions = [];
+  const ongoing_due_date = [];
   ongoing_data.forEach((item) => {
     ongoing_titles.push(item.dataValues.title);
     ongoing_descriptions.push(item.dataValues.description);
+    const date = createDate(item.dataValues.due_date);
+    ongoing_due_date.push(date);
   });
   //미완료 업무 검색
   const pending_data = await Task.findAll({
     where: {
-      user_id: nickname,
+      user_id: userId,
       state: "pending",
     },
   });
@@ -982,22 +1034,64 @@ exports.get_MyPage = async (req, res) => {
     pending_titles.push(item.dataValues.title);
     pending_descriptions.push(item.dataValues.description);
   });
+
   // 모든 업무의 개수
   const allListNum =
     done_titles.length + ongoing_titles.length + pending_titles.length;
 
   // 업무 성공률
-  const successPercentage = Math.round((done_titles.length / allListNum) * 100);
-
+  let successPercentage = Math.round((done_titles.length / allListNum) * 100);
+  if (isNaN(successPercentage)) {
+    successPercentage = 0;
+  }
   // 사용자 정보
-
-  const userId = req.session.userId;
   const userData = await User.findOne({
     where: {
       id: userId,
-      nickname: nickname,
     },
   });
+
+  let profileImg;
+  if (userData.profile_image) {
+    profileImg = userData.profile_image;
+  } else {
+    profileImg = "/static/img/profile.png";
+  }
+  const likeData = await Like.findAll({
+    where: {
+      user_id: userId,
+    },
+  });
+  const like_feedId_arr = [];
+  likeData.forEach((like) => {
+    like_feedId_arr.push(like.dataValues.feed_id);
+  });
+  console.log(like_feedId_arr);
+  //내가 올린 피드 검색용
+  const feeds = await Feed.findAll({});
+
+  //좋아요 누른 피드 검색
+  const page = parseInt(req.query.page);
+  const limit = 3; // 한페이지에 보여줄 피드 개수
+  let offset = (page - 1) * limit;
+  offset = isNaN(offset) ? 0 : offset;
+  const like_feed = await Feed.findAll({
+    where: {
+      id: {
+        [Op.in]: like_feedId_arr,
+      },
+    },
+    include: [
+      {
+        model: require("../models/index").User,
+        attributes: ["nickname"],
+      },
+    ],
+    order: [["created_at", "DESC"]],
+    limit: limit,
+    offset: offset,
+  });
+  console.log(like_feed[0].dataValues.user.nickname);
   res.render("myPage", {
     done_titles: done_titles,
     done_descriptions: done_descriptions,
@@ -1005,12 +1099,45 @@ exports.get_MyPage = async (req, res) => {
     ongoing_descriptions: ongoing_descriptions,
     pending_titles: pending_titles,
     pending_descriptions: pending_descriptions,
+    done_due_date: done_due_date,
+    ongoing_due_date: ongoing_due_date,
     allListNum: allListNum,
     successPercentage: successPercentage,
     nickname: userData.nickname,
     username: userData.username,
+    profileImg: profileImg,
+    likenum: like_feedId_arr.length,
+    feeds: like_feed,
+    userNickName: userNickName,
   });
 };
+function createDate(date) {
+  // 날짜 객체 생성
+  const dates = new Date(date);
+
+  // 연도 추출
+  const year = dates.getFullYear();
+
+  // 월 추출 (0부터 시작하므로 1을 더해줌)
+  const month = dates.getMonth() + 1;
+
+  const getDate = dates.getDate();
+
+  // 요일 추출
+  const weekdays = [
+    "일요일",
+    "월요일",
+    "화요일",
+    "수요일",
+    "목요일",
+    "금요일",
+    "토요일",
+  ];
+  const weekday = weekdays[dates.getDay()];
+
+  // 출력
+  return `${year}년 ${month}월 ${getDate}일 ${weekday}`;
+}
 
 exports.post_ProfileImage = async (req, res) => {
   try {

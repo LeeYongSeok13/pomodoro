@@ -47,15 +47,15 @@ router.get(
   controller.get_Calender_currentData
 );
 
-router.get('/get-like-status', controller.get_LikeStatus);
+router.get("/get-like-status", controller.get_LikeStatus);
 
-router.post('/toggle-like', controller.toggleLike);
+router.post("/toggle-like", controller.toggleLike);
 
-router.get('/api/likes/:feedId', controller.get_likesUsers);
+router.get("/api/likes/:feedId", controller.get_likesUsers);
 
-router.get('/get-like-count', controller.get_likeCount);
+router.get("/get-like-count", controller.get_likeCount);
 
-router.get('/get-feed-like', controller.get_feedlike);
+router.get("/get-feed-like", controller.get_feedlike);
 
 router.post("/calender/addTodo", controller.post_addtodo);
 

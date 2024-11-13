@@ -7,17 +7,19 @@
     <link rel="stylesheet" href="/static/css/reset.css" />
     <link rel="stylesheet" href="/static/css/navbar.css" />
     <link rel="stylesheet" href="/static/css/index.css" />
-    <link rel="stylesheet" href="/static/css/todoItem.css">
-    <link rel="stylesheet" href="/static//css/button.css">
+    <link rel="stylesheet" href="/static/css/todoItem.css" />
+    <link rel="stylesheet" href="/static//css/button.css" />
     <!-- toastr CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
-
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+      rel="stylesheet"
+    />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/static/js/navbar.js"></script>
-
+    <script src="/static/js/index.js" defer></script>
     <script src="/static/js/FeedInfo.js"></script>
     <title>메인 페이지</title>
     <!-- 글씨체 -->
@@ -30,114 +32,20 @@
   </head>
   <body>
     <header>
-      <%- include("./shared/navbar") %>
+      <%- include("./shared/navbar"), {profileImg: profileImg} %>
       <a href="/" class="logo"
         ><img width="158" src="/static/img/logo.png" alt="로고 이미지"
       /></a>
     </header>
 
     <main>
-      <div class="feed-container">
-        <% feeds.forEach(feed => { %>
-        <div class="feed-item" data-feed-id="<%= feed.id %>">
-          <div class="content">
-            <div class="user-info">
-              <div class="profile-img">
-                <img
-                  src="/static/img/profile.png"
-                  alt="프로필 이미지"
-                  width="30px"
-                />
-              </div>
-              <strong><%= feed.user.nickname %></strong>
-
-            </div>
-
-            <div id="feed-img-<%= feed.id %>">
-              <img src="<%= feed.file_url %>" alt="post" />
-            </div>
-    
-            <div id="feed-content-<%= feed.id %>" style="padding : 10px;">
-              <p><%= feed.content %>
-            </div>
-            
-          
-            <!-- 수정 -->
-            <div class="edit-container" id = "edit-container-<%= feed.id %>" style = "display: none;">
-              <!-- 이미지 수정 -->
-              <div class="file-upload-container">
-                <input type="file" id="img-input-<%= feed.id %>" onchange="updateImage('<%= feed.id %>','<%= feed.file_url%>')">
-                <label class="label-file" for="img-input-<%= feed.id %>">파일선택</label>
-                <div class="file-info-container">
-                  <span class="span-file">선택된 파일이 없습니다.</span>
-                  <div class="error-message" style="color: red; display: none; font-size: 13px; margin-top: 5px;">
-                    [ERROR!] 확장자는 jpeg, jpg, png, bmp만 가능합니다.
-                  </div>
-                </div>
-              </div>
-            
-               <img src="<%= feed.file_url %>" id ="edit-img-<%= feed.id %>" class = "edit-img" alt="이미지 수정">
-              <!-- 내용 수정 -->
-               <div class="edit-container" style="margin-top: 7px;">
-                <textarea id="edit-content-<%= feed.id %>" class="edit-textarea" placeholder="수정할 내용을 입력하세요"><%= feed.content %></textarea>
-
-                <!-- 저장 및 취소 -->
-                 <div class="button-container">
-                  <button type="button" onclick="saveChanges('<%= feed.id %>')" class="btn save-btn">저장</button>
-                  <button type="button" onclick="cancelEdit('<%= feed.id %>')" class="btn cancel-btn">취소</button>     
-                 </div>
-              </div>
-               
-            </div>
-
-            <div id="like-info-<%= feed.id %>" data-feed-id="<%= feed.id %>" class="like-info" onclick="openLikeModal('<%= feed.id %>')">
-              <span id="like-text-<%= feed.id %>"></span>
-            </div>
-
-            <div class="icon-container">
-
-              <div class="left-icons">
-                <svg id="likeIcon-<%= feed.id %>" class = "likeIcon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" onclick="toggleLike('<%= feed.id %>')">>
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
-                </svg>
-                <img src="../static/svg/chat.svg" alt="채팅 아이콘" onclick="toggleCommentBox('<%= feed.id %>')"/>
-              </div>
-
-              <!-- 좋아요 모달 -->
-              <div id="likeModal-<%= feed.id %>" class="like-modal" data-feed-id="<%= feed.id %>">
-                <div class="like-modal-content">
-                  <span class="close" onclick="closeLikeModal('<%= feed.id %>')">&times;</span>
-                  <h2>이 피드를 좋아한 사람들의 목록</h2>
-                  <ul style="list-style: none; padding : 0; margin : 0;border-bottom : none" id="likes-list-<%= feed.id %>">
-                    <!-- 좋아요 목록이 여기에 표시됨 -->            
-
-
-                  </ul>
-                </div>
-              </div>
-
-              <div class="right-icons">
-                <% if (userNickName === feed.user.nickname) { %>
-                <button type = "button" class = "imgButton modify" onclick="feedEdit('<%= feed.id %>')"></button>
-                <button type="button" class="imgButton delete" onclick="feedDelete('<%= feed.id %>')"></button>
-                <% } %>
-              </div>
-            </div>
-          </div>
-        </div>
-        <% }); %>
-      </div>
-
+      <%- include("./shared/feedItem"), {feeds: feeds, profileImg:profileImg} %>
       <!-- 댓글 입력창 -->
       <div class="comment-box" id="commentBox">
         <div id="commentsContainer" class="comments-container"></div>
         <div class="input-container">
           <span class="profile-img">
-            <img
-              src="/static/img/profile.png"
-              alt="프로필 이미지"
-              width="30px"
-            />
+            <img src="<%= profileImg %>" alt="프로필 이미지" width="30px" />
           </span>
           <strong class="comment-nickname"><%= nickname %></strong>
           <input
@@ -171,320 +79,5 @@
         />
       </div>
     </main>
-    <script>
-      function toggleCommentBox() {
-        const commentBox = document.getElementById("commentBox");
-        const plusIcon = document.querySelector(".plus-icon");
-
-        commentBox.classList.toggle("active");
-
-        if (commentBox.classList.contains("active")) {
-          document.getElementById("commentInput").focus();
-          plusIcon.style.display = "none";
-        } else {
-          plusIcon.style.display = "block";
-        }
-      }
-
-      let currentEditComment = null;
-      // 댓글 전송 함수
-      function submitComment() {
-        const commentInput = document.getElementById("commentInput");
-        const commentText = commentInput.value;
-        const userID = "User123"; // 여기 데이터베이스 가져와서 유저 아이디 가져와야해요!!!
-
-        if (currentEditComment) {
-          currentEditComment.querySelector("p").textContent = commentText;
-          currentEditComment = null;
-        } else if (commentText) {
-          addCommentToDOM(userID, commentText);
-        }
-        commentInput.value = "";
-      }
-
-      // 댓글을 화면에 추가하는 함수
-      function addCommentToDOM(userID, commentText) {
-        const commentsContainer = document.getElementById("commentsContainer");
-        const commentElement = document.createElement("div");
-        commentElement.classList.add("comment");
-
-        // 유저 ID와 댓글 내용을 함께 표시
-        commentElement.innerHTML = `
-          <div class="profile-img">
-            <img src="/static/img/profile.png" alt="프로필 이미지" width="30px"/>
-          </div>
-          <div class="comment-content">
-            <strong><%= nickname %></strong>
-            <p>${commentText}</p>
-            <div class="comment-actions">
-              <button onclick="editComment(this)">수정</button>
-              <button onclick="deleteComment(this)">삭제</button>
-            </div>
-          </div>
-        `;
-
-        commentsContainer.appendChild(commentElement);
-        commentsContainer.scrollTop = commentsContainer.scrollHeight;
-      }
-
-      // 댓글 수정 함수
-      function editComment(button) {
-        const commentElement = button.closest(".comment");
-        const commentTextElement = commentElement.querySelector("p");
-        const commentInput = document.getElementById("commentInput");
-        commentInput.value = commentTextElement.textContent;
-        currentEditComment = commentElement;
-      }
-
-      // 댓글 삭제 함수
-      function deleteComment(button) {
-        const commentElement = button.closest(".comment");
-        if (confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
-          commentElement.remove();
-        }
-      }
-
-      // 다른 화면 클릭 시 댓글창 닫기
-      document.addEventListener("click", function (e) {
-        const commentBox = document.getElementById("commentBox");
-        const plusIcon = document.querySelector(".plus-icon");
-        if (
-          !e.target.closest(".comment-box") &&
-          !e.target.closest(".icon-container img")
-        ) {
-          commentBox.classList.remove("active");
-          plusIcon.style.display = "block";
-        }
-      });
-
-      // 피드 올리는 아이콘 클릭 시 feed.ejs로 이동
-      function goToFeed() {
-        window.location.href = "./feed";
-      }
-
-      // 피드 삭제 함수
-      function feedDelete(feedId) {
-        Swal.fire({
-          icon: "warning",
-          text: "정말 삭제하시겠습니까?",
-          showCancelButton: true,
-          confirmButtonText: "확인",
-          cancelButtonText: "취소",
-        }).then((result) => {
-          // '확인' 버튼을 눌렀을 경우 삭제 함수 실행
-          if (result.isConfirmed) {
-            fetch(`/feeds/delete/${feedId}`, {
-              method: "DELETE",
-            })
-              .then((response) => {
-                if (response.ok) {
-                  Swal.fire({
-                    icon: "success",
-                    text: "피드가 삭제되었습니다.",
-                    confirmButtonText: "확인",
-                  }).then(() => {
-                    // 삭제 후 페이지를 새로고침하거나 해당 피드 아이템만 삭제
-                    document
-                      .querySelector(`.feed-item[data-feed-id="${feedId}"]`)
-                      .remove();
-                  });
-                } else {
-                  Swal.fire({
-                    icon: "error",
-                    text: "삭제하는 중 오류가 발생했습니다.",
-                    confirmButtonText: "확인",
-                  });
-                }
-              })
-              .catch((error) => {
-                Swal.fire({
-                  icon: "error",
-                  text: "서버와의 통신 중 오류가 발생했습니다.",
-                  confirmButtonText: "확인",
-                });
-              });
-          }
-        });
-      }
-
-      // 피드 수정 함수
-      function feedEdit(feedId) {
-
-        document.getElementById(`img-input-${feedId}`).style.display = 'none';
-        
-        const editContainer = document.getElementById(`edit-container-${feedId}`);
-        const feedContent = document.getElementById(`feed-content-${feedId}`);
-        const feedImage = document.getElementById(`feed-img-${feedId}`);
-
-        // 수정 칸 토글 (보이기 / 숨기기)
-        if (editContainer.style.display === "none") {
-          editContainer.style.display = "block"; // 수정 칸 보이기
-          feedContent.style.display = "none";    // 기존 내용 숨기기
-          feedImage.style.display = "none";      // 기존 이미지 숨기기
-        } else {
-          editContainer.style.display = "none";  // 수정 칸 숨기기
-          feedContent.style.display = "block";   // 기존 내용 보이기
-          feedImage.style.display = "block";     // 기존 이미지 보이기
-        }
-      
-      
-    }
-
-    // 사용자가 수정버튼을 누르고 그다음 파일선택을 눌렀을때 실행되는 함수
-    function updateImage(feedId,fileUrl) {
-
-      // 기존 이미지 경로
-      const baseFileUrl = fileUrl;
-      // input file 
-      const input = document.getElementById(`img-input-${feedId}`);
-      // 사용자가 이미지를 변경하면 이미지 src값을 변경
-      const imgPreview = document.getElementById(`edit-img-${feedId}`);
-      // 사용자가 어떤 파일을 선택했는지
-      const fileInfoContainer = input.nextElementSibling.nextElementSibling;
-      
-      const spanFileName = fileInfoContainer.querySelector('.span-file');  // 선택된 파일 이름을 표시하는 span
-      const errorMessage = fileInfoContainer.querySelector('.error-message');  // 에러 메시지
-  
-      // 사용자가 하나의 파일을 선택했을때만 실행한다.
-      if(input.files && input.files[0]) {
-        const reader = new FileReader();
-        
-        const file = input.files[0];
-        const filename = file.name;
-        const fileExtension = filename.split('.').pop().toLowerCase(); // 파일 확장자 추출
-      
-        // 허용 확장자
-        const allowedExtensions = ['jpeg','jpg','png','bmp'];
-        
-        if(allowedExtensions.includes(fileExtension)) {
-          // 파일 이름 표시
-          spanFileName.textContent = filename;
-          // 에러 메시지 숨기기
-          errorMessage.style.display = 'none';
-
-          // 이미지 미리보기 업데이트
-          reader.onload = function(e) {
-          imgPreview.src = e.target.result;
-        };
-        reader.readAsDataURL(input.files[0]);
-      } else {
-        // 확장자가 맞지 않으면 경고 메시지 표시
-        spanFileName.textContent = "파일을 다시 선택하세요!.";
-        errorMessage.style.display = 'block';  // 경고 메시지 표시
-      }
-        
-      } else {
-        // 파일이 선택되지 않은 경우
-        spanFileName.textContent = "선택된 파일이 없습니다.";
-        errorMessage.style.display = 'none';
-      }  
-    }
-
-// 저장 버튼 클릭 시
-function saveChanges(feedId) {
-  Swal.fire({
-    title: "저장하시겠습니까?",
-    text: "변경된 내용을 저장하려면 확인을 클릭해주세요.",
-    icon: "question",
-    showCancelButton: true, 
-    confirmButtonText: "확인",
-    cancelButtonText: "취소",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // 확인을 눌렀을 때 서버로 업데이트 요청 보내기
-      const newContent = document.getElementById(`edit-content-${feedId}`).value;
-      const newImageFile = document.getElementById(`img-input-${feedId}`).files[0];
-
-      if (!newContent || !newImageFile) {
-        Swal.fire({
-          icon: 'error',
-          title: '입력 오류',
-          text: '수정할 내용 또는 이미지를 선택해주세요!',
-          confirmButtonText: '확인'
-        });
-        return; // 폼 제출을 중단
-      }
-
-      const formData = new FormData();
-      formData.append('content', newContent);
-      formData.append('feedId', feedId);
-
-      if (newImageFile) {
-        formData.append('image', newImageFile);
-      }
-
-      // 서버로 요청 보내기
-      fetch('/feeds/update', {
-        method: 'POST',
-        body: formData
-      })
-        .then((response) => response.json())
-        .then((data) => { 
-          
-            // 새 이미지 URL 적용 (타임스탬프 추가)
-            const newImageElement = document.getElementById(`feed-img-${feedId}`).querySelector('img');
-            const newContentParagraph = document.getElementById(`feed-content-${feedId}`).querySelector('p');
-            // 업데이트 전 초기화하기
-            newImageElement.src = null;
-            newContentParagraph.textContent = null;
-
-            // 수정 칸 숨기기
-            const editContainer = document.getElementById(`edit-container-${feedId}`);
-            editContainer.style.display = "none";  // 수정 칸 숨기기
-            document.getElementById(`feed-content-${feedId}`).style.display = "block";  // 기존 내용 보이기
-            document.getElementById(`feed-img-${feedId}`).style.display = "block";     // 이미지 보이기
-                          
-          Swal.fire({
-            icon: 'success',
-            title: '변경 완료',
-            text: '피드가 성공적으로 업데이트되었습니다.',
-            confirmButtonText: '확인'
-          });
-          // 새 이미지와 내용 적용
-          newImageElement.src = `${data.newImageUrl}?timestamp=${new Date().getTime()}`;
-          newContentParagraph.textContent = data.content;
-        })
-        .catch((error) => {
-          console.log('피드 업데이트 실패', error);
-          Swal.fire({
-            icon: 'error',
-            title: '오류 발생',
-            text: '서버와 연결하는데 문제가 발생했습니다.',
-            confirmButtonText: '확인'
-          });
-        });
-    } else {
-      // 취소 버튼을 눌렀을 때
-      Swal.fire({
-        icon: 'info',
-        title: '취소되었습니다',
-        text: '피드 수정이 취소되었습니다.',
-        confirmButtonText: '확인'
-      });
-    }
-  });
-}
-
-
-    // 사용자가 수정을 누르고 취소버튼을 클릭했을 때
-    function cancelEdit(feedId) {
-        // 수정 컨테이너, 피드 내용, 이미지 요소 찾기
-        const editContainer = document.getElementById(`edit-container-${feedId}`);
-        const feedContent = document.getElementById(`feed-content-${feedId}`);
-        const feedImage = document.getElementById(`feed-img-${feedId}`);
-
-        // 수정 영역 숨기고 원래 내용과 이미지 보이기
-        feedContent.style.display = 'block';  // 원래 내용 보이기
-        feedImage.style.display = 'block';    // 원래 이미지 보이기
-        editContainer.style.display = 'none'; // 수정 영역 숨기기
-
-        // 알림 창을 오른쪽 상단에 띄운다.
-        toastr.info('피드 수정을 취소했습니다.', {
-        positionClass: 'toast-top-right',  // 오른쪽 상단에 띄우기
-        timeOut: 2000  // 3초 후 자동으로 사라짐
-    });
-    }
-    </script>
-    <script src="/static/js/index.js"></script>
   </body>
 </html>
