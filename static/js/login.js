@@ -27,8 +27,6 @@ async function loginUser() {
     });
 
     const data = await response.json();
-    console.log(data);
-
     if (response.status === 200 && data.success) {
       // 로그인 성공 시 페이지 리디렉션
       window.location.href = "/"; // 로그인 성공 후 홈으로 이동

@@ -89,7 +89,6 @@
       const imageupload = document.querySelector("#imageUpload");
 
       imageupload.addEventListener("change", (event) => {
-        console.log(imageupload.files)
         if(imageupload.files.length > 0){
           uploadlabel.textContent = imageupload.files[0].name;
           uploadlabel.style.color = "#121212";
@@ -113,7 +112,6 @@
         const commentText = commentInput.value;
         const userId = req.session.id;
         const feedId = document.getElementById(".feed-item").dataset.feedId;
-        console.log("댓글을 달 피드:", feedId);
         if (commentText) {
           // 여기에서 댓글을 서버에 저장할 수 있어요오오오오.
           fetch("/feed/comment", {
@@ -129,7 +127,6 @@
           }).then(response => response.json())
           .then(data => {
             if(data.message) {
-              console.log(data.message) // 서버로 부터 응답 메세지 출력
               commentInput.value = ""; // 댓글 입력 란 비우기
               toggleCommentBox(); // 댓글 입력창 숨기기
             } else {

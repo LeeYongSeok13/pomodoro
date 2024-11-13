@@ -26,7 +26,6 @@ window.addEventListener("load", async () => {
   const addListButton = document.querySelector(".addListButton");
   const todoform = document.forms["todoform"];
   const todoContainer = document.querySelector(".todo-container");
-  console.log(dayItem, date);
   window.addEventListener("resize", () => {
     if (dayList.style.transform) {
       dayList.style.transform = "";
@@ -300,7 +299,6 @@ window.addEventListener("load", async () => {
     statusButton.forEach((item) => {
       if (!item.hasListener) {
         item.addEventListener("click", async (event) => {
-          console.log(event.target.classList);
           const dataId = event.target.parentElement.parentElement.dataset.id;
           if (event.target.classList.contains("pending")) {
             ClassStateChange(event.target, "pending", "done");
