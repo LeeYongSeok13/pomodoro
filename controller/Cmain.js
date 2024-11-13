@@ -568,7 +568,7 @@ exports.post_FeedUpdate = async (req, res) => {
 
       // 로컬 파일 삭제 (S3 업로드 후 삭제)
       fs.unlink(filePath, (err) => {
-        if (err) ("로컬파일 삭제 오류", err);
+        if (err) "로컬파일 삭제 오류", err;
       });
     }
 
@@ -680,7 +680,6 @@ exports.toggleLike = async (req, res) => {
 exports.get_likesUsers = async (req, res) => {
   const feedId = req.params.feedId;
 
-
   try {
     // 좋아요 갯수 확인
     const likeCount = await Like.count({
@@ -711,7 +710,6 @@ exports.get_likesUsers = async (req, res) => {
       nickname: user.dataValues.nickname,
       profile_image: user.dataValues.profile_image,
     }));
-
 
     res.json({
       likeCount: likeCount,
@@ -860,7 +858,6 @@ exports.get_changeDate = async (req, res) => {
   const { year, month, day } = req.query;
 
   const user_id = req.session.userId;
-  console.log(year, month, day, user_id);
 
   // 클릭 연 월 일 필요
   const startOfDay = new Date(year, month, day);
@@ -1066,7 +1063,6 @@ exports.get_MyPage = async (req, res) => {
   likeData.forEach((like) => {
     like_feedId_arr.push(like.dataValues.feed_id);
   });
-  console.log(like_feedId_arr);
   //내가 올린 피드 검색용
   const feeds = await Feed.findAll({});
 
@@ -1091,7 +1087,6 @@ exports.get_MyPage = async (req, res) => {
     limit: limit,
     offset: offset,
   });
-  console.log(like_feed[0].dataValues.user.nickname);
   res.render("myPage", {
     done_titles: done_titles,
     done_descriptions: done_descriptions,

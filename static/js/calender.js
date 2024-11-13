@@ -337,7 +337,6 @@ window.addEventListener("load", async () => {
         const { data } = await axios.delete("/calender/delete", {
           data: { dataId: dataId },
         });
-        console.log(data);
         if (data) {
           parentItem.style.transform = "translateX(-100vw)";
           window.setTimeout(() => {

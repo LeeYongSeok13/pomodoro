@@ -87,9 +87,10 @@
   margin: 0 10px 20px 0;
   background-image: url("/static/img/tomato.png");
 }
-.like-button {
+.button-grid > .like-button {
   margin: 0 0 20px 10px;
   background-image: url("/static/svg/suit-heart-fill.svg");
+  width: 100%;
 }
 .done-button {
   margin: 0 10px 20px 0;
@@ -175,6 +176,11 @@ figcaption {
   z-index: 100;
 
   display: none;
+}
+.ongoingModal,
+.doneModal {
+  width: 90%;
+  margin: 0 auto;
 }
 .Modaldetail {
   display: none;
