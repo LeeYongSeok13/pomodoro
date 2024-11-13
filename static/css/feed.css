@@ -131,7 +131,7 @@ body {
   padding: 20px;
   border-radius: 30px;
   width: 75%;
-  height: auto;
+  height: 50%;
   position: relative;
 }
 /* 부모요소때문에 방해되던 정렬을 왼쪽으로 바꿈 (유저id) */
@@ -170,6 +170,7 @@ body {
   cursor: pointer;
   text-align: center;
   width: 80%;
+  font-size: 12px;
 }
 
 .upload-container:hover {
@@ -227,11 +228,30 @@ body {
   color: #fff;
   border: #c5373d;
   border-radius: 50px;
-  width: 80%;
-  height: 30px;
+  width: 30%;
+  height: 44px;
+  font-size: 15px;
   margin-top: 20px;
 }
 .create-button:hover {
   font-weight: 900;
   background-color: #cb2931;
+}
+
+/* 태블릿 스타일 */
+@media screen and (min-width: 768px) {
+  .modal-content {
+    max-width: 700px;
+  }
+  .upload-container {
+    font-size: 15px;
+  }
+  #postContent {
+    font-size: 20px;
+  }
+  .create-button {
+    width: 30%;
+    height: 50px;
+    font-size: 20px;
+  }
 }
