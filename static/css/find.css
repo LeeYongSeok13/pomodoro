@@ -59,11 +59,14 @@ input::placeholder {
   background-repeat: no-repeat;
 }
 
-.username::placeholder {
+.usernameId::placeholder {
+  background-image: url("/static/svg/person-vcard.svg");
+}
+.usernamePw::placeholder {
   background-image: url("/static/svg/person-vcard.svg");
 }
 
-.emailAddr::placeholder {
+.emailAddrPw::placeholder {
   background-image: url("/static/svg/envelope-fill.svg");
 }
 
@@ -79,7 +82,11 @@ input::placeholder {
   background-image: url("/static/svg/person-fill.svg");
 }
 
-.phoneNumber::placeholder {
+.phoneNumberPw::placeholder {
+  background-image: url("/static/svg/telephone-fill.svg");
+}
+
+.phoneNumberId::placeholder {
   background-image: url("/static/svg/telephone-fill.svg");
 }
 
