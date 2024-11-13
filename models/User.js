@@ -51,6 +51,11 @@ const user = (Sequelize, DataTypes) => {
         // 프로필 이미지
         type: DataTypes.STRING(255),
       },
+      tomato: {
+        // 프로필 이미지
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
       created_at: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW, // 현재 시간으로 기본값 설정

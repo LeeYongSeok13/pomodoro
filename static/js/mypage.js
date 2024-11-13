@@ -15,8 +15,6 @@ window.addEventListener("load", () => {
       });
 
       const data = await response.json();
-      console.log(data);
-
       if (data.success) {
         const profileImage = document.querySelector("#profileImage");
         profileImage.src = data.fileUrl; // 업로드된 이미지 URL로 이미지 소스 설정

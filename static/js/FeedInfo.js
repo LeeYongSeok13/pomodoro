@@ -135,14 +135,12 @@ window.onload = function () {
 
     // 각 피드 좋아요 수 가져와서 업데이트
     async function updateLikeCounts (feedIds) {
-      console.log(feedIds);
       for (const feedId of feedIds) {
         try {
           const response = await fetch(`/get-like-count?feedId=${feedId}`);
           const { likeCount } = await response.json();
   
           const likeText = document.getElementById(`like-text-${feedId}`);
-          console.log('liketext :' ,likeText);
           if (likeCount > 0) {
             likeText.textContent = `${likeCount}명이 해당 게시물에 공감하고 있어요`;
           } else {
@@ -192,7 +190,6 @@ async function setLikeStatusOnPageLoad() {
     const response = await fetch('/get-like-status');
     const feedLikeStatus = await response.json();
 
-    console.log(response);
 
     // 각 피드에 대해 좋아요 상태를 업데이트
     feedLikeStatus.forEach(({ feedId, liked }) => {

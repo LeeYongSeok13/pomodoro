@@ -26,8 +26,6 @@ bcrypt.hash(plainpassword, saltRounds, (err, hash) => {
     console.error("Error hashing password", err);
     return;
   }
-  // 해시된 비밀번호를 데이터베이스에 저장
-  console.log("Hashed password: ", hash);
 });
 
 const multer = require("multer");
@@ -554,7 +552,7 @@ exports.post_FeedUpdate = async (req, res) => {
 
       // 로컬 파일 삭제 (S3 업로드 후 삭제)
       fs.unlink(filePath, (err) => {
-        if (err) console.log("로컬파일 삭제 오류", err);
+        if (err) ("로컬파일 삭제 오류", err);
       });
     }
 
@@ -665,7 +663,7 @@ exports.toggleLike = async (req, res) => {
 // 좋아요 갯수와 사용자 목록 가져오기
 exports.get_likesUsers = async (req, res) => {
   const feedId = req.params.feedId;
-  console.log(feedId);
+
 
   try {
     // 좋아요 갯수 확인
@@ -698,7 +696,6 @@ exports.get_likesUsers = async (req, res) => {
       profile_image: user.dataValues.profile_image,
     }));
 
-    console.log(userList);
 
     res.json({
       likeCount: likeCount,
@@ -731,7 +728,6 @@ exports.get_likeCount = async (req, res) => {
 // 하나의 피드에 대해 좋아요 최신화
 exports.get_feedlike = async (req, res) => {
   const feedId = req.query.feedId;
-  console.log(feedId);
 
   try {
     const likeCnt = await Like.count({
@@ -819,7 +815,7 @@ exports.get_Timer = async (req, res) => {
 exports.get_changeDate = async (req, res) => {
   const { year, month, day } = req.query;
   const user_id = req.session.nickname;
-  console.log(year, month, day, user_id);
+
 
   // 클릭 연 월 일 필요
   const startOfDay = new Date(year, month, day);
@@ -930,7 +926,7 @@ exports.post_addtodo = async (req, res) => {
     const { title, description, year, month, today } = req.body;
     const specificDate = new Date(year, month - 1, today);
     const user_id = req.session.userId;
-    console.log(user_id);
+
     const newtask = await Task.create({
       user_id,
       title,
