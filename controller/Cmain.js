@@ -3,7 +3,8 @@ const User = require("../models/index").User;
 const Task = require("../models/index").Task;
 const Timer = require("../models/index").Timer;
 const Feed = require("../models/index").Feed;
-const { Op } = require("sequelize");
+const Like = require('../models/index').Like;
+const { Op , Sequelize  } = require("sequelize");
 const {
   S3Client,
   PutObjectCommand,
@@ -456,7 +457,7 @@ exports.post_feedUpload = (req, res) => {
     try {
       const filename = req.file.filename;
       const filePath = req.file.path;
-      const bucketName = "feedimageup";
+      const bucketName = "feeduploadimg";
       const keyName = `images/${filename}`;
 
       // S3에 파일 업로드
@@ -540,14 +541,14 @@ exports.post_FeedUpdate = async (req, res) => {
     if (newImage) {
       // 기존 이미지 URL을 사용하여 S3에서 삭제
       if (feed.file_url) {
-        const bucketName = "feedimageup";
-        await deleteImageFromS3(bucketName, feed.file_url); // 기존 이미지를 S3에서 삭제
+        const bucketName = "feeduploadimg";
+        await deleteImageFromS3(bucketName,feed.file_url); // 기존 이미지를 S3에서 삭제
       }
 
       // 새 이미지 파일 로컬 저장소에서 S3로 업로드
       const filePath = path.join(__dirname, "../uploads/", newImage.filename);
       const filename = req.file.filename;
-      const bucketName = "feedimageup";
+      const bucketName = "feeduploadimg";
       const keyName = `images/${filename}`;
       newImageUrl = await uploadToS3(filePath, bucketName, keyName); // 새 이미지 S3에 업로드 후 URL 반환
 
@@ -602,6 +603,147 @@ exports.del_FeedDelete = async (req, res) => {
       .json({ error: "피드를 삭제하는 중 오류가 발생하였습니다." });
   }
 };
+
+// 좋아요 상태 확인을 위한 API
+exports.get_LikeStatus = async (req, res) => {
+  const userId = req.session.userId; // 로그인한 사용자 ID
+  try {
+    // likes 테이블에서 현재 사용자(userId)가 좋아요한 feedId 목록 조회
+    const likes = await Like.findAll({
+      where: { user_id: userId },
+      attributes: ['feed_id'], // 피드 ID만 가져옵니다.
+    });
+
+    // feedId 목록 생성
+    const likedFeedIds = likes.map(like => like.feed_id);
+
+    // 서버에서 모든 피드 ID를 가져오는 방법 필요 (예시)
+    const allFeeds = await Feed.findAll({
+      attributes: ['id'], // 피드 ID만 가져옵니다.
+    });
+
+    // 모든 피드에 대해 좋아요 상태를 포함한 리스트 생성
+    const allFeedLikeStatus = allFeeds.map(feed => ({
+      feedId: feed.id,
+      liked: likedFeedIds.includes(feed.id), // 좋아요 상태 여부
+    }));
+
+    // 클라이언트로 좋아요 상태를 응답
+    res.json(allFeedLikeStatus);
+  } catch (error) {
+    console.log('Failed to check like status', error);
+    res.status(500).json({ message: 'Error checking like status' });
+  }
+};
+
+// 좋아요 상태 토글을 위한 API
+exports.toggleLike = async (req, res) => {
+  const userId = req.session.userId; // 로그인한 사용자 ID
+  const feedId = req.query.feedId;  // 클릭된 피드 ID
+
+  try {
+    // 좋아요 상태 확인
+    const existingLike = await Like.findOne({
+      where: { user_id: userId, feed_id: feedId },
+    });
+
+    if (existingLike) {
+      // 좋아요가 이미 눌러져 있으면 삭제
+      await existingLike.destroy();
+      return res.json({ liked: false }); // 좋아요 상태 변경
+    } else {
+      // 좋아요가 안 눌러져 있으면 추가
+      await Like.create({ user_id: userId, feed_id: feedId });
+      return res.json({ liked: true }); // 좋아요 상태 변경
+    }
+  } catch (error) {
+    console.error('Failed to toggle like', error);
+    res.status(500).json({ message: 'Error toggling like' });
+  }
+};
+
+// 좋아요 갯수와 사용자 목록 가져오기 
+exports.get_likesUsers = async (req, res) => {
+  const feedId = req.params.feedId;
+  console.log(feedId);
+
+  try {
+    // 좋아요 갯수 확인
+    const likeCount = await Like.count({
+      where : {
+        feed_id : feedId
+      }
+    });
+
+    // 좋아요 누른 사용자 조회
+    const users = await Like.findAll({
+      attributes : [
+        [Sequelize.col ('user.nickname'), 'nickname'],
+        [Sequelize.col ('user.profile_image'), 'profile_image'],
+      ],
+      where : {
+        feed_id : feedId
+      },
+      include : [
+        {
+          model : User,
+          attributes : []
+        }
+      ]
+    });
+
+    // 사용자 데이터 가공
+    const userList = users.map(user => ({
+      nickname : user.dataValues.nickname,
+      profile_image : user.dataValues.profile_image
+    }));
+
+    console.log(userList);
+
+    res.json({
+      likeCount : likeCount,
+      users : userList
+    });
+  } catch (error) {
+    console.log('Error data error', error);
+    res.status(500).json({ error : '서버 오류 발생' });
+  }
+};
+
+// 각 피드마다 좋아요 개수 가져오기
+// 좋아요 개수 조회를 위한 함수
+exports.get_likeCount = async (req, res) => {
+  const feedId = req.query.feedId; // 클라이언트에서 전달한 피드 ID
+
+  try {
+    // feedId에 대한 좋아요 개수를 조회
+    const likeCount = await Like.count({
+      where: { feed_id: feedId },
+    });
+
+    // 좋아요 개수를 클라이언트에 응답
+    res.json({ feedId, likeCount });
+  } catch (error) {
+    console.error('Failed to get like count', error);
+    res.status(500).json({ message: 'Error fetching like count' });
+  }
+};
+// 하나의 피드에 대해 좋아요 최신화
+exports.get_feedlike = async (req, res) => {
+  const feedId = req.query.feedId;
+  console.log(feedId);
+
+  try {
+    const likeCnt = await Like.count({
+      where : { feed_id : feedId },
+    });
+    // 좋아요 수 클라이언트 전달
+    res.json ( { feedId, likeCnt });
+  } catch (error) {
+    console.error('좋아요 최신화 실패',error);
+    res.status(500).json({ message : 'error' });
+  }
+}
 
 // 댓글 작성
 exports.post_Comment = async (req, res) => {

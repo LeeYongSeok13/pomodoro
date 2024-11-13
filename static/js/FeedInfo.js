@@ -2,31 +2,30 @@ window.onload = function () {
   let currentPage = 2; // 현재 페이지
   let isLoading = false; // 데이터 로딩 여부 체크
 
-  function loadMoreFeeds() {
-    if (isLoading) return; // 로딩 중일 때는 중복 요청을 방지
-    isLoading = true; // 로딩 시작
 
-    fetch(`/get-feeds?page=${currentPage}`)
-      .then((response) => response.json())
-      .then((data) => {
-        const feedContainer = document.querySelector(".feed-container");
-        // 피드 데이터가 존재하면 화면에 추가
-        if (data && data.feeds.length > 0) {
-          const sessionNickname = data.feedNickname;
-          data.feeds.forEach((feed) => {
-            const feedElement = document.createElement("div");
-            feedElement.classList.add("feed-item"); // 'feed-item' 클래스 추가
-            feedElement.setAttribute("data-feed-id", feed.id); // 'data-feed-id' 속성 추가 및 값 설정
+  async function loadMoreFeeds() {
+    if (isLoading) return;  // 로딩 중일 때는 중복 요청을 방지
+    isLoading = true;  // 로딩 시작
 
-            // 로그인한 사용자의 피드게시글만 수정 삭제 보이게 처리
-            const buttonHtml =
-              feed.user.nickname === sessionNickname
-                ? `
-                 <button type="button" class="imgButton modify" onclick="feedEdit(${feed.id})"></button>
-                 <button type="button" class="imgButton delete" onclick="feedDelete(${feed.id})"></button>
-                 `
-                : "";
+    try {
+      const response = await fetch(`/get-feeds?page=${currentPage}`);
+      const data = await response.json();
 
+      const feedContainer = document.querySelector('.feed-container');
+
+      if (data && data.feeds.length > 0) {
+        const sessionNickname = data.feedNickname;
+
+        data.feeds.forEach(feed => {
+          const feedElement = document.createElement('div');
+          feedElement.classList.add('feed-item'); // 'feed-item' 클래스 추가
+          feedElement.setAttribute('data-feed-id', feed.id); // 'data-feed-id' 속성 추가 및 값 설정
+
+          const buttonHtml = feed.user.nickname === sessionNickname
+            ? `<button type="button" class="imgButton modify" onclick="feedEdit(${feed.id})"></button>
+               <button type="button" class="imgButton delete" onclick="feedDelete(${feed.id})"></button>`
+            : '';
+          
             // 피드 생성 html
             feedElement.innerHTML = `
               <div class="content">
@@ -41,8 +40,6 @@ window.onload = function () {
               <strong>${feed.user.nickname}</strong>
             </div>
 
-
-                
             <div id="feed-img-${feed.id}">
               <img src="${feed.file_url}" alt="post" />
             </div>
@@ -75,23 +72,16 @@ window.onload = function () {
                
             </div>
 
-
-                <div class="get-tomato-sum">
-                  획득한 토마토<img class="tomato" src="/static/img/tomato.png" alt="획득 토마토" />
-                </div>
-
-            <div class="like-info" onclick="openLikeModal(${feed.id})">
-              <span id="like-text-<%= feed.id %>">[닉네임] 외 여러명이 해당 게시물에 공감하고 있어요</span>
+            <div id="like-info-${feed.id}" data-feed-id="${feed.id}" class="like-info" onclick="openLikeModal(${feed.id})">
+              <span id="like-text-${feed.id}"></span>
             </div>   
 
             <div class="icon-container">
               <div class="left-icons">
-                <img src="../static/svg/suit-heart.svg" alt="하트 아이콘" />
-                <img
-                  src="../static/svg/chat.svg"
-                  alt="채팅 아이콘"
-                  onclick="toggleCommentBox()"
-                />
+                <svg id="likeIcon-${feed.id}" class = "likeIcon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" onclick="toggleLike(${feed.id})">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                </svg>
+                <img src="../static/svg/chat.svg" alt="채팅 아이콘" onclick="toggleCommentBox('<%= feed.id %>')"/>
               </div>
 
               <!-- 좋아요 모달 -->
@@ -99,75 +89,36 @@ window.onload = function () {
                 <div class="like-modal-content">
                   <span class="close" onclick="closeLikeModal(${feed.id})">&times;</span>
                   <h2>이 피드를 좋아한 사람들의 목록</h2>
-                  <ul style="list-style: none; padding : 0; margin : 0;border-bottom : none" id="like-list-${feed.id}">
+                  <ul style="list-style: none; padding : 0; margin : 0;border-bottom : none" id="likes-list-${feed.id}">
                     <!-- 좋아요 목록이 여기에 표시됨 -->
-                    <li class="user">
-                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
-                      <span class="user-nickname">TEST</span>
-                    </li>
-                    <li class="user">
-                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
-                      <span class="user-nickname">TEST</span>
-                    </li>
-                    <li class="user">
-                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
-                      <span class="user-nickname">TEST</span>
-                    </li>
-                    <li class="user">
-                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
-                      <span class="user-nickname">TEST</span>
-                    </li>
-                    <li class="user">
-                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
-                      <span class="user-nickname">TEST</span>
-                    </li>
-                    <li class="user">
-                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
-                      <span class="user-nickname">TEST</span>
-                    </li>
-                    <li class="user">
-                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
-                      <span class="user-nickname">TEST</span>
-                    </li>
-                    <li class="user">
-                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
-                      <span class="user-nickname">TEST</span>
-                    </li>
-                    <li class="user">
-                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
-                      <span class="user-nickname">TEST</span>
-                    </li>
-                    <li class="user">
-                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
-                      <span class="user-nickname">TEST</span>
-                    </li>
-                    <li class="user">
-                      <img src="../static/img/profile.png" alt="프로필 이미지" class="user-profile-img" />
-                      <span class="user-nickname">TEST</span>
-                    </li>
+
                   </ul>
                 </div>
               </div>
-
-
 
               <div class="right-icons">
                 ${buttonHtml} 
               </div>
             </div>
-              </div>
+          </div>
             `;
             feedContainer.appendChild(feedElement);
-          });
 
-          currentPage++; // 페이지 번호 증가
-        }
+        }); // end foreach
 
-        isLoading = false; // 로딩 종료
-      })
-      .catch((error) => {
-        isLoading = false; // 에러가 나면 로딩 종료
-      });
+        currentPage++ // 페이지 번호 증가
+        // 모든 피드가 추가된 후 좋아요 상태와 카운트 업데이트
+       // 새로 추가된 피드의 좋아요 상태와 좋아요 수 업데이트
+       const newFeedIds = data.feeds.map(feed => feed.id);
+       updateLikeCounts(newFeedIds);
+       setLikeStatusOnPageLoad();
+      } // end if
+     isLoading = false; // 로딩 종료
+    } // end try 
+     catch (error) {
+      console.error('Error loading moer feeds : ', error);
+      isLoading = false; // 에러가 나면 로딩 종료
+    } // end catch
   }
 
   // 스크롤 이벤트 핸들러
@@ -181,7 +132,32 @@ window.onload = function () {
     }
   });
 
-  function updateImage(feedId, fileUrl) {
+
+    // 각 피드 좋아요 수 가져와서 업데이트
+    async function updateLikeCounts (feedIds) {
+      console.log(feedIds);
+      for (const feedId of feedIds) {
+        try {
+          const response = await fetch(`/get-like-count?feedId=${feedId}`);
+          const { likeCount } = await response.json();
+  
+          const likeText = document.getElementById(`like-text-${feedId}`);
+          console.log('liketext :' ,likeText);
+          if (likeCount > 0) {
+            likeText.textContent = `${likeCount}명이 해당 게시물에 공감하고 있어요`;
+          } else {
+            likeText.textContent = '아직 공감한 사람이 없습니다.';
+          }
+        } catch (error) {
+          console.error('error');
+        }
+      }
+    }
+   
+
+
+  function updateImage(feedId,fileUrl) {
+
     // 기존 이미지
     const baseFileUrl = fileUrl;
     // input file
@@ -207,4 +183,32 @@ window.onload = function () {
       imgPreview.src = `${baseFileUrl}`; // 초기 이미지로 재설정
     }
   }
-};
+
+
+
+  // 페이징 처리 시, 서버에서 받아온 좋아요 상태에 따라 하트 아이콘을 업데이트
+async function setLikeStatusOnPageLoad() {
+  try {
+    const response = await fetch('/get-like-status');
+    const feedLikeStatus = await response.json();
+
+    console.log(response);
+
+    // 각 피드에 대해 좋아요 상태를 업데이트
+    feedLikeStatus.forEach(({ feedId, liked }) => {
+      const heartIcon = document.getElementById(`likeIcon-${feedId}`);
+      if (heartIcon) {
+        if (liked) {
+          heartIcon.classList.add('liked'); // 좋아요가 되어 있으면 하트 아이콘 활성화
+        } else {
+          heartIcon.classList.remove('liked'); // 좋아요가 되어 있지 않으면 비활성화
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Failed to fetch like status', error);
+  }
+}
+
+
+}
