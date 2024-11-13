@@ -243,3 +243,15 @@ async function updatePassword() {
     openErrorModal("서버 오류가 발생했습니다.");
   }
 }
+
+// 비밀번호 재설정버튼 누르면 input 비우기
+
+$(".modalBt").click(function () {
+  $("#newPassword").val("");
+  $("#confirmPassword").val("");
+});
+
+$(".modalOffBt").click(function () {
+  $("#newPassword").val("");
+  $("#confirmPassword").val("");
+});
