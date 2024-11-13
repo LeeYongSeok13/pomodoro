@@ -3,12 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>메인페이지</title>
+    <title>Pomodoro</title>
     <link rel="stylesheet" href="/static/css/reset.css" />
     <link rel="stylesheet" href="/static/css/navbar.css" />
     <link rel="stylesheet" href="/static/css/index.css" />
     <link rel="stylesheet" href="/static/css/todoItem.css" />
     <link rel="stylesheet" href="/static//css/button.css" />
+    <link rel="icon" href="/static/img/faviconPomo.png">
     <!-- toastr CSS -->
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
@@ -21,8 +22,12 @@
     <script src="/static/js/navbar.js"></script>
     <script src="/static/js/index.js" defer></script>
     <script src="/static/js/FeedInfo.js"></script>
-    <title>메인 페이지</title>
-    <!-- 글씨체 -->
+    <script>
+      // 1분마다 페이지 새로고침
+      setInterval(function() {
+        location.reload();  // 페이지를 새로고침합니다.
+      }, 60000);  // 60000ms = 1분
+    </script>
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
       rel="stylesheet"
