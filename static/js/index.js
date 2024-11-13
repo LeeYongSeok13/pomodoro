@@ -153,7 +153,7 @@ async function setLikeStatusOnPageLoad() {
   }
 }
 // 페이지 로드 시 실행
-window.addEventListener("load", setLikeStatusOnPageLoad);
+window.addEventListener("load", setLikeStatusOnPageLoad());
 
 function toggleCommentBox() {
   const commentBox = document.getElementById("commentBox");
@@ -208,6 +208,12 @@ function submitComment() {
   const commentInput = document.getElementById("commentInput");
   const commentText = commentInput.value;
   console.log(commentText);
+
+  // 버튼 클릭시 해당 댓글 insert
+
+
+
+
   const userID = "User123"; // 여기 데이터베이스 가져와서 유저 아이디 가져와야해요!!!
 
   if (currentEditComment) {
@@ -222,7 +228,7 @@ function submitComment() {
 // 댓글을 화면에 추가하는 함수
 function addCommentToDOM(userID, commentText) {
   
-  const profileImg = '../img/profile.png'
+  const profileImg = '/static/img/profile.png'
 
   const commentsContainer = document.getElementById("commentsContainer");
   const commentElement = document.createElement("div");
