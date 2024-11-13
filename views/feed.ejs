@@ -62,7 +62,7 @@
             />
           </svg>
           <br /><br />
-          <label for="imageUpload" class="custom-file-upload">
+          <label for="imageUpload" class="custom-file-upload" id="uploadlabel">
             파일을 선택하거나 여기로 끌어다 놓으세요<br /><br />
             업로드 가능한 확장자<br />
             .png / .jpg / .jpeg / .bmp /
@@ -92,6 +92,20 @@
     </div>
 
     <script>
+      const uploadlabel = document.querySelector("#uploadlabel");
+      const imageupload = document.querySelector("#imageUpload");
+
+      imageupload.addEventListener("change", (event) => {
+        console.log(imageupload.files)
+        if(imageupload.files.length > 0){
+          uploadlabel.textContent = imageupload.files[0].name;
+          uploadlabel.style.color = "#121212";
+        }else {
+          uploadlabel.innerHTML = `파일을 선택하거나 여기로 끌어다 놓으세요<br /><br />
+            업로드 가능한 확장자<br />
+            .png / .jpg / .jpeg / .bmp /`;
+        }
+      });
       function toggleCommentBox() {
         const commentBox = document.getElementById("commentBox");
         commentBox.classList.toggle("active");

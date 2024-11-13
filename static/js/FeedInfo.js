@@ -1,28 +1,31 @@
-window.onload = function() {
+window.onload = function () {
   let currentPage = 2; // 현재 페이지
   let isLoading = false; // 데이터 로딩 여부 체크
 
   function loadMoreFeeds() {
-    if (isLoading) return;  // 로딩 중일 때는 중복 요청을 방지
-    isLoading = true;  // 로딩 시작
-  
+    if (isLoading) return; // 로딩 중일 때는 중복 요청을 방지
+    isLoading = true; // 로딩 시작
+
     fetch(`/get-feeds?page=${currentPage}`)
-      .then(response => response.json())
-      .then(data => {
-        const feedContainer = document.querySelector('.feed-container'); 
+      .then((response) => response.json())
+      .then((data) => {
+        const feedContainer = document.querySelector(".feed-container");
         // 피드 데이터가 존재하면 화면에 추가
         if (data && data.feeds.length > 0) {
           const sessionNickname = data.feedNickname;
-          data.feeds.forEach(feed => {
-            const feedElement = document.createElement('div');
-            feedElement.classList.add('feed-item'); // 'feed-item' 클래스 추가
-            feedElement.setAttribute('data-feed-id', feed.id); // 'data-feed-id' 속성 추가 및 값 설정
+          data.feeds.forEach((feed) => {
+            const feedElement = document.createElement("div");
+            feedElement.classList.add("feed-item"); // 'feed-item' 클래스 추가
+            feedElement.setAttribute("data-feed-id", feed.id); // 'data-feed-id' 속성 추가 및 값 설정
 
             // 로그인한 사용자의 피드게시글만 수정 삭제 보이게 처리
-            const buttonHtml = feed.user.nickname === sessionNickname ?`
+            const buttonHtml =
+              feed.user.nickname === sessionNickname
+                ? `
                  <button type="button" class="imgButton modify" onclick="feedEdit(${feed.id})"></button>
                  <button type="button" class="imgButton delete" onclick="feedDelete(${feed.id})"></button>
-                 ` : '';
+                 `
+                : "";
 
             // 피드 생성 html
             feedElement.innerHTML = `
@@ -162,26 +165,26 @@ window.onload = function() {
 
         isLoading = false; // 로딩 종료
       })
-      .catch(error => {
-     
+      .catch((error) => {
         isLoading = false; // 에러가 나면 로딩 종료
       });
   }
 
   // 스크롤 이벤트 핸들러
-  window.addEventListener('scroll', () => {
+  window.addEventListener("scroll", () => {
     // 페이지 끝에 도달하면 데이터 요청
-    if(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100) {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.documentElement.scrollHeight - 100
+    ) {
       loadMoreFeeds(); // 추가 데이터
     }
   });
 
-
-  function updateImage(feedId,fileUrl) {
-
+  function updateImage(feedId, fileUrl) {
     // 기존 이미지
     const baseFileUrl = fileUrl;
-    // input file 
+    // input file
     const input = document.getElementById(`img-input-${feedId}`);
     // 사용자가 이미지를 변경하면 이미지 src값을 변경
     const imgPreview = document.getElementById(`edit-img-${feedId}`);
@@ -189,21 +192,19 @@ window.onload = function() {
     const spanFileName = input.nextElementSibling.nextElementSibling;
 
     // 사용자가 하나의 파일을 선택했을때만 실행한다.
-    if(input.files && input.files[0]) {
+    if (input.files && input.files[0]) {
       const reader = new FileReader();
-      
+
       // 파일 이름 표시
       spanFileName.textContent = input.files[0].name;
       // 이미지 미리보기 업데이트
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         imgPreview.src = e.target.result;
       };
       reader.readAsDataURL(input.files[0]);
     } else {
-      spanFileName.textContent = '선택된 파일이 없습니다.';
+      spanFileName.textContent = "선택된 파일이 없습니다.";
       imgPreview.src = `${baseFileUrl}`; // 초기 이미지로 재설정
     }
-
   }
-
-}
+};
