@@ -201,6 +201,9 @@ figcaption {
 .modal > ul > li {
   position: relative;
 }
+.modal > .like_feed {
+  display: none;
+}
 .modal > ul > li::after {
   content: "";
   position: absolute;
@@ -229,5 +232,6 @@ figcaption {
   }
   .modal {
     max-width: 1000px;
+    overflow: scroll;
   }
 }

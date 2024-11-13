@@ -990,6 +990,7 @@ exports.post_addtodo = async (req, res) => {
 
 exports.get_MyPage = async (req, res) => {
   const userId = req.session.userId;
+  const userNickName = req.session.nickname;
   // 완료한 업무 검색
   const done_data = await Task.findAll({
     where: {
@@ -1052,38 +1053,48 @@ exports.get_MyPage = async (req, res) => {
       id: userId,
     },
   });
+
   let profileImg;
   if (userData.profile_image) {
     profileImg = userData.profile_image;
   } else {
     profileImg = "/static/img/profile.png";
   }
-  function createDate(date) {
-    // 날짜 객체 생성
-    const dates = new Date(date);
+  const likeData = await Like.findAll({
+    where: {
+      user_id: userId,
+    },
+  });
+  const like_feedId_arr = [];
+  likeData.forEach((like) => {
+    like_feedId_arr.push(like.dataValues.feed_id);
+  });
+  console.log(like_feedId_arr);
+  //내가 올린 피드 검색용
+  const feeds = await Feed.findAll({});
 
-    // 연도 추출
-    const year = dates.getFullYear();
-
-    // 월 추출 (0부터 시작하므로 1을 더해줌)
-    const month = dates.getMonth() + 1;
-
-    // 요일 추출
-    const weekdays = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-    const weekday = weekdays[dates.getDay()];
-
-    // 출력
-    return `${year}년 ${month}월 ${weekday}`;
-  }
-  console.log(done_titles);
+  //좋아요 누른 피드 검색
+  const page = parseInt(req.query.page);
+  const limit = 3; // 한페이지에 보여줄 피드 개수
+  let offset = (page - 1) * limit;
+  offset = isNaN(offset) ? 0 : offset;
+  const like_feed = await Feed.findAll({
+    where: {
+      id: {
+        [Op.in]: like_feedId_arr,
+      },
+    },
+    include: [
+      {
+        model: require("../models/index").User,
+        attributes: ["nickname"],
+      },
+    ],
+    order: [["created_at", "DESC"]],
+    limit: limit,
+    offset: offset,
+  });
+  console.log(like_feed[0].dataValues.user.nickname);
   res.render("myPage", {
     done_titles: done_titles,
     done_descriptions: done_descriptions,
@@ -1098,8 +1109,38 @@ exports.get_MyPage = async (req, res) => {
     nickname: userData.nickname,
     username: userData.username,
     profileImg: profileImg,
+    likenum: like_feedId_arr.length,
+    feeds: like_feed,
+    userNickName: userNickName,
   });
 };
+function createDate(date) {
+  // 날짜 객체 생성
+  const dates = new Date(date);
+
+  // 연도 추출
+  const year = dates.getFullYear();
+
+  // 월 추출 (0부터 시작하므로 1을 더해줌)
+  const month = dates.getMonth() + 1;
+
+  const getDate = dates.getDate();
+
+  // 요일 추출
+  const weekdays = [
+    "일요일",
+    "월요일",
+    "화요일",
+    "수요일",
+    "목요일",
+    "금요일",
+    "토요일",
+  ];
+  const weekday = weekdays[dates.getDay()];
+
+  // 출력
+  return `${year}년 ${month}월 ${getDate}일 ${weekday}`;
+}
 
 exports.post_ProfileImage = async (req, res) => {
   try {
