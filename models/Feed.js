@@ -27,7 +27,8 @@ const feed = (Sequelize, DataTypes) => {
       content: {
         type: DataTypes.STRING(255),
       },
-      file_url: {  // S3 파일 URL을 저장하는 필드
+      file_url: {
+        // S3 파일 URL을 저장하는 필드
         type: DataTypes.STRING,
         allowNull: true,
       },
@@ -45,9 +46,10 @@ const feed = (Sequelize, DataTypes) => {
 
   // 모델 간 관계 정의
   Feed.associate = (models) => {
-    Feed.belongsTo(models.User, {  // Feed는 하나의 User에 속함
-      foreignKey: "user_id",       // foreign key
-      targetKey: "id",             // target key (User 모델의 id와 매칭)
+    Feed.belongsTo(models.User, {
+      // Feed는 하나의 User에 속함
+      foreignKey: "user_id", // foreign key
+      targetKey: "id", // target key (User 모델의 id와 매칭)
     });
   };
 

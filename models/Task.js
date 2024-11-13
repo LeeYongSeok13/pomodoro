@@ -54,6 +54,15 @@ const Task = (Sequelize, DataTypes) => {
       updatedAt: "update_at",
     }
   );
+
+  // 모델 간 관계 정의
+  Task.associate = (models) => {
+    Task.belongsTo(models.User, {
+      // Feed는 하나의 User에 속함
+      foreignKey: "user_id", // foreign key
+      targetKey: "id", // target key (User 모델의 id와 매칭)
+    });
+  };
 };
 
 module.exports = Task;
