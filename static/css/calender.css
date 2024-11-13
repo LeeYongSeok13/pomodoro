@@ -87,6 +87,7 @@
   margin-bottom: 30vh;
 }
 .todayTomato {
+  display: none;
   font-size: 16px;
   font-weight: 600;
   margin-top: 30px;
@@ -99,7 +100,7 @@
   background-size: 33px;
   background-position: 95% center;
 
-  display: flex;
+  /* display: flex; */
   justify-content: space-between;
   align-items: center;
   padding-right: 20%;

@@ -14,30 +14,31 @@ function fetchLikeUsers(feedId) {
   fetch(`/api/likes/${feedId}`)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
+      const likeList = document.getElementById(`likes-list-${feedId}`);
+
+      likeList.innerHTML = ""; // 기존 목록 초기화 (새로운 값을 계속 보여주기 위해)
+    });
+}
+
+// 좋아요 사용자 데이터 가져오기
+function fetchLikeUsers(feedId) {
+  fetch(`/api/likes/${feedId}`)
+    .then((response) => response.json())
+    .then((data) => {
       const likeList = document.getElementById(`likes-list-${feedId}`);
 
       likeList.innerHTML = ""; // 기존 목록 초기화 (새로운 값을 계속 보여주기 위해)
 
-  // 좋아요 사용자 데이터 가져오기
-  function fetchLikeUsers(feedId) {
-    fetch(`/api/likes/${feedId}`)
-      .then (response => response.json())
-      .then (data => {
-        const likeList = document.getElementById(`likes-list-${feedId}`);
+      // 사용자 목록 업데이트
+      data.users.forEach((user) => {
+        const listItem = document.createElement("li");
+        // 'user' 클래스 추가
+        listItem.classList.add("user");
 
-        likeList.innerHTML = ''; // 기존 목록 초기화 (새로운 값을 계속 보여주기 위해)
-        
-        // 사용자 목록 업데이트
-        data.users.forEach(user => {
-          const listItem = document.createElement('li');
-          // 'user' 클래스 추가
-          listItem.classList.add('user');
+        // profile_image가 null일 경우 기본 이미지 사용
+        const profileImage = user.profile_image || "../static/img/profile.png";
 
-         // profile_image가 null일 경우 기본 이미지 사용
-          const profileImage = user.profile_image || '../static/img/profile.png';
-          
-          listItem.innerHTML = `
+        listItem.innerHTML = `
               <img src="${profileImage}" alt="${user.nickname}" class="user-profile-img" />
               <span class="user-nickname">${user.nickname}</span>
           `;
@@ -49,24 +50,12 @@ function fetchLikeUsers(feedId) {
     });
 }
 
-
-        const likeText = document.getElementById(`like-text-${feedId}`);
-        if (likeCount > 0) {
-          likeText.textContent = `${likeCount}명이 해당 게시물에 공감하고 있어요`;
-        } else {
-          likeText.textContent = '아직 공감한 사람이 없습니다.';
-        }
-      } catch (error) {
-        console.error('error');
-      }
-    }
-  }
-  // 해당 피드에 대해서만 좋아요 수 최신화
-  async function updateFeedLike(feedId) {
+// 각 피드 좋아요 수 가져와서 업데이트
+async function updateLikeCounts(feedIds) {
+  for (const feedId of feedIds) {
     try {
       const response = await fetch(`/get-like-count?feedId=${feedId}`);
       const { likeCount } = await response.json();
-
       const likeText = document.getElementById(`like-text-${feedId}`);
       if (likeCount > 0) {
         likeText.textContent = `${likeCount}명이 해당 게시물에 공감하고 있어요`;
@@ -80,13 +69,28 @@ function fetchLikeUsers(feedId) {
 }
 // 해당 피드에 대해서만 좋아요 수 최신화
 async function updateFeedLike(feedId) {
-  console.log("실행");
+  try {
+    const response = await fetch(`/get-like-count?feedId=${feedId}`);
+    const { likeCount } = await response.json();
+
+    const likeText = document.getElementById(`like-text-${feedId}`);
+    if (likeCount > 0) {
+      likeText.textContent = `${likeCount}명이 해당 게시물에 공감하고 있어요`;
+    } else {
+      likeText.textContent = "아직 공감한 사람이 없습니다.";
+    }
+  } catch (error) {
+    console.error("error");
+  }
+}
+
+// 해당 피드에 대해서만 좋아요 수 최신화
+async function updateFeedLike(feedId) {
   try {
     const response = await fetch(`/get-feed-like?feedId=${feedId}`);
     const { likeCnt } = await response.json(); // likeCount를 객체로 받을 경우
 
     const likeText = document.getElementById(`like-text-${feedId}`);
-    console.log(likeCnt);
     if (likeCnt > 0) {
       likeText.textContent = `${likeCnt}명이 해당 게시물에 공감하고 있어요`;
     } else {
