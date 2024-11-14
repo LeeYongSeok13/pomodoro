@@ -214,9 +214,7 @@
         );
         const playIcon = document.getElementById("playIcon");
         const pauseIcon = document.getElementById("pauseIcon");
-
         const isHidden = timerTomato.classList.contains("hide");
-
         if (isHidden) {
           rightIcon.style.display = "block";
           leftIcon.style.display = "none";
@@ -228,13 +226,12 @@
           leftIcon.style.display = "block";
           timerTomato.classList.add("hide");
           outerTimerContainer.classList.add("active");
-          timeRemaining = 25 * 60;
+          timeRemaining = 0;
         }
         playIcon.style.display = "block";
         pauseIcon.style.display = "none";
         clearInterval(timerInterval);
         isTimerRunning = false;
-
         updateDisplay();
       }
 
@@ -253,12 +250,9 @@
         const seconds = String(timeRemaining % 60).padStart(2, "0");
         timerDisplay.textContent = `${hours} : ${minutes} : ${seconds}`;
       }
-      // 타이머 시작 1
+      // 타이머 시작
       function startTimer() {
-        pomoTime = 25 * 60; 
-
         if (isTimerRunning) return;
-
         isTimerRunning = true;
         timerInterval = setInterval(() => {
           if (
@@ -279,17 +273,15 @@
           updateDisplay();
         }, 1000);
       }
-      
+
       // 25분 타이머 종료 후 알람창
       function showRestModal() {
         const restModal = document.getElementById("restModal");
         restModal.style.display = "flex";
-
         document.querySelector(".restok").onclick = () => {
           restModal.style.display = "none";
           startRestTimer();
         };
-
         document.querySelector(".restend").onclick = () => {
           restModal.style.display = "none";
           stopTimer();
@@ -303,7 +295,6 @@
         updateDisplay();
         startRestPeriod();
         isTimerRunning = true;
-
         timerInterval = setInterval(() => {
           if (timeRemaining > 0) {
             timeRemaining--;
@@ -323,7 +314,6 @@
           restModal.style.display = "none"; // 다른 알람이 뜨지 않도록 설정
         const restendModal = document.getElementById("restendModal");
         restendModal.style.display = "flex";
-
         // '종료' 버튼 클릭 시
         document.querySelector(".resttheend").onclick = () => {
           restendModal.style.display = "none";
@@ -391,20 +381,14 @@
       function stopTimer() {
         clearInterval(timerInterval);
         isTimerRunning = false;
-
         const stopModal = document.getElementById("stopModal");
         stopModal.style.display = "flex";
-
         document.querySelector(".stopok").onclick = () => {
           stopModal.style.display = "none";
           // timeRemaining = timerTomato.classList.contains("hide") ? 0 : 1 * 60;
           // updateDisplay();
           document.getElementById("doneModal").style.display = "flex";
-          // 합산된 토마토 값을 html 로 랜더링
-          endTime();
-          // users 필드에 토마토 값 업데이트
         };
-
         document.querySelector(".stopend").onclick = () => {
           stopModal.style.display = "none";
         };
