@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/static/css/calender.css" />
     <link rel="stylesheet" href="/static/css/todoItem.css" />
     <link rel="stylesheet" href="/static/css/alert.css" />
-    <link rel="icon" href="/static/img/faviconPomo.png">
+    <link rel="icon" href="/static/img/faviconPomo.png" />
     <!-- axios CDN -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -193,7 +193,7 @@
         <div id="timer" class="timer"></div>
         <section class="todayTomato">
           획득한 토마토
-          <p>+<span id = "sumTomatoCount"></span></p>
+          <p>+<span id="sumTomatoCount"></span></p>
         </section>
         <section class="todayresult">오늘의 성과</section>
         <section class="improvement">추가 개선이 필요한 업무</section>
@@ -223,7 +223,6 @@
           timerTomato.classList.remove("hide");
           outerTimerContainer.classList.remove("active");
           timeRemaining = 25 * 60;
-
         } else {
           rightIcon.style.display = "none";
           leftIcon.style.display = "block";
@@ -256,12 +255,14 @@
       }
 
       function startTimer() {
+      // 타이머 시작 1
+      function startTimer() {
+        pomoTime = 25 * 60; 
+
         if (isTimerRunning) return;
-        
 
         isTimerRunning = true;
         timerInterval = setInterval(() => {
-          
           if (
             timeRemaining > 0 &&
             !document.querySelector(".timerTomato").classList.contains("hide")
@@ -280,7 +281,7 @@
           updateDisplay();
         }, 1000);
       }
-
+      
       // 25분 타이머 종료 후 알람창
       function showRestModal() {
         const restModal = document.getElementById("restModal");
@@ -404,7 +405,6 @@
           // 합산된 토마토 값을 html 로 랜더링
           endTime();
           // users 필드에 토마토 값 업데이트
-
         };
 
         document.querySelector(".stopend").onclick = () => {
