@@ -204,9 +204,6 @@
     </div>
 
     <script>
-      let tomatoCnt = 0;
-      let timeElapsed = 0; // 경과 시간을 초 단위로 저장
-      let pomoTime = 0; // 포토타이머 시간을 초단위로 저장
       // 오른쪽 왼쪽 아이콘 토글
       function toggleRight() {
         const rightIcon = document.getElementById("rightIcon");
@@ -225,15 +222,13 @@
           leftIcon.style.display = "none";
           timerTomato.classList.remove("hide");
           outerTimerContainer.classList.remove("active");
-          /*timeRemaining = 25 * 60;*/
           timeRemaining = 25 * 60;
-          // 타이머 5초로 재설정 하고 테스트 진행
         } else {
           rightIcon.style.display = "none";
           leftIcon.style.display = "block";
           timerTomato.classList.add("hide");
           outerTimerContainer.classList.add("active");
-          timeRemaining = 0;
+          timeRemaining = 25 * 60;
         }
         playIcon.style.display = "block";
         pauseIcon.style.display = "none";
@@ -259,15 +254,15 @@
         timerDisplay.textContent = `${hours} : ${minutes} : ${seconds}`;
       }
 
+      function startTimer() {
       // 타이머 시작 1
       function startTimer() {
-        pomoTime = 25 * 60; // 5초로 초기화
+        pomoTime = 25 * 60; 
+
         if (isTimerRunning) return;
 
         isTimerRunning = true;
         timerInterval = setInterval(() => {
-          timeElapsed++;
-          pomoTime--;
           if (
             timeRemaining > 0 &&
             !document.querySelector(".timerTomato").classList.contains("hide")
@@ -284,27 +279,9 @@
             timeRemaining++;
           }
           updateDisplay();
-          // 5 에서 1일 될때만 토마토 적립
-
-          if (pomoTime == 0) {
-            onTimeEnd();
-          }
         }, 1000);
       }
-
-      // 타이머가 끝나면 span 태그에 1씩 누적된 토마토값 랜더링
-      function onTimeEnd() {
-        tomatoCnt += 1;
-        const tomatoSpan = document.getElementById("tomatoCount");
-        tomatoSpan.textContent = tomatoCnt; // span 태그에 현재 토마토 획득 수 표시
-      }
-
-      // 타이머 종료 버튼 누르면 토마토 합산 값 출력
-      function endTime() {
-        const sumTomatoSpan = document.getElementById("sumTomatoCount");
-        sumTomatoSpan.textContent = tomatoCnt;
-      }
-
+      
       // 25분 타이머 종료 후 알람창
       function showRestModal() {
         const restModal = document.getElementById("restModal");
@@ -358,7 +335,6 @@
         // '확인' 버튼 클릭 시 타이머 재시작
         document.querySelector(".resttheok").onclick = () => {
           restendModal.style.display = "none";
-          /*timeRemaining = 25 * 60;*/
           timeRemaining = 25 * 60;
           updateDisplay();
           startTimer();
@@ -404,7 +380,7 @@
             });
 
           if (spotlight) spotlight.style.display = "none";
-        }, 1000);
+        }, 5 * 60 * 1000);
       }
 
       // 타이머 일시정지
